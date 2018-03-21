@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge.test;
+package titan.ccp.kiekerbridge;
 
 import java.time.Instant;
 
@@ -14,43 +14,51 @@ import kieker.monitoring.writer.kafka.KafkaWriter;
 import kieker.monitoring.writer.serializer.BinarySerializer;
 import titan.ccp.model.PowerConsumptionRecord;
 
-public class Writer {
-
-	public static void main(String[] args) {
-		
-		String writerName = ChunkingCollector.class.getCanonicalName();
-		
-		
+public class KafkaSender {
+	
+	private static final String BOOTSTRAP_SERVER = "127.0.0.1:9092"; //TODO
+	private static final String TOPIC_NAME = "test-soeren--3"; //TODO
+	
+	private IMonitoringController monitoringController;
+	
+	public KafkaSender() {
 		final Configuration configuration = ConfigurationFactory.createDefaultConfiguration();
-
-		configuration.setProperty(ConfigurationKeys.WRITER_CLASSNAME, writerName);
-		
+		configuration.setProperty(ConfigurationKeys.WRITER_CLASSNAME, ChunkingCollector.class.getCanonicalName());
 		configuration.setProperty(ChunkingCollector.CONFIG_SERIALIZER_CLASSNAME, BinarySerializer.class.getCanonicalName());
 		configuration.setProperty(ChunkingCollector.CONFIG_WRITER_CLASSNAME, KafkaWriter.class.getCanonicalName());
-		
-		//configuration.setProperty(ChunkingCollector.CONFIG_QUEUE_SIZE, "100");
-		
-		// The address and port of the Kafka bootstrap server(s), e.g. 127.0.0.1:9092
-		configuration.setProperty(KafkaWriter.CONFIG_PROPERTY_BOOTSTRAP_SERVERS, "127.0.0.1:9092"); //TODO
-		
-		// The topic name to use for the monitoring records
-		configuration.setProperty(KafkaWriter.CONFIG_PROPERTY_TOPIC_NAME, "test-soeren--3"); //TODO
-		
-		//configuration.setProperty(KafkaWriter.CONFIG_PROPERTY_BATCH_SIZE, "100");
-		
-		IMonitoringController monitoringController = MonitoringController.createInstance(configuration);
+		//configuration.setProperty(ChunkingCollector.CONFIG_QUEUE_SIZE, "100"); //TODO
+		configuration.setProperty(KafkaWriter.CONFIG_PROPERTY_BOOTSTRAP_SERVERS, BOOTSTRAP_SERVER);
+		configuration.setProperty(KafkaWriter.CONFIG_PROPERTY_TOPIC_NAME, TOPIC_NAME);
+		//configuration.setProperty(KafkaWriter.CONFIG_PROPERTY_BATCH_SIZE, "100"); //TODO
+		this.monitoringController = MonitoringController.createInstance(configuration);
+	}
+	
+	public void send(IMonitoringRecord record) {
+		this.monitoringController.newMonitoringRecord(record);
+	}
+	
+	public void shutdown() {
+		//TODO
+		monitoringController.terminateMonitoring();
+		//monitoringController.waitForTermination(0);
+	}
+	
+	
+	//TODO remove
+	public static void main(String[] args) {
+		final KafkaSender kafkaSender = new KafkaSender();
 		
 		for (int i = 0; i < 1000000; i++) {
-			final byte[] identifier = {1,2,3,4,5,6,7,8};
+			final byte[] identifier = {1,2,3,4,5,6,7,8}; //TODO String
 			final long timestamp = 0;
 			final int consumption = 10;
 			IMonitoringRecord record = new PowerConsumptionRecord(identifier,timestamp, consumption);
-			monitoringController.newMonitoringRecord(record);
+			kafkaSender.send(record);
 		}
 		
 		System.out.println("Finished writing");
 		System.out.println("Terminate monitoring...");
-		monitoringController.terminateMonitoring();
+		kafkaSender.shutdown();
 		System.out.println("Start sleeping");
 		try {
 			Thread.sleep(10000);

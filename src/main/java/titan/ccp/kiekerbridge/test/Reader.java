@@ -12,6 +12,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import kieker.analysis.plugin.reader.newio.deserializer.BinaryDeserializer;
 import kieker.analysis.plugin.reader.newio.deserializer.IMonitoringRecordDeserializer;
 import kieker.common.record.IMonitoringRecord;
+import kieker.common.record.io.IValueSerializer;
 
 public class Reader {
 
@@ -78,10 +79,89 @@ public class Reader {
 	}
 	
 	private void deliver(IMonitoringRecord monitoringRecord) {
-		//TODO
-		System.out.println(monitoringRecord);
+		//TODO notify callback for each record
+		testSerialization(monitoringRecord);
+		
 	}
 
+	private void testSerialization(IMonitoringRecord monitoringRecord) {
+		
+			monitoringRecord.serialize(new IValueSerializer() {
+			
+			@Override
+			public void putString(String value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putShort(short value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putLong(long value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putInt(int value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putFloat(float value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public <T extends Enum<T>> void putEnumeration(T value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putDouble(double value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putChar(char value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putBytes(byte[] value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putByte(byte value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void putBoolean(boolean value) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		String name = monitoringRecord.getClass().getName();
+		String[] valueNames = monitoringRecord.getValueNames();
+		Class<?>[] valueTypes = monitoringRecord.getValueTypes();
+		Object[] array = monitoringRecord.toArray();
+		System.out.println(monitoringRecord);
+	}
+	
 	public static void main(String[] args) {
 		
 		new Reader().run();

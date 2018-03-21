@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge.test;
+package titan.ccp.model;
 
 import java.nio.BufferOverflowException;
 
@@ -11,7 +11,7 @@ import kieker.common.util.registry.IRegistry;
 
 
 /**
- * @author Sören Henning
+ * @author Sï¿½ren Henning
  * API compatibility: Kieker 1.13.0
  * 
  * @since 1.13
