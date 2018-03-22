@@ -16,7 +16,12 @@ public class RaritanKiekerBridge extends KiekerBridge {
 	}
 
 	public static void main(String[] args) {
+		//TODO
+		System.out.println("Start...");
+		
 		new RaritanKiekerBridge().start();
+		
+		
 	}
 
 	
