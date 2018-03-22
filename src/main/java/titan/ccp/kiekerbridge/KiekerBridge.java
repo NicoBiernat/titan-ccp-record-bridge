@@ -11,12 +11,17 @@ public class KiekerBridge {
  
 	private final Execution<KiekerBridgeConfiguration> execution;
 	
+	//TODO clean up constructors
+	
 	public KiekerBridge(Function<Consumer<IMonitoringRecord>, SensorReader> sensorReaderFactory) {
 		this(new SensorReaderStage(sensorReaderFactory));
 	}
 	
 	public KiekerBridge(AbstractProducerStage<IMonitoringRecord> sensorReaderStage) {
-		KiekerBridgeConfiguration configuration = new KiekerBridgeConfiguration(sensorReaderStage);
+		this(new KiekerBridgeConfiguration(sensorReaderStage));
+	}
+	
+	public KiekerBridge(KiekerBridgeConfiguration configuration) {
 		execution = new Execution<KiekerBridgeConfiguration>(configuration);
 	}
 	

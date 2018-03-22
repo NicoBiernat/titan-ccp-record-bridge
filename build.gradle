@@ -13,10 +13,12 @@ dependencies {
     // These dependencies is exported to consumers, that is to say found on their compile classpath.
     api 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'
     api 'net.sourceforge.teetime:teetime:3.0-SNAPSHOT'
+    api 'org.slf4j:slf4j-simple:1.6.1'
 
     // These dependencies are used internally, and not exposed to consumers on their own compile classpath.
     implementation 'org.apache.kafka:kafka-clients:1.0.0'
     implementation 'com.google.guava:guava:20.0'
+    implementation 'org.jctools:jctools-core:2.1.1'
     
     implementation "com.sparkjava:spark-core:2.7.2"
     
