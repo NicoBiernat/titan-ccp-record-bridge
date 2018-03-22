@@ -11,12 +11,12 @@ import titan.ccp.model.PowerConsumptionRecord;
 
 public class RaritanRestListener implements SensorReader {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RaritanRestListener.class); 
+	private static final Logger LOGGER = LoggerFactory.getLogger(RaritanRestListener.class);
 
 	private final Consumer<IMonitoringRecord> newRecordHandler;
-	
+
 	private final RaritanRestServer restServer = new RaritanRestServer();
-	
+
 	public RaritanRestListener(Consumer<IMonitoringRecord> handler) {
 		restServer.start();
 		newRecordHandler = handler;
@@ -29,18 +29,17 @@ public class RaritanRestListener implements SensorReader {
 			this.newRecordHandler.accept(record);
 		}
 	}
-	
+
 	public void stop() {
-		//service.stop(); //TODO
+		// service.stop(); //TODO
 	}
 
-	
 	private IMonitoringRecord createMonitoringRecord(String message) {
-		//TODO transform
-		final byte[] identifier = {1,2,3,4,5,6,7,8};
+		// TODO transform
+		final byte[] identifier = { 1, 2, 3, 4, 5, 6, 7, 8 };
 		final long timestamp = System.nanoTime();
 		final int consumption = 10;
-		return new PowerConsumptionRecord(identifier,timestamp, consumption);
+		return new PowerConsumptionRecord(identifier, timestamp, consumption);
 	}
-	
+
 }
