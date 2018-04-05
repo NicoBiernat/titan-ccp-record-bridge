@@ -1,9 +1,14 @@
 package titan.ccp.kiekerbridge.raritan;
 
+import java.util.List;
+
 import kieker.analysisteetime.util.stage.FunctionStage;
 import kieker.common.record.IMonitoringRecord;
+import teetime.framework.Configuration;
+import teetime.framework.ConfigurationBuilder;
+import titan.ccp.kiekerbridge.FlattenerStage;
+import titan.ccp.kiekerbridge.KafkaSenderStage;
 import titan.ccp.kiekerbridge.KiekerBridge;
-import titan.ccp.kiekerbridge.KiekerBridgeConfiguration;
 
 public class RaritanKiekerBridge extends KiekerBridge {
 
@@ -14,7 +19,7 @@ public class RaritanKiekerBridge extends KiekerBridge {
 		super(createConfiguration());
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		// TODO
 		System.out.println("Start...");
 
@@ -23,14 +28,15 @@ public class RaritanKiekerBridge extends KiekerBridge {
 	}
 
 	// TODO remove from here
-	private final static KiekerBridgeConfiguration createConfiguration() {
-		RaritanRestServer raritanRestServer = new RaritanRestServer();
+	private final static Configuration createConfiguration() {
+		final RaritanRestServer raritanRestServer = new RaritanRestServer();
 
-		QueueProccessorStage<String> queueProccessor = new QueueProccessorStage<>(raritanRestServer.getQueue());
-		FunctionStage<String, IMonitoringRecord> functionStage = new FunctionStage<>(new RaritanJsonTransformer());
+		final QueueProccessorStage<String> queueProccessor = new QueueProccessorStage<>(raritanRestServer.getQueue());
+		final FunctionStage<String, List<IMonitoringRecord>> functionStage = new FunctionStage<>(
+				new RaritanJsonTransformer());
+		final KafkaSenderStage senderStage = new KafkaSenderStage();
 
-		KiekerBridgeConfiguration configuration = new KiekerBridgeConfiguration(queueProccessor, functionStage);
-		return configuration;
+		return ConfigurationBuilder.from(queueProccessor).to(functionStage).to(new FlattenerStage<>()).end(senderStage);
 	}
 
 }

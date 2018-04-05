@@ -5,31 +5,32 @@ import java.util.function.Function;
 
 import kieker.common.record.IMonitoringRecord;
 import teetime.framework.AbstractProducerStage;
+import teetime.framework.Configuration;
 import teetime.framework.Execution;
 
 public class KiekerBridge {
 
-	private final Execution<KiekerBridgeConfiguration> execution;
+	private final Execution<Configuration> execution;
 
 	// TODO clean up constructors
 
-	public KiekerBridge(Function<Consumer<IMonitoringRecord>, SensorReader> sensorReaderFactory) {
+	public KiekerBridge(final Function<Consumer<IMonitoringRecord>, SensorReader> sensorReaderFactory) {
 		this(new SensorReaderStage(sensorReaderFactory));
 	}
 
-	public KiekerBridge(AbstractProducerStage<IMonitoringRecord> sensorReaderStage) {
+	public KiekerBridge(final AbstractProducerStage<IMonitoringRecord> sensorReaderStage) {
 		this(new KiekerBridgeConfiguration(sensorReaderStage));
 	}
 
-	public KiekerBridge(KiekerBridgeConfiguration configuration) {
-		execution = new Execution<KiekerBridgeConfiguration>(configuration);
+	public KiekerBridge(final Configuration configuration) {
+		this.execution = new Execution<>(configuration);
 	}
 
 	public void start() {
-		execution.executeNonBlocking();
+		this.execution.executeNonBlocking();
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		// new KiekerBridge(readerStage).start();
 	}
 

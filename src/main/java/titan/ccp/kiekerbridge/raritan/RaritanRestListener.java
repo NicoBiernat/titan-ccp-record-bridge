@@ -17,26 +17,28 @@ public class RaritanRestListener implements SensorReader {
 
 	private final RaritanRestServer restServer = new RaritanRestServer();
 
-	public RaritanRestListener(Consumer<IMonitoringRecord> handler) {
-		restServer.start();
-		newRecordHandler = handler;
+	public RaritanRestListener(final Consumer<IMonitoringRecord> handler) {
+		this.restServer.start();
+		this.newRecordHandler = handler;
 	}
 
+	@Override
 	public void start() {
-		while (!restServer.getQueue().isEmpty()) {
-			String event = restServer.getQueue().poll();
-			IMonitoringRecord record = createMonitoringRecord(event);
+		while (!this.restServer.getQueue().isEmpty()) {
+			final String event = this.restServer.getQueue().poll();
+			final IMonitoringRecord record = this.createMonitoringRecord(event);
 			this.newRecordHandler.accept(record);
 		}
 	}
 
+	@Override
 	public void stop() {
 		// service.stop(); //TODO
 	}
 
-	private IMonitoringRecord createMonitoringRecord(String message) {
+	private IMonitoringRecord createMonitoringRecord(final String message) {
 		// TODO transform
-		final byte[] identifier = { 1, 2, 3, 4, 5, 6, 7, 8 };
+		final String identifier = "identifier";
 		final long timestamp = System.nanoTime();
 		final int consumption = 10;
 		return new PowerConsumptionRecord(identifier, timestamp, consumption);

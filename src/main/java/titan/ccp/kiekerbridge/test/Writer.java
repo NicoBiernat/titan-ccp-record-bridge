@@ -1,10 +1,7 @@
 package titan.ccp.kiekerbridge.test;
 
-import java.time.Instant;
-
 import kieker.common.configuration.Configuration;
 import kieker.common.record.IMonitoringRecord;
-import kieker.common.record.system.CPUUtilizationRecord;
 import kieker.monitoring.core.configuration.ConfigurationFactory;
 import kieker.monitoring.core.configuration.ConfigurationKeys;
 import kieker.monitoring.core.controller.IMonitoringController;
@@ -16,9 +13,9 @@ import titan.ccp.model.PowerConsumptionRecord;
 
 public class Writer {
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 
-		String writerName = ChunkingCollector.class.getCanonicalName();
+		final String writerName = ChunkingCollector.class.getCanonicalName();
 
 		final Configuration configuration = ConfigurationFactory.createDefaultConfiguration();
 
@@ -38,13 +35,13 @@ public class Writer {
 
 		// configuration.setProperty(KafkaWriter.CONFIG_PROPERTY_BATCH_SIZE, "100");
 
-		IMonitoringController monitoringController = MonitoringController.createInstance(configuration);
+		final IMonitoringController monitoringController = MonitoringController.createInstance(configuration);
 
 		for (int i = 0; i < 1000000; i++) {
-			final byte[] identifier = { 1, 2, 3, 4, 5, 6, 7, 8 };
+			final String identifier = "identifier";
 			final long timestamp = 0;
 			final int consumption = 10;
-			IMonitoringRecord record = new PowerConsumptionRecord(identifier, timestamp, consumption);
+			final IMonitoringRecord record = new PowerConsumptionRecord(identifier, timestamp, consumption);
 			monitoringController.newMonitoringRecord(record);
 		}
 
@@ -54,7 +51,7 @@ public class Writer {
 		System.out.println("Start sleeping");
 		try {
 			Thread.sleep(10000);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

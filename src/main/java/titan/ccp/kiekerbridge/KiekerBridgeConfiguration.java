@@ -7,13 +7,14 @@ import teetime.stage.basic.AbstractTransformation;
 
 public class KiekerBridgeConfiguration extends Configuration {
 
-	public KiekerBridgeConfiguration(AbstractProducerStage<IMonitoringRecord> readerStage) {
+	public KiekerBridgeConfiguration(final AbstractProducerStage<IMonitoringRecord> readerStage) {
 		final KafkaSenderStage senderStage = new KafkaSenderStage();
 		super.from(readerStage).end(senderStage);
 	}
 
-	public <T> KiekerBridgeConfiguration(AbstractProducerStage<T> readerStage,
-			AbstractTransformation<T, IMonitoringRecord> transformerStage) {
+	// TODO remove
+	public <T> KiekerBridgeConfiguration(final AbstractProducerStage<T> readerStage,
+			final AbstractTransformation<T, IMonitoringRecord> transformerStage) {
 		// TODO avoid duplicate code
 		final KafkaSenderStage senderStage = new KafkaSenderStage();
 		super.from(readerStage).to(transformerStage).end(senderStage);
