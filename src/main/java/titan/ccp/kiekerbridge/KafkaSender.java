@@ -47,7 +47,7 @@ public class KafkaSender {
 		final KafkaSender kafkaSender = new KafkaSender();
 
 		for (int i = 0; i < 1000000; i++) {
-			final byte[] identifier = { 1, 2, 3, 4, 5, 6, 7, 8 }; // TODO String
+			final String identifier = "identifier";
 			final long timestamp = 0;
 			final int consumption = 10;
 			final IMonitoringRecord record = new PowerConsumptionRecord(identifier, timestamp, consumption);
