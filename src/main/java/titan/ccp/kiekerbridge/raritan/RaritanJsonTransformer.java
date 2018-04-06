@@ -34,7 +34,7 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 			final long timestamp = row.get("timestamp").getAsLong();
 			final JsonArray records = row.get("records").getAsJsonArray();
 			final JsonObject relevantRecord = records.get(relevantSensorIndex).getAsJsonObject();
-			final int value = (int) relevantRecord.get("avgValue").getAsDouble(); // TODO temp casting to long
+			final int value = (int) relevantRecord.get("avgValue").getAsDouble(); // TODO temp casting to int
 
 			monitoringRecords.add(new PowerConsumptionRecord(sensorLabel, timestamp, value));
 		}
