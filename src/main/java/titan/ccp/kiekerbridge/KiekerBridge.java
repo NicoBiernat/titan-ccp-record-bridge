@@ -1,15 +1,14 @@
 package titan.ccp.kiekerbridge;
 
-import teetime.framework.Configuration;
 import teetime.framework.Execution;
 
 public class KiekerBridge {
 
-	private final Execution<Configuration> execution;
+	private final Execution<KiekerBridgeConfiguration> execution;
 
 	// TODO clean up constructors
 
-	public KiekerBridge(final Configuration configuration) {
+	public KiekerBridge(final KiekerBridgeConfiguration configuration) {
 		this.execution = new Execution<>(configuration);
 	}
 

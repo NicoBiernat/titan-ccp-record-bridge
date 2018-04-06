@@ -4,22 +4,24 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import kieker.common.record.IMonitoringRecord;
+import teetime.framework.AbstractProducerStage;
 
-public class SensorReaderStage extends teetime.framework.AbstractProducerStage<IMonitoringRecord> {
+@Deprecated
+public class SensorReaderStage extends AbstractProducerStage<IMonitoringRecord> {
 
 	private final SensorReader sensorReader;
 
-	public SensorReaderStage(Function<Consumer<IMonitoringRecord>, SensorReader> sensorReaderFactory) {
-		sensorReader = sensorReaderFactory.apply(this.getOutputPort()::send);
+	public SensorReaderStage(final Function<Consumer<IMonitoringRecord>, SensorReader> sensorReaderFactory) {
+		this.sensorReader = sensorReaderFactory.apply(this.getOutputPort()::send);
 	}
 
 	@Override
 	protected void execute() throws Exception {
-		sensorReader.start();
+		this.sensorReader.start();
 	}
 
 	public void terminate() {
-		sensorReader.stop();
+		this.sensorReader.stop();
 	}
 
 }

@@ -1,8 +1,10 @@
 package titan.ccp.kiekerbridge;
 
 import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import kieker.analysisteetime.util.stage.FilterStage;
 import kieker.common.record.IMonitoringRecord;
@@ -10,10 +12,12 @@ import teetime.framework.AbstractProducerStage;
 import teetime.framework.Configuration;
 import teetime.framework.OutputPort;
 import teetime.stage.basic.ITransformation;
-import titan.ccp.kiekerbridge.raritan.QueueProccessorStage;
-import titan.ccp.kiekerbridge.raritan.QueueProvider;
 import titan.ccp.kiekerbridge.stages.FlatMapStage;
 import titan.ccp.kiekerbridge.stages.MapStage;
+import titan.ccp.kiekerbridge.stages.QueueProccessorStage;
+import titan.ccp.kiekerbridge.stages.QueueProvider;
+import titan.ccp.kiekerbridge.stages.SupplierStage;
+import titan.ccp.kiekerbridge.stages.Terminatable;
 
 public abstract class KiekerBridgeConfiguration extends Configuration {
 
@@ -24,6 +28,8 @@ public abstract class KiekerBridgeConfiguration extends Configuration {
 	private KiekerBridgeConfiguration() {
 	}
 
+	public abstract CompletableFuture<Void> requestTermination();
+
 	public static KiekerBridgeConfiguration of(final Stream<? extends IMonitoringRecord> stream) {
 		return completeConfiguration(stream.configuration, stream.lastOutputPort);
 	}
@@ -33,15 +39,6 @@ public abstract class KiekerBridgeConfiguration extends Configuration {
 		final KafkaSenderStage senderStage = new KafkaSenderStage();
 		configuration.connectPorts(outputPort, senderStage.getInputPort());
 		return configuration;
-	}
-
-	// TODO name
-	private static class StreamBasedConfiguration extends KiekerBridgeConfiguration {
-
-		public StreamBasedConfiguration() {
-			super();
-		}
-
 	}
 
 	public static final class Stream<T> {
@@ -71,24 +68,38 @@ public abstract class KiekerBridgeConfiguration extends Configuration {
 			return new Stream<>(this.configuration, stage.getOutputPort());
 		}
 
-		public static <T> Stream<T> ofQueue(final Queue<T> queue) {
-			return create(new QueueProccessorStage<>(queue));
+		public static <T> Stream<T> of(final Queue<T> queue) {
+			return createFromStage(new QueueProccessorStage<>(queue));
 		}
 
-		public static <T> Stream<T> ofQueue(final QueueProvider<T> queueProvider) {
-			return create(new QueueProccessorStage<>(queueProvider));
+		public static <T> Stream<T> of(final QueueProvider<T> queueProvider) {
+			return createFromStage(new QueueProccessorStage<>(queueProvider));
 		}
 
-		private static <T> Stream<T> create(final AbstractProducerStage<T> stage) {
-			return new Stream<>(new StreamBasedConfiguration(), stage.getOutputPort());
+		public static <T> Stream<T> of(final Supplier<T> supplier) {
+			return createFromStage(new SupplierStage<>(supplier));
+		}
+
+		private static <T, S extends AbstractProducerStage<T> & Terminatable> Stream<T> createFromStage(final S stage) {
+			return new Stream<>(new StreamBasedConfiguration(stage), stage.getOutputPort());
 		}
 
 	}
 
-	public static void main(final String[] args) {
-		final Stream<String> map = new Stream<String>(null, null).map(x -> x.getBytes()).map(b -> b.length)
-				.map(i -> i.toString()).map(s -> s.toLowerCase()).filter(s -> s.length() > 10)
-				.filter(s -> s.hashCode() < 1000);
+	// TODO name
+	private static class StreamBasedConfiguration extends KiekerBridgeConfiguration {
+
+		private final Terminatable terminatable;
+
+		public StreamBasedConfiguration(final Terminatable terminatable) {
+			super();
+			this.terminatable = terminatable;
+		}
+
+		@Override
+		public CompletableFuture<Void> requestTermination() {
+			return this.terminatable.requestTermination();
+		}
 
 	}
 

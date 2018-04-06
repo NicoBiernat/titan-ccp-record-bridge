@@ -10,6 +10,7 @@ import titan.ccp.kiekerbridge.SensorReader;
 import titan.ccp.model.PowerConsumptionRecord;
 
 //TODO remove
+@Deprecated
 public class RaritanRestListener implements SensorReader {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RaritanRestListener.class);
