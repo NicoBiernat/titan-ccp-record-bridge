@@ -1,13 +1,17 @@
 package titan.ccp.kiekerbridge;
 
+import java.util.Queue;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import kieker.analysisteetime.util.stage.FilterStage;
 import kieker.common.record.IMonitoringRecord;
+import teetime.framework.AbstractProducerStage;
 import teetime.framework.Configuration;
 import teetime.framework.OutputPort;
 import teetime.stage.basic.ITransformation;
+import titan.ccp.kiekerbridge.raritan.QueueProccessorStage;
+import titan.ccp.kiekerbridge.raritan.QueueProvider;
 import titan.ccp.kiekerbridge.stages.FlatMapStage;
 import titan.ccp.kiekerbridge.stages.MapStage;
 
@@ -65,6 +69,18 @@ public abstract class KiekerBridgeConfiguration extends Configuration {
 		private <R> Stream<R> addStage(final ITransformation<? super T, ? extends R> stage) {
 			this.configuration.connectPorts(this.lastOutputPort, stage.getInputPort());
 			return new Stream<>(this.configuration, stage.getOutputPort());
+		}
+
+		public static <T> Stream<T> ofQueue(final Queue<T> queue) {
+			return create(new QueueProccessorStage<>(queue));
+		}
+
+		public static <T> Stream<T> ofQueue(final QueueProvider<T> queueProvider) {
+			return create(new QueueProccessorStage<>(queueProvider));
+		}
+
+		private static <T> Stream<T> create(final AbstractProducerStage<T> stage) {
+			return new Stream<>(new StreamBasedConfiguration(), stage.getOutputPort());
 		}
 
 	}
