@@ -2,6 +2,8 @@ package titan.ccp.kiekerbridge.stages;
 
 import java.util.Queue;
 
+import titan.ccp.kiekerbridge.QueueProvider;
+
 public class QueueProccessorStage<T> extends AbstractTerminatableProducerStage<T> {
 
 	private final Queue<T> queue;

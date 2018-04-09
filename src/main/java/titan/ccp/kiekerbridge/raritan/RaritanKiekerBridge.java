@@ -1,25 +1,17 @@
 package titan.ccp.kiekerbridge.raritan;
 
+import kieker.common.record.IMonitoringRecord;
 import titan.ccp.kiekerbridge.KiekerBridge;
-import titan.ccp.kiekerbridge.KiekerBridgeConfiguration;
+import titan.ccp.kiekerbridge.KiekerBridgeStream;
 
-public class RaritanKiekerBridge extends KiekerBridge {
-
-	public RaritanKiekerBridge() {
-		super(createConfiguration());
-	}
+public class RaritanKiekerBridge {
 
 	public static void main(final String[] args) {
-		new RaritanKiekerBridge().start();
-
-	}
-
-	// TODO remove from here
-	private final static KiekerBridgeConfiguration createConfiguration() {
 		final RaritanRestServer raritanRestServer = new RaritanRestServer();
-
-		return KiekerBridgeConfiguration
-				.of(KiekerBridgeConfiguration.Stream.of(raritanRestServer).flatMap(new RaritanJsonTransformer()));
+		final KiekerBridgeStream<IMonitoringRecord> stream = KiekerBridgeStream.from(raritanRestServer)
+				.flatMap(new RaritanJsonTransformer());
+		final KiekerBridge kiekerBridge = KiekerBridge.ofStream(stream).onStop(raritanRestServer::stop).build();
+		kiekerBridge.start();
 	}
 
 }

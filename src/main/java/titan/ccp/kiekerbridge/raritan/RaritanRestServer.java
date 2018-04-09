@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 import spark.Service;
-import titan.ccp.kiekerbridge.stages.QueueProvider;
+import titan.ccp.kiekerbridge.QueueProvider;
 
 public class RaritanRestServer implements QueueProvider<String> {
 

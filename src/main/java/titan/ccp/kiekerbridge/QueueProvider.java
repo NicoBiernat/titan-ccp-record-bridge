@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge.stages;
+package titan.ccp.kiekerbridge;
 
 import java.util.Queue;
 
