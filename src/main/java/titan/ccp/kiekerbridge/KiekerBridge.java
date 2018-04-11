@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import kieker.common.record.IMonitoringRecord;
 import teetime.framework.Execution;
 import teetime.framework.OutputPort;
+import titan.ccp.kiekerbridge.test.KafkaPowerConsumptionRecordSender;
 
 public final class KiekerBridge {
 
@@ -73,7 +74,9 @@ public final class KiekerBridge {
 
 			// TODO Kafka configuration
 			this.configurationFactory = x -> {
-				final KafkaSenderStage senderStage = new KafkaSenderStage();
+				// final KafkaSenderStage senderStage = new KafkaSenderStage();
+				final KafkaPowerConsumptionRecordSender.Stage senderStage = new KafkaPowerConsumptionRecordSender.Stage(); // TODO
+																															// temp
 				configuration.connectPorts(outputPort, senderStage.getInputPort(), TEETIME_DEFAULT_PIPE_CAPACITY);
 				return configuration;
 			};
