@@ -11,7 +11,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import kieker.common.record.IMonitoringRecord;
-import titan.ccp.model.PowerConsumptionRecord;
+import titan.ccp.models.records.PowerConsumptionRecord;
 
 public class RaritanJsonTransformer implements Function<String, List<IMonitoringRecord>> {
 

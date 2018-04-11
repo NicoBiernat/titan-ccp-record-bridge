@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import kieker.common.record.IMonitoringRecord;
-import titan.ccp.model.PowerConsumptionRecord;
+import titan.ccp.models.records.PowerConsumptionRecord;
 
 public class RaritanJsonTransformerTest {
 

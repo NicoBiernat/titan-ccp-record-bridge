@@ -9,7 +9,7 @@ import kieker.monitoring.core.controller.MonitoringController;
 import kieker.monitoring.writer.collector.ChunkingCollector;
 import kieker.monitoring.writer.kafka.KafkaWriter;
 import kieker.monitoring.writer.serializer.BinarySerializer;
-import titan.ccp.model.PowerConsumptionRecord;
+import titan.ccp.models.records.PowerConsumptionRecord;
 
 public class Writer {
 
