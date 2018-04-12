@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge.raritan.dummy;
+package titan.ccp.kiekerbridge.raritan.emulator;
 
 import java.net.URI;
 
@@ -6,19 +6,18 @@ import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpRequest;
 import jdk.incubator.http.HttpResponse;
 
-//TODO move to .emulator
-//TODO rename to Sender and only send messages
-public class RaritanDummySensor {
-
-	private static final URI PUSH_URI = URI.create("http://localhost:80/raritan");
+public class HttpPusher {
 
 	private final HttpClient client = HttpClient.newHttpClient();
 
-	public RaritanDummySensor() {
+	private final URI pushUri;
+
+	public HttpPusher(final URI pushUri) {
+		this.pushUri = pushUri;
 	}
 
 	public void sendMessage(final String message) {
-		final HttpRequest request = HttpRequest.newBuilder().uri(PUSH_URI)
+		final HttpRequest request = HttpRequest.newBuilder().uri(this.pushUri)
 				.POST(HttpRequest.BodyProcessor.fromString(message)).build();
 		this.client.sendAsync(request, HttpResponse.BodyHandler.<Void>discard(null));
 	}
