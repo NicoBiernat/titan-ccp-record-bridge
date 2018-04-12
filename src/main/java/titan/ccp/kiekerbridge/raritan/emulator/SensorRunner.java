@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge.raritan.dummy;
+package titan.ccp.kiekerbridge.raritan.emulator;
 
 import java.net.URI;
 import java.text.MessageFormat;
@@ -7,22 +7,22 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import jdk.incubator.http.HttpClient;
-import jdk.incubator.http.HttpRequest;
-import jdk.incubator.http.HttpResponse;
-import titan.ccp.kiekerbridge.raritan.emulator.JsonTemplate;
+import titan.ccp.kiekerbridge.raritan.dummy.RaritanDummySensor;
 
 //TODO move to .emulator
 //TODO rename to Sender and only send messages
-public class RaritanDummySensor {
+public class SensorRunner {
 
 	private static final URI PUSH_URI = URI.create("http://localhost:80/raritan");
+
+	private final RaritanDummySensor httpPusher = new RaritanDummySensor(null);
 
 	private final String sensor;
 
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private final HttpClient client = HttpClient.newHttpClient();
 
-	public RaritanDummySensor(final String sensor) {
+	public SensorRunner(final String sensor) {
 		this.sensor = sensor;
 	}
 
@@ -33,19 +33,12 @@ public class RaritanDummySensor {
 
 	private String generateMessage(final int value) {
 		final long timestamp = System.currentTimeMillis();
-
 		return MessageFormat.format(JsonTemplate.TEMPLATE, this.sensor, String.valueOf(timestamp),
 				String.valueOf(value));
 	}
 
-	public void sendMessage(final String message) {
-		// final HttpRequest request =
-		// HttpRequest.newBuilder().uri(PUSH_URI).POST(HttpRequest.BodyProcessor.fromString(message)).build();
-		System.out.println("send msg");
-
-		final HttpRequest request = HttpRequest.newBuilder().uri(PUSH_URI)
-				.POST(HttpRequest.BodyProcessor.fromString(message)).build();
-		this.client.sendAsync(request, HttpResponse.BodyHandler.<Void>discard(null));
+	private void sendMessage(final String message) {
+		this.httpPusher.sendMessage(message);
 	}
 
 	public static void main(final String[] args) {

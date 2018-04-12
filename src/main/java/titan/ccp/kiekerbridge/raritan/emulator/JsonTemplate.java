@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge.raritan.dummy;
+package titan.ccp.kiekerbridge.raritan.emulator;
 
 //TODO move to .emulator
 public final class JsonTemplate {
