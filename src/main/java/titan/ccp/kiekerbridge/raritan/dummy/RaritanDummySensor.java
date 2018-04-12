@@ -10,6 +10,8 @@ import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpRequest;
 import jdk.incubator.http.HttpResponse;
 
+//TODO move to .emulator
+//TODO rename to SensorRunner
 public class RaritanDummySensor {
 
 	private static final URI PUSH_URI = URI.create("http://localhost:80/raritan");
