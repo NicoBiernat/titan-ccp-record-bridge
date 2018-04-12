@@ -22,7 +22,7 @@ public class RaritanRestServer implements QueueProvider<String> {
 	private static final String RESPONSE_STATUS_MESSAGE = ""; // TODO temp
 
 	private final Service service;
-	private final Queue<String> queue = new SpmcArrayQueue<>(16);
+	private final Queue<String> queue = new SpmcArrayQueue<>(1024);
 
 	public RaritanRestServer() {
 		this.service = Service.ignite().port(PORT);

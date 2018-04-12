@@ -2,6 +2,7 @@ package titan.ccp.kiekerbridge;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -63,20 +64,23 @@ public final class KiekerBridge {
 
 		private static final int TEETIME_DEFAULT_PIPE_CAPACITY = 512;
 
-		private Function<Object, TerminatableConfiguration> configurationFactory; // TODO
+		private final Function<KafkaConfig, TerminatableConfiguration> configurationFactory;
 
 		private final List<Runnable> onStartActions = new ArrayList<>(4);
 
 		private final List<Supplier<CompletableFuture<Void>>> onStopActions = new ArrayList<>(4);
 
+		private KafkaConfig kafkaConfig;
+
 		private Builder(final TerminatableConfiguration configuration,
 				final OutputPort<? extends IMonitoringRecord> outputPort) {
 
-			// TODO Kafka configuration
-			this.configurationFactory = x -> {
+			this.configurationFactory = kafkaConfig -> {
 				// final KafkaSenderStage senderStage = new KafkaSenderStage();
-				final KafkaPowerConsumptionRecordSender.Stage senderStage = new KafkaPowerConsumptionRecordSender.Stage(); // TODO
-																															// temp
+				final KafkaPowerConsumptionRecordSender kafkaSender = new KafkaPowerConsumptionRecordSender(
+						kafkaConfig.bootstrapServers, kafkaConfig.topic, kafkaConfig.properties);
+				final KafkaPowerConsumptionRecordSender.Stage senderStage = new KafkaPowerConsumptionRecordSender.Stage(
+						kafkaSender);
 				configuration.connectPorts(outputPort, senderStage.getInputPort(), TEETIME_DEFAULT_PIPE_CAPACITY);
 				return configuration;
 			};
@@ -100,8 +104,29 @@ public final class KiekerBridge {
 			return this;
 		}
 
+		public Builder withKafkaConfiguration(final String bootstrapServers, final String topic,
+				final Properties properties) {
+			this.kafkaConfig = new KafkaConfig(bootstrapServers, topic, properties);
+			return this;
+		}
+
 		public KiekerBridge build() {
-			return new KiekerBridge(this.configurationFactory.apply(null), this.onStartActions, this.onStopActions); // TODO
+			return new KiekerBridge(this.configurationFactory.apply(this.kafkaConfig), this.onStartActions,
+					this.onStopActions);
+		}
+
+		private static class KafkaConfig {
+
+			public final String bootstrapServers;
+			public final String topic;
+			public final Properties properties;
+
+			public KafkaConfig(final String bootstrapServers, final String topic, final Properties properties) {
+				this.bootstrapServers = bootstrapServers;
+				this.topic = topic;
+				this.properties = properties;
+			}
+
 		}
 
 	}

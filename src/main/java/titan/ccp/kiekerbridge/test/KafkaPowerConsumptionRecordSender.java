@@ -14,15 +14,24 @@ import titan.ccp.models.records.serialization.kafka.PowerConsumptionRecordSerial
 
 public class KafkaPowerConsumptionRecordSender {
 
-	private static final String BOOTSRATP_SERVERS = "localhost:9092";
-	private static final String TOPIC = "test-topic-18040319";
+	// private static final String BOOTSRATP_SERVERS = "localhost:9092";
+	// private static final String TOPIC = "test-topic-18040319";
+
+	private final String topic;
 
 	private final Producer<String, PowerConsumptionRecord> producer;
 
-	public KafkaPowerConsumptionRecordSender() {
-		final Properties properties = new Properties();
+	public KafkaPowerConsumptionRecordSender(final String bootstrapServers, final String topic) {
+		this(bootstrapServers, topic, new Properties());
+	}
 
-		properties.put("bootstrap.servers", BOOTSRATP_SERVERS);
+	public KafkaPowerConsumptionRecordSender(final String bootstrapServers, final String topic,
+			final Properties defaultProperties) {
+		this.topic = topic;
+
+		final Properties properties = new Properties();
+		properties.putAll(defaultProperties);
+		properties.put("bootstrap.servers", bootstrapServers);
 		// properties.put("acks", this.acknowledges);
 		// properties.put("batch.size", this.batchSize);
 		// properties.put("linger.ms", this.lingerMs);
@@ -32,7 +41,7 @@ public class KafkaPowerConsumptionRecordSender {
 	}
 
 	public void write(final PowerConsumptionRecord powerConsumptionRecord) {
-		final ProducerRecord<String, PowerConsumptionRecord> record = new ProducerRecord<>(TOPIC,
+		final ProducerRecord<String, PowerConsumptionRecord> record = new ProducerRecord<>(this.topic,
 				powerConsumptionRecord.getIdentifier(), powerConsumptionRecord);
 		this.producer.send(record);
 	}
@@ -41,8 +50,8 @@ public class KafkaPowerConsumptionRecordSender {
 
 		private final KafkaPowerConsumptionRecordSender sender;
 
-		public Stage() {
-			this.sender = new KafkaPowerConsumptionRecordSender();
+		public Stage(final KafkaPowerConsumptionRecordSender sender) {
+			this.sender = sender;
 		}
 
 		@Override
