@@ -12,7 +12,7 @@ import titan.ccp.kiekerbridge.raritan.dummy.RaritanDummySensor;
 
 public class SensorRunner {
 
-	private final RaritanDummySensor httpPusher = new RaritanDummySensor(null);
+	private final RaritanDummySensor httpPusher = new RaritanDummySensor();
 
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
