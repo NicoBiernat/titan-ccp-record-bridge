@@ -46,6 +46,10 @@ public class KafkaPowerConsumptionRecordSender {
 		this.producer.send(record);
 	}
 
+	public void terminate() {
+		this.producer.close();
+	}
+
 	public static class Stage extends AbstractConsumerStage<IMonitoringRecord> {
 
 		private final KafkaPowerConsumptionRecordSender sender;
@@ -59,6 +63,12 @@ public class KafkaPowerConsumptionRecordSender {
 			if (record instanceof PowerConsumptionRecord) {
 				this.sender.write((PowerConsumptionRecord) record);
 			}
+		}
+
+		@Override
+		protected void onTerminating() {
+			this.sender.terminate();
+			super.onTerminating();
 		}
 
 	}
