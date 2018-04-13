@@ -27,7 +27,7 @@ public class RaritanKiekerBridge {
 		final KiekerBridgeStream<IMonitoringRecord> stream = KiekerBridgeStream.from(raritanRestServer)
 				.flatMap(new RaritanJsonTransformer());
 		final KiekerBridge kiekerBridge = KiekerBridge.ofStream(stream).onStop(raritanRestServer::stop)
-				.withKafkaConfiguration(kafkaBootstrapServer, kafkaTopic, kafkaProperties).build();
+				.withKafkaConfiguration("localhost:9092", "input", new Properties()).build();
 		kiekerBridge.start();
 	}
 

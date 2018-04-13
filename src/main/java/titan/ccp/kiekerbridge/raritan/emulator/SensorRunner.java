@@ -32,7 +32,7 @@ public class SensorRunner {
 
 	public static void main(final String[] args) {
 		new SensorRunner(URI.create("http://localhost:80/raritan"),
-				List.of(new EmulatedSensor("my-sensor", Duration.ofSeconds(5), x -> 10))).run();
+				List.of(new EmulatedSensor("comcent.server1.pw1", Duration.ofSeconds(5), x -> 10))).run();
 	}
 
 }
