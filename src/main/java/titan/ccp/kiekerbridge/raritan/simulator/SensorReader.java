@@ -1,18 +1,18 @@
-package titan.ccp.kiekerbridge.raritan.emulator;
+package titan.ccp.kiekerbridge.raritan.simulator;
 
 import java.text.MessageFormat;
 
 public class SensorReader {
 
-	private final EmulatedSensor sensor;
+	private final SimulatedSensor sensor;
 
 	private final long startTimestamp;
 
-	public SensorReader(final EmulatedSensor sensor) {
+	public SensorReader(final SimulatedSensor sensor) {
 		this(sensor, System.currentTimeMillis());
 	}
 
-	public SensorReader(final EmulatedSensor sensor, final long startTimestamp) {
+	public SensorReader(final SimulatedSensor sensor, final long startTimestamp) {
 		this.sensor = sensor;
 		this.startTimestamp = startTimestamp;
 	}
@@ -36,7 +36,7 @@ public class SensorReader {
 		return this.sensor.getValueFunction().applyAsInt(millisSinceStart);
 	}
 
-	public EmulatedSensor getSensor() {
+	public SimulatedSensor getSensor() {
 		return this.sensor;
 	}
 

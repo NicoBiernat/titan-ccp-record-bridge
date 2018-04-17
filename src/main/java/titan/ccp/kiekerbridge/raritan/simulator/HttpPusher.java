@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge.raritan.emulator;
+package titan.ccp.kiekerbridge.raritan.simulator;
 
 import java.net.URI;
 
