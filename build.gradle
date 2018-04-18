@@ -5,11 +5,13 @@ apply plugin: 'eclipse'
 sourceCompatibility = "1.9"
 targetCompatibility = "1.9"
 
-repositories {
-    jcenter()
-    maven {
-    	url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
+allprojects { 
+	repositories {
+	    jcenter()
+	    maven {
+	    	url "https://oss.sonatype.org/content/repositories/snapshots/"
+	    }
+	}
 }
 
 dependencies {
@@ -17,7 +19,6 @@ dependencies {
     api 'org.industrial-devops:titan.ccp.model:0.0.1-SNAPSHOT'
     api 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'
     api 'net.sourceforge.teetime:teetime:3.0'
-    api 'org.slf4j:slf4j-simple:1.6.1'
 
     // These dependencies are used internally, and not exposed to consumers on their own compile classpath.
     implementation 'org.apache.kafka:kafka-clients:1.0.0'

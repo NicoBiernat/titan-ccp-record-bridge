@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'application'
 apply plugin: 'eclipse'
 
 sourceCompatibility = "1.9"
@@ -6,16 +6,14 @@ targetCompatibility = "1.9"
 
 repositories {
     jcenter()
-    maven {
-    	url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
 }
 
 dependencies {
     compile project(':')
-    compile 'net.kieker-monitoring:kieker:1.14-SNAPSHOT' //TODO not sure why is necessary
+    
     compile 'com.google.code.gson:gson:2.8.2'
     compile "com.sparkjava:spark-core:2.7.2"
+    compile 'org.slf4j:slf4j-simple:1.6.1'
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
@@ -28,6 +26,10 @@ tasks.withType(AbstractCompile) {
 tasks.withType(Test) {
   jvmArgs += ["--add-modules", "jdk.incubator.httpclient"]
 }
+
+mainClassName = "titan.ccp.kiekerbridge.raritan.RaritanKiekerBridge"
+
+applicationDefaultJvmArgs = ["--add-modules=jdk.incubator.httpclient"]
 
 eclipse {
     classpath {
