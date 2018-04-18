@@ -14,6 +14,7 @@ repositories {
 dependencies {
     compile project(':')
     compile 'net.kieker-monitoring:kieker:1.14-SNAPSHOT' //TODO not sure why is necessary
+    compile 'com.google.code.gson:gson:2.8.2'
     compile "com.sparkjava:spark-core:2.7.2"
 
     // Use JUnit test framework
