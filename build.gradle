@@ -32,6 +32,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
+tasks.withType(AbstractCompile) {
+  options.compilerArgs += ["--add-modules", "jdk.incubator.httpclient"]
+}
+
+tasks.withType(Test) {
+  jvmArgs += ["--add-modules", "jdk.incubator.httpclient"]
+}
+
 eclipse {
     classpath {
        downloadSources=true
