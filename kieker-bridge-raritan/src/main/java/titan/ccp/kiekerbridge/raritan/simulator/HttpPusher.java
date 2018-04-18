@@ -18,7 +18,7 @@ public class HttpPusher {
 
 	public void sendMessage(final String message) {
 		final HttpRequest request = HttpRequest.newBuilder().uri(this.pushUri)
-				.POST(HttpRequest.BodyProcessor.fromString(message)).build();
+				.POST(HttpRequest.BodyPublisher.fromString(message)).build();
 		this.client.sendAsync(request, HttpResponse.BodyHandler.<Void>discard(null));
 	}
 }
