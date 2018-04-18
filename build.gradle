@@ -24,20 +24,9 @@ dependencies {
     implementation 'com.google.guava:guava:20.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'org.jctools:jctools-core:2.1.1'
-    
-    implementation "com.sparkjava:spark-core:2.7.2"
-    
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
-}
-
-tasks.withType(AbstractCompile) {
-  options.compilerArgs += ["--add-modules", "jdk.incubator.httpclient"]
-}
-
-tasks.withType(Test) {
-  jvmArgs += ["--add-modules", "jdk.incubator.httpclient"]
 }
 
 eclipse {

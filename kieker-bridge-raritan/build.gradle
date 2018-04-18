@@ -1,0 +1,36 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = "1.9"
+targetCompatibility = "1.9"
+
+repositories {
+    jcenter()
+    maven {
+    	url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
+
+dependencies {
+    compile project(':')
+    compile 'net.kieker-monitoring:kieker:1.14-SNAPSHOT' //TODO not sure why is necessary
+    compile "com.sparkjava:spark-core:2.7.2"
+
+    // Use JUnit test framework
+    testCompile 'junit:junit:4.12'
+}
+
+tasks.withType(AbstractCompile) {
+  options.compilerArgs += ["--add-modules", "jdk.incubator.httpclient"]
+}
+
+tasks.withType(Test) {
+  jvmArgs += ["--add-modules", "jdk.incubator.httpclient"]
+}
+
+eclipse {
+    classpath {
+       downloadSources=true
+       downloadJavadoc=true
+    }
+}
