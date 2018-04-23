@@ -23,11 +23,11 @@ public class RaritanKiekerBridge {
 		final String kafkaTopic = username + "-default";
 
 		final RaritanRestServer raritanRestServer = new RaritanRestServer();
-		
+
 		final KiekerBridgeStream<IMonitoringRecord> stream = KiekerBridgeStream.from(raritanRestServer)
 				.flatMap(new RaritanJsonTransformer());
 		final KiekerBridge kiekerBridge = KiekerBridge.ofStream(stream).onStop(raritanRestServer::stop)
-				.withKafkaConfiguration("localhost:9092", "input", new Properties()).build();
+				.withKafkaConfiguration("10.0.75.1:9092", "input", new Properties()).build();
 		kiekerBridge.start();
 	}
 

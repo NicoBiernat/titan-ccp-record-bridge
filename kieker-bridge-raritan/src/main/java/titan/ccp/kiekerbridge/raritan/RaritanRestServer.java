@@ -26,9 +26,11 @@ public class RaritanRestServer implements QueueProvider<String> {
 
 	public RaritanRestServer() {
 		this.service = Service.ignite().port(PORT);
+		LOGGER.info("Instantiate Spark server.");
 
 		this.service.post(POST_URL, (final Request request, final Response response) -> {
 			this.queue.add(request.body());
+			LOGGER.info("Received push message on {}:{}", POST_URL, PORT); // TODO change to debug
 			response.status(RESPONSE_STATUS_CODE);
 			return RESPONSE_STATUS_MESSAGE;
 		});
