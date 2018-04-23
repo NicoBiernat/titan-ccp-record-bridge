@@ -12,6 +12,8 @@ before_script:
 
 build:
   stage: build
+  tags:
+    - dockerex
   script: gradle --build-cache assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
@@ -23,6 +25,8 @@ build:
 
 test:
   stage: test
+  tags:
+    - dockerex
   script: gradle check
   cache:
     key: "$CI_COMMIT_REF_NAME"
