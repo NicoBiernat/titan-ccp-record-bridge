@@ -1,6 +1,4 @@
-image: docker:latest
-services:
-  - docker:dind
+image: openjdk:10-jdk
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -45,6 +43,9 @@ deploy:
   stage: deploy
   tags:
     - dockerex
+  image: docker:latest
+  services:
+    - docker:dind
   script:
     - docker build --pull -t titan-ccp-kieker-bridge-raritan ./kieker-bridge-raritan
   cache:
