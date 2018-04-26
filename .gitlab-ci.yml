@@ -1,4 +1,4 @@
-image: gradle:jdk10
+image: openjdk:10-jdk
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -14,12 +14,14 @@ build:
   stage: build
   tags:
     - dockerex
-  script: gradle --build-cache assemble
+  script: ./gradlew --build-cache assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
       - build
+      - kieker-bridge-raritan/build
+      - kieker-bridge-raritan/raritan-simulator/build
       - .gradle
 
 
@@ -27,11 +29,30 @@ test:
   stage: test
   tags:
     - dockerex
-  script: gradle check
+  script: ./gradlew check
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
       - build
+      - kieker-bridge-raritan/build
+      - kieker-bridge-raritan/raritan-simulator/build
       - .gradle
 
+deploy:
+  stage: deploy
+  tags:
+    - dockerex
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build --pull -t titan-ccp-kieker-bridge-raritan ./kieker-bridge-raritan
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - kieker-bridge-raritan/build
+      - kieker-bridge-raritan/raritan-simulator/build
+      - .gradle
