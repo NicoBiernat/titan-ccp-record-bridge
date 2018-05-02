@@ -7,6 +7,10 @@ image: openjdk:10-jdk
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
+cache:
+  paths:
+    - .gradle
+
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
@@ -15,14 +19,11 @@ build:
   tags:
     - dockerex
   script: ./gradlew --build-cache assemble
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
+  artifacts:
     paths:
-      - build
+      - build/
       - kieker-bridge-raritan/build
       - kieker-bridge-raritan/raritan-simulator/build
-      - .gradle
 
 
 test:
@@ -30,14 +31,6 @@ test:
   tags:
     - dockerex
   script: ./gradlew check
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - kieker-bridge-raritan/build
-      - kieker-bridge-raritan/raritan-simulator/build
-      - .gradle
 
 deploy:
   stage: deploy
@@ -48,11 +41,3 @@ deploy:
     - docker:dind
   script:
     - docker build --pull -t titan-ccp-kieker-bridge-raritan ./kieker-bridge-raritan
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - kieker-bridge-raritan/build
-      - kieker-bridge-raritan/raritan-simulator/build
-      - .gradle
