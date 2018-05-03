@@ -8,9 +8,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.apache.commons.configuration2.Configuration;
+
 import kieker.common.record.IMonitoringRecord;
 import teetime.framework.Execution;
 import teetime.framework.OutputPort;
+import titan.ccp.common.configuration.Configurations;
 import titan.ccp.kiekerbridge.test.KafkaPowerConsumptionRecordSender;
 
 public final class KiekerBridge {
@@ -64,25 +67,29 @@ public final class KiekerBridge {
 
 		private static final int TEETIME_DEFAULT_PIPE_CAPACITY = 512;
 
-		private final Function<KafkaConfig, TerminatableConfiguration> configurationFactory;
+		private final Function<Configuration, TerminatableConfiguration> teetimeConfigFactory;
 
 		private final List<Runnable> onStartActions = new ArrayList<>(4);
 
 		private final List<Supplier<CompletableFuture<Void>>> onStopActions = new ArrayList<>(4);
 
-		private KafkaConfig kafkaConfig;
+		// private KafkaConfig kafkaConfig;
 
-		private Builder(final TerminatableConfiguration configuration,
+		private final Configuration configuration = Configurations.create();
+
+		private Builder(final TerminatableConfiguration teetimeConfiguration,
 				final OutputPort<? extends IMonitoringRecord> outputPort) {
 
-			this.configurationFactory = kafkaConfig -> {
+			this.teetimeConfigFactory = config -> {
 				// final KafkaSenderStage senderStage = new KafkaSenderStage();
 				final KafkaPowerConsumptionRecordSender kafkaSender = new KafkaPowerConsumptionRecordSender(
-						kafkaConfig.bootstrapServers, kafkaConfig.topic, kafkaConfig.properties);
+						config.getString("kafka.bootstrap.servers"), config.getString("kafka.input.topic"),
+						new Properties());
 				final KafkaPowerConsumptionRecordSender.Stage senderStage = new KafkaPowerConsumptionRecordSender.Stage(
 						kafkaSender);
-				configuration.connectPorts(outputPort, senderStage.getInputPort(), TEETIME_DEFAULT_PIPE_CAPACITY);
-				return configuration;
+				teetimeConfiguration.connectPorts(outputPort, senderStage.getInputPort(),
+						TEETIME_DEFAULT_PIPE_CAPACITY);
+				return teetimeConfiguration;
 			};
 		}
 
@@ -104,29 +111,9 @@ public final class KiekerBridge {
 			return this;
 		}
 
-		public Builder withKafkaConfiguration(final String bootstrapServers, final String topic,
-				final Properties properties) {
-			this.kafkaConfig = new KafkaConfig(bootstrapServers, topic, properties);
-			return this;
-		}
-
 		public KiekerBridge build() {
-			return new KiekerBridge(this.configurationFactory.apply(this.kafkaConfig), this.onStartActions,
+			return new KiekerBridge(this.teetimeConfigFactory.apply(this.configuration), this.onStartActions,
 					this.onStopActions);
-		}
-
-		private static class KafkaConfig {
-
-			public final String bootstrapServers;
-			public final String topic;
-			public final Properties properties;
-
-			public KafkaConfig(final String bootstrapServers, final String topic, final Properties properties) {
-				this.bootstrapServers = bootstrapServers;
-				this.topic = topic;
-				this.properties = properties;
-			}
-
 		}
 
 	}
