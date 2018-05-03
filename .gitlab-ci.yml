@@ -41,3 +41,4 @@ deploy:
     - docker:dind
   script:
     - docker build --pull -t titan-ccp-kieker-bridge-raritan ./kieker-bridge-raritan
+    - docker build --pull -t titan-ccp-raritan-simulator ./kieker-bridge-raritan/raritan-simulator
