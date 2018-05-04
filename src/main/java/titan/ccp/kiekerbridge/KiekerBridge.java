@@ -73,8 +73,6 @@ public final class KiekerBridge {
 
 		private final List<Supplier<CompletableFuture<Void>>> onStopActions = new ArrayList<>(4);
 
-		// private KafkaConfig kafkaConfig;
-
 		private final Configuration configuration = Configurations.create();
 
 		private Builder(final TerminatableConfiguration teetimeConfiguration,
