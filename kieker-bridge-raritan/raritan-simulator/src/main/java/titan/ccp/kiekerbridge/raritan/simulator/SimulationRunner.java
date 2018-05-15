@@ -31,9 +31,12 @@ public class SimulationRunner {
 	}
 
 	public static void main(final String[] args) {
-		new SimulationRunner(URI.create("http://localhost:80/raritan"), List.of(
-				new SimulatedSensor("comcent.server1.pw1", Duration.ofSeconds(1), x -> (int) (Math.random() * 5) + 10)))
-						.run();
+		new SimulationRunner(URI.create("http://localhost:80/raritan"),
+				// List.of(new SimulatedSensor("comcent.server1.pw1", Duration.ofSeconds(1),
+				List.of(new SimulatedSensor("server1", Duration.ofSeconds(2),
+						x -> (int) (Math.random() * 10) - 5 + 100),
+						new SimulatedSensor("printer1", Duration.ofSeconds(1),
+								x -> (int) (Math.random() * 10) - 5 + 120))).run();
 	}
 
 }
