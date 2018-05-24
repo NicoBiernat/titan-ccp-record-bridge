@@ -42,3 +42,11 @@ deploy:
   script:
     - docker build --pull -t titan-ccp-kieker-bridge-raritan ./kieker-bridge-raritan
     - docker build --pull -t titan-ccp-raritan-simulator ./kieker-bridge-raritan/raritan-simulator
+    - docker tag titan-ccp-kieker-bridge-raritan industrialdevops/titan-ccp-kieker-bridge-raritan:latest
+    - docker tag titan-ccp-kieker-bridge-raritan industrialdevops/titan-ccp-kieker-bridge-raritan:$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-raritan-simulator industrialdevops/titan-ccp-raritan-simulator:latest
+    - docker tag titan-ccp-raritan-simulator industrialdevops/titan-ccp-raritan-simulator:$(date +%Y%m%d%H%M%S)
+    - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
+    - docker push industrialdevops/titan-ccp-kieker-bridge-raritan
+    - docker push industrialdevops/titan-ccp-raritan-simulator
+    - docker logout
