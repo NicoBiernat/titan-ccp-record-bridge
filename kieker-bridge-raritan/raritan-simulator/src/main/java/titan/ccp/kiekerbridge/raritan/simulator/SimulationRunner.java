@@ -9,6 +9,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.apache.commons.configuration2.Configuration;
+
+import titan.ccp.common.configuration.Configurations;
+
 public class SimulationRunner {
 
 	private final HttpPusher httpPusher;
@@ -31,7 +35,8 @@ public class SimulationRunner {
 	}
 
 	public static void main(final String[] args) {
-		new SimulationRunner(URI.create("http://localhost:80/raritan"),
+		final Configuration configuration = Configurations.create();
+		new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")),
 				// List.of(new SimulatedSensor("comcent.server1.pw1", Duration.ofSeconds(1),
 				List.of(new SimulatedSensor("server1", Duration.ofSeconds(2),
 						x -> (int) (Math.random() * 10) - 5 + 100),
