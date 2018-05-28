@@ -2,7 +2,7 @@ package titan.ccp.kiekerbridge.raritan;
 
 import java.util.Queue;
 
-import org.jctools.queues.SpmcArrayQueue;
+import org.jctools.queues.MpscArrayQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public class RaritanRestServer implements QueueProvider<String> {
 	private static final String RESPONSE_STATUS_MESSAGE = ""; // TODO temp
 
 	private final Service service;
-	private final Queue<String> queue = new SpmcArrayQueue<>(1024);
+	private final Queue<String> queue = new MpscArrayQueue<>(1024);
 
 	public RaritanRestServer() {
 		this.service = Service.ignite().port(PORT);
@@ -30,7 +30,12 @@ public class RaritanRestServer implements QueueProvider<String> {
 
 		this.service.post(POST_URL, (final Request request, final Response response) -> {
 			LOGGER.info("Received push message on {}:{}", POST_URL, PORT); // TODO change to debug
-			this.queue.add(request.body());
+			try {
+				this.queue.add(request.body());
+			} catch (final IllegalStateException e) {
+				LOGGER.warn("Element cannot be added since queue capacity is exhausted.", e);
+			}
+
 			response.status(RESPONSE_STATUS_CODE);
 			return RESPONSE_STATUS_MESSAGE;
 		});

@@ -31,7 +31,7 @@ public class HttpPusher {
 		this.client.sendAsync(request, bodyHandler).exceptionally(e -> {
 			LOGGER.warn("Failed to push message.", e);
 			return null;
-		});
+		}).thenAccept(r -> LOGGER.info("Pushed message"));
 
 	}
 }
