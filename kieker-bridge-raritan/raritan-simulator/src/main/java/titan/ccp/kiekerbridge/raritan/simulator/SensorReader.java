@@ -22,18 +22,18 @@ public class SensorReader {
 	}
 
 	public String getMessage(final long timestamp) {
-		final int value = this.getValue(timestamp);
+		final double value = this.getValue(timestamp);
 		return MessageFormat.format(JsonTemplate.TEMPLATE, this.sensor.getIdentifier(), String.valueOf(timestamp),
 				String.valueOf(value));
 	}
 
-	public int getValue() {
+	public double getValue() {
 		return this.getValue(System.currentTimeMillis());
 	}
 
-	public int getValue(final long timestamp) {
+	public double getValue(final long timestamp) {
 		final long millisSinceStart = this.startTimestamp - timestamp;
-		return this.sensor.getValueFunction().applyAsInt(millisSinceStart);
+		return this.sensor.getValueFunction().applyAsDouble(millisSinceStart);
 	}
 
 	public SimulatedSensor getSensor() {

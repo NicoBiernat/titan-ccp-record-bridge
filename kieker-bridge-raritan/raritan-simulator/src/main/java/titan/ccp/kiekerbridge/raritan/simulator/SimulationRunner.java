@@ -34,14 +34,27 @@ public class SimulationRunner {
 		}
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws InterruptedException {
 		final Configuration configuration = Configurations.create();
+
 		new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")),
 				// List.of(new SimulatedSensor("comcent.server1.pw1", Duration.ofSeconds(1),
-				List.of(new SimulatedSensor("server1", Duration.ofSeconds(2),
-						x -> (int) (Math.random() * 10) - 5 + 100),
+				List.of(new SimulatedSensor("server1", Duration.ofSeconds(1),
+						FunctionBuilder.of(x -> 50).plus(Functions.wave1()).plus(Functions.noise(10)).build()),
+						new SimulatedSensor("server2", Duration.ofSeconds(2),
+								FunctionBuilder.of(x -> 60).plus(Functions.noise(20)).build()),
+						new SimulatedSensor("server3", Duration.ofSeconds(1),
+								FunctionBuilder.of(x -> 40)
+										.plusScaled(20, Functions.squares(30_000, 10_000, 10 * 60_000))
+										.plus(Functions.noise(5)).build()),
 						new SimulatedSensor("printer1", Duration.ofSeconds(1),
-								x -> (int) (Math.random() * 10) - 5 + 120))).run();
+								FunctionBuilder.of(x -> 50).plus(Functions.wave2()).plus(Functions.noise(10)).build()),
+						new SimulatedSensor("printer2", Duration.ofSeconds(1),
+								FunctionBuilder.of(x -> 60).plus(Functions.noise(10)).build()))).run();
+
+		// 5 * (10 + Math.sin(x/20) + Math.sin((x+1)/40) + 5 * Math.sin(x/100) +
+		// Math.sin(x/1000)) + 50;
+
 	}
 
 }
