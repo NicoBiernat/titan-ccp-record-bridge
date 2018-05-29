@@ -9,7 +9,6 @@ import kieker.monitoring.core.controller.MonitoringController;
 import kieker.monitoring.writer.collector.ChunkingCollector;
 import kieker.monitoring.writer.kafka.KafkaWriter;
 import kieker.monitoring.writer.serializer.BinarySerializer;
-import titan.ccp.models.records.PowerConsumptionRecord;
 
 public class KafkaSender {
 
@@ -40,31 +39,6 @@ public class KafkaSender {
 		// TODO
 		this.monitoringController.terminateMonitoring();
 		// monitoringController.waitForTermination(0);
-	}
-
-	// TODO remove
-	public static void main(final String[] args) {
-		final KafkaSender kafkaSender = new KafkaSender();
-
-		for (int i = 0; i < 1000000; i++) {
-			final String identifier = "identifier";
-			final long timestamp = 0;
-			final int consumption = 10;
-			final IMonitoringRecord record = new PowerConsumptionRecord(identifier, timestamp, consumption);
-			kafkaSender.send(record);
-		}
-
-		System.out.println("Finished writing");
-		System.out.println("Terminate monitoring...");
-		kafkaSender.shutdown();
-		System.out.println("Start sleeping");
-		try {
-			Thread.sleep(10000);
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Finished sleeping, exit");
 	}
 
 }

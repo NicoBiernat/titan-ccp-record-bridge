@@ -1,6 +1,5 @@
 package titan.ccp.kiekerbridge.raritan.simulator;
 
-//TODO move to .emulator
 public final class JsonTemplate {
 
 	public static final String TEMPLATE = "'{'\n" + "  \"sensors\": [\n" + "    '{'\n" + "      \"device\": '{'\n"

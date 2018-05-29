@@ -20,8 +20,8 @@ public final class KiekerBridgeStream<T> {
 
 	private static final int TEETIME_DEFAULT_PIPE_CAPACITY = 512;
 
-	private final StreamBasedConfiguration configuration; // TODO
-	private final OutputPort<? extends T> lastOutputPort; // TODO
+	private final StreamBasedConfiguration configuration;
+	private final OutputPort<? extends T> lastOutputPort;
 
 	private KiekerBridgeStream(final StreamBasedConfiguration configuration,
 			final OutputPort<? extends T> lastOutputPort) {

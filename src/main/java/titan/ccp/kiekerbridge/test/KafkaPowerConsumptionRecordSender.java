@@ -14,9 +14,6 @@ import titan.ccp.models.records.serialization.kafka.PowerConsumptionRecordSerial
 
 public class KafkaPowerConsumptionRecordSender {
 
-	// private static final String BOOTSRATP_SERVERS = "localhost:9092";
-	// private static final String TOPIC = "test-topic-18040319";
-
 	private final String topic;
 
 	private final Producer<String, PowerConsumptionRecord> producer;
