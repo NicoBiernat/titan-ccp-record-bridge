@@ -21,12 +21,12 @@ public final class Functions {
 	}
 
 	public static LongToDoubleFunction wave1() {
-		return x -> 5 * (10 + Math.sin(x / 20_000) + Math.sin((x / 1000 + 1) / 40) + 5 * Math.sin(x / 100_000)
-				+ Math.sin(x / 1000_000));
+		return x -> 5 * (10 + Math.sin((double) x / 20_000) + Math.sin(((double) x / 1000 + 1) / 40)
+				+ 5 * Math.sin((double) x / 100_000) + Math.sin((double) x / 1000_000));
 	}
 
 	public static LongToDoubleFunction wave2() {
-		return x -> 2 * (Math.sin(x / 1_000_000) + Math.sin(x / 200_000) + 4);
+		return x -> 2 * (Math.sin((double) x / 1_000_000) + Math.sin((double) x / 200_000) + 4);
 	}
 
 }
