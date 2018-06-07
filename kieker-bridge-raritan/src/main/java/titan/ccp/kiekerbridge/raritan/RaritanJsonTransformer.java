@@ -40,13 +40,16 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 		final List<IMonitoringRecord> monitoringRecords = new ArrayList<>(rows.size());
 		for (final JsonElement rowJsonElement : rows) {
 			final JsonObject row = rowJsonElement.getAsJsonObject();
-			final long timestamp = row.get(TIMESTAMP_KEY).getAsLong();
+			final long timestamp = row.get(TIMESTAMP_KEY).getAsLong() * 1_000;
 			final JsonArray records = row.get(RECORDS_KEY).getAsJsonArray();
 			final JsonObject relevantRecord = records.get(relevantSensorIndex).getAsJsonObject();
 			final int value = (int) relevantRecord.get(AVG_VALUE_KEY).getAsDouble(); // TODO temp casting to int
 
 			monitoringRecords.add(new PowerConsumptionRecord(sensorLabel, timestamp, value));
 		}
+
+		System.out.println("Parsed records: " + monitoringRecords.size()); // TODO temp
+
 		return monitoringRecords;
 	}
 
