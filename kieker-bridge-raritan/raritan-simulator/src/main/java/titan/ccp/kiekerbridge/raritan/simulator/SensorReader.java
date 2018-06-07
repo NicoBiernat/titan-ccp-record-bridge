@@ -23,8 +23,8 @@ public class SensorReader {
 
 	public String getMessage(final long timestamp) {
 		final double value = this.getValue(timestamp);
-		return MessageFormat.format(JsonTemplate.TEMPLATE, this.sensor.getIdentifier(), String.valueOf(timestamp),
-				String.valueOf(value));
+		return MessageFormat.format(JsonTemplate.TEMPLATE, this.sensor.getIdentifier(),
+				String.valueOf(timestamp / 1_000), String.valueOf(value));
 	}
 
 	public double getValue() {
