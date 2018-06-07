@@ -48,8 +48,6 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 			monitoringRecords.add(new PowerConsumptionRecord(sensorLabel, timestamp, value));
 		}
 
-		System.out.println("Parsed records: " + monitoringRecords.size()); // TODO temp
-
 		return monitoringRecords;
 	}
 

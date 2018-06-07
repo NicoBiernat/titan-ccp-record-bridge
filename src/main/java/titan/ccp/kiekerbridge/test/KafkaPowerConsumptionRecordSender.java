@@ -41,8 +41,6 @@ public class KafkaPowerConsumptionRecordSender {
 		final ProducerRecord<String, PowerConsumptionRecord> record = new ProducerRecord<>(this.topic,
 				powerConsumptionRecord.getIdentifier(), powerConsumptionRecord);
 
-		System.out.println("Send record via kafka: " + record); // TODO temp
-
 		this.producer.send(record);
 	}
 
