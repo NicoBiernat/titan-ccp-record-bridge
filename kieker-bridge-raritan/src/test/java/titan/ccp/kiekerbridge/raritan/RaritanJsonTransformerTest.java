@@ -170,7 +170,7 @@ public class RaritanJsonTransformerTest {
 		assertTrue(monitoringRecords.get(1) instanceof PowerConsumptionRecord);
 		final PowerConsumptionRecord secondRecord = (PowerConsumptionRecord) monitoringRecords.get(1);
 		assertEquals("13", secondRecord.getIdentifier());
-		assertEquals(1521817380, secondRecord.getTimestamp());
+		assertEquals(1521817380_000l, secondRecord.getTimestamp());
 		assertEquals(88, secondRecord.getPowerConsumptionInWh()); // TODO 88 is W instead of Wh
 	}
 
