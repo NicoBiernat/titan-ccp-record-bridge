@@ -82,8 +82,15 @@ public final class KiekerBridge {
 				// final KafkaSenderStage senderStage = new KafkaSenderStage();
 				final KafkaPowerConsumptionRecordSender kafkaSender = new KafkaPowerConsumptionRecordSender(
 						config.getString("kafka.bootstrap.servers"), config.getString("kafka.topic"), new Properties());
+				// final KafkaRecordSender<PowerConsumptionRecord> kafkaSender2 = new
+				// KafkaRecordSender<>(
+				// config.getString("kafka.bootstrap.servers"), config.getString("kafka.topic"),
+				// r -> r.getIdentifier(), new Properties());
 				final KafkaPowerConsumptionRecordSender.Stage senderStage = new KafkaPowerConsumptionRecordSender.Stage(
 						kafkaSender);
+				// final KafkaRecordSender.Stage<PowerConsumptionRecord> senderStage2 = new
+				// KafkaRecordSender.Stage<>(
+				// kafkaSender2);
 				teetimeConfiguration.connectPorts(outputPort, senderStage.getInputPort(),
 						TEETIME_DEFAULT_PIPE_CAPACITY);
 				return teetimeConfiguration;
