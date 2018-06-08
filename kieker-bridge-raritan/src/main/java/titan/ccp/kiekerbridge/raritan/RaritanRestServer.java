@@ -18,7 +18,7 @@ public class RaritanRestServer implements QueueProvider<String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RaritanRestServer.class);
 
-	private static final int RESPONSE_STATUS_CODE = 204; // TODO temp
+	private static final int RESPONSE_STATUS_CODE = 200; // TODO temp
 	private static final String RESPONSE_STATUS_MESSAGE = ""; // TODO temp
 
 	private final Service service;
