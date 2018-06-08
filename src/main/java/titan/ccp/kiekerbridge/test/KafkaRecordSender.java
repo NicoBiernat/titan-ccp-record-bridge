@@ -11,6 +11,7 @@ import com.google.common.base.Function;
 
 import kieker.common.record.IMonitoringRecord;
 import teetime.framework.AbstractConsumerStage;
+import titan.ccp.common.kieker.kafka.IMonitoringRecordSerde;
 
 public class KafkaRecordSender<T extends IMonitoringRecord> {
 
@@ -41,7 +42,7 @@ public class KafkaRecordSender<T extends IMonitoringRecord> {
 		// properties.put("linger.ms", this.lingerMs);
 		// properties.put("buffer.memory", this.bufferMemory);
 
-		this.producer = new KafkaProducer<>(properties, new StringSerializer(), null); // TODO
+		this.producer = new KafkaProducer<>(properties, new StringSerializer(), IMonitoringRecordSerde.serializer());
 	}
 
 	public void write(final T monitoringRecord) {
