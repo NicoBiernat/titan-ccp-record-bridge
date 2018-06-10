@@ -13,8 +13,10 @@ import org.apache.commons.configuration2.Configuration;
 import kieker.common.record.IMonitoringRecord;
 import teetime.framework.Execution;
 import teetime.framework.OutputPort;
+import teetime.stage.InstanceOfFilter;
 import titan.ccp.common.configuration.Configurations;
-import titan.ccp.kiekerbridge.test.KafkaPowerConsumptionRecordSender;
+import titan.ccp.kiekerbridge.test.KafkaRecordSender;
+import titan.ccp.models.records.ActivePowerRecord;
 
 public final class KiekerBridge {
 
@@ -80,18 +82,23 @@ public final class KiekerBridge {
 
 			this.teetimeConfigFactory = config -> {
 				// final KafkaSenderStage senderStage = new KafkaSenderStage();
-				final KafkaPowerConsumptionRecordSender kafkaSender = new KafkaPowerConsumptionRecordSender(
-						config.getString("kafka.bootstrap.servers"), config.getString("kafka.topic"), new Properties());
-				// final KafkaRecordSender<PowerConsumptionRecord> kafkaSender2 = new
-				// KafkaRecordSender<>(
+				// final KafkaPowerConsumptionRecordSender kafkaSender = new
+				// KafkaPowerConsumptionRecordSender(
 				// config.getString("kafka.bootstrap.servers"), config.getString("kafka.topic"),
-				// r -> r.getIdentifier(), new Properties());
-				final KafkaPowerConsumptionRecordSender.Stage senderStage = new KafkaPowerConsumptionRecordSender.Stage(
+				// new Properties());
+				final KafkaRecordSender<ActivePowerRecord> kafkaSender = new KafkaRecordSender<>(
+						config.getString("kafka.bootstrap.servers"), config.getString("kafka.topic"),
+						r -> r.getIdentifier(), new Properties());
+				// final KafkaPowerConsumptionRecordSender.Stage senderStage = new
+				// KafkaPowerConsumptionRecordSender.Stage(
+				// kafkaSender);
+				final KafkaRecordSender.Stage<ActivePowerRecord> senderStage = new KafkaRecordSender.Stage<>(
 						kafkaSender);
-				// final KafkaRecordSender.Stage<PowerConsumptionRecord> senderStage2 = new
-				// KafkaRecordSender.Stage<>(
-				// kafkaSender2);
-				teetimeConfiguration.connectPorts(outputPort, senderStage.getInputPort(),
+				final InstanceOfFilter<IMonitoringRecord, ActivePowerRecord> instanceOfFilter = new InstanceOfFilter<>(
+						ActivePowerRecord.class);
+				teetimeConfiguration.connectPorts(outputPort, instanceOfFilter.getInputPort(),
+						TEETIME_DEFAULT_PIPE_CAPACITY);
+				teetimeConfiguration.connectPorts(instanceOfFilter.getMatchedOutputPort(), senderStage.getInputPort(),
 						TEETIME_DEFAULT_PIPE_CAPACITY);
 				return teetimeConfiguration;
 			};
