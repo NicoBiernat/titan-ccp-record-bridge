@@ -46,6 +46,9 @@ deploy-raritan-bridge:
     - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
     - docker push industrialdevops/titan-ccp-kieker-bridge-raritan
     - docker logout
+  only:
+    - master
+
 
 deploy-raritan-simulator:
   stage: deploy
@@ -61,3 +64,5 @@ deploy-raritan-simulator:
     - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
     - docker push industrialdevops/titan-ccp-raritan-simulator
     - docker logout
+  only:
+    - master
