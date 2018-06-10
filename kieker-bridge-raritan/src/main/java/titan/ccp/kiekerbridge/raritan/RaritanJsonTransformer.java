@@ -11,7 +11,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import kieker.common.record.IMonitoringRecord;
-import titan.ccp.models.records.PowerConsumptionRecord;
+import titan.ccp.models.records.ActivePowerRecord;
 
 public class RaritanJsonTransformer implements Function<String, List<IMonitoringRecord>> {
 
@@ -46,8 +46,9 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 			final double value = relevantRecord.get(AVG_VALUE_KEY).getAsDouble();
 
 			// TODO Use new ActivePowerRecords
-			// monitoringRecords.add(new ActivePowerRecord(sensorLabel, timestamp, value));
-			monitoringRecords.add(new PowerConsumptionRecord(sensorLabel, timestamp, (int) value));
+			monitoringRecords.add(new ActivePowerRecord(sensorLabel, timestamp, value));
+			// monitoringRecords.add(new PowerConsumptionRecord(sensorLabel, timestamp,
+			// (int) value));
 		}
 
 		return monitoringRecords;
