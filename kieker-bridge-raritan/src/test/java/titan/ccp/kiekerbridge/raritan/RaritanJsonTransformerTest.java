@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import kieker.common.record.IMonitoringRecord;
-import titan.ccp.models.records.PowerConsumptionRecord;
+import titan.ccp.models.records.ActivePowerRecord;
 
 public class RaritanJsonTransformerTest {
 
@@ -162,16 +162,16 @@ public class RaritanJsonTransformerTest {
 	public void testIbakRaritanOutletJson() {
 		final List<IMonitoringRecord> monitoringRecords = this.raritanJsonTransformer.apply(IBAK_RARITAN_OUTLET_JSON);
 		assertEquals(2, monitoringRecords.size());
-		assertTrue(monitoringRecords.get(0) instanceof PowerConsumptionRecord);
-		final PowerConsumptionRecord firstRecord = (PowerConsumptionRecord) monitoringRecords.get(0);
+		assertTrue(monitoringRecords.get(0) instanceof ActivePowerRecord);
+		final ActivePowerRecord firstRecord = (ActivePowerRecord) monitoringRecords.get(0);
 		assertEquals("13", firstRecord.getIdentifier());
 		assertEquals(1521817336_000l, firstRecord.getTimestamp());
-		assertEquals(87, firstRecord.getPowerConsumptionInWh()); // TODO 87 is W instead of Wh
-		assertTrue(monitoringRecords.get(1) instanceof PowerConsumptionRecord);
-		final PowerConsumptionRecord secondRecord = (PowerConsumptionRecord) monitoringRecords.get(1);
+		assertEquals(87, firstRecord.getValueInWh(), 0.1); // TODO 87 is W instead of Wh
+		assertTrue(monitoringRecords.get(1) instanceof ActivePowerRecord);
+		final ActivePowerRecord secondRecord = (ActivePowerRecord) monitoringRecords.get(1);
 		assertEquals("13", secondRecord.getIdentifier());
 		assertEquals(1521817380_000l, secondRecord.getTimestamp());
-		assertEquals(88, secondRecord.getPowerConsumptionInWh()); // TODO 88 is W instead of Wh
+		assertEquals(88, secondRecord.getValueInWh(), 0.1); // TODO 88 is W instead of Wh
 	}
 
 }
