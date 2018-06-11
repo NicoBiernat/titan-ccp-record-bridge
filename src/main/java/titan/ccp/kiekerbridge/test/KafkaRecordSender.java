@@ -6,6 +6,8 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 
@@ -14,6 +16,8 @@ import teetime.framework.AbstractConsumerStage;
 import titan.ccp.common.kieker.kafka.IMonitoringRecordSerde;
 
 public class KafkaRecordSender<T extends IMonitoringRecord> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaRecordSender.class);
 
 	private final String topic;
 
@@ -49,6 +53,7 @@ public class KafkaRecordSender<T extends IMonitoringRecord> {
 		final ProducerRecord<String, T> record = new ProducerRecord<>(this.topic,
 				this.keyAccessor.apply(monitoringRecord), monitoringRecord);
 
+		LOGGER.info("Send record to Kafka topic {}: {}", this.topic, record); // TODO debug
 		this.producer.send(record);
 	}
 
