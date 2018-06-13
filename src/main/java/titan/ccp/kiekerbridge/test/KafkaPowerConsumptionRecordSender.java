@@ -9,14 +9,14 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import kieker.common.record.IMonitoringRecord;
 import teetime.framework.AbstractConsumerStage;
-import titan.ccp.models.records.PowerConsumptionRecord;
-import titan.ccp.models.records.serialization.kafka.PowerConsumptionRecordSerializer;
+import titan.ccp.common.kieker.kafka.IMonitoringRecordSerde;
+import titan.ccp.models.records.ActivePowerRecord;
 
 public class KafkaPowerConsumptionRecordSender {
 
 	private final String topic;
 
-	private final Producer<String, PowerConsumptionRecord> producer;
+	private final Producer<String, ActivePowerRecord> producer;
 
 	public KafkaPowerConsumptionRecordSender(final String bootstrapServers, final String topic) {
 		this(bootstrapServers, topic, new Properties());
@@ -34,11 +34,11 @@ public class KafkaPowerConsumptionRecordSender {
 		// properties.put("linger.ms", this.lingerMs);
 		// properties.put("buffer.memory", this.bufferMemory);
 
-		this.producer = new KafkaProducer<>(properties, new StringSerializer(), new PowerConsumptionRecordSerializer());
+		this.producer = new KafkaProducer<>(properties, new StringSerializer(), IMonitoringRecordSerde.serializer());
 	}
 
-	public void write(final PowerConsumptionRecord powerConsumptionRecord) {
-		final ProducerRecord<String, PowerConsumptionRecord> record = new ProducerRecord<>(this.topic,
+	public void write(final ActivePowerRecord powerConsumptionRecord) {
+		final ProducerRecord<String, ActivePowerRecord> record = new ProducerRecord<>(this.topic,
 				powerConsumptionRecord.getIdentifier(), powerConsumptionRecord);
 
 		this.producer.send(record);
@@ -58,8 +58,8 @@ public class KafkaPowerConsumptionRecordSender {
 
 		@Override
 		protected void execute(final IMonitoringRecord record) throws Exception {
-			if (record instanceof PowerConsumptionRecord) {
-				this.sender.write((PowerConsumptionRecord) record);
+			if (record instanceof ActivePowerRecord) {
+				this.sender.write((ActivePowerRecord) record);
 			}
 		}
 

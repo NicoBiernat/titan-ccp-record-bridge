@@ -9,7 +9,7 @@ import kieker.monitoring.core.controller.MonitoringController;
 import kieker.monitoring.writer.collector.ChunkingCollector;
 import kieker.monitoring.writer.kafka.KafkaWriter;
 import kieker.monitoring.writer.serializer.BinarySerializer;
-import titan.ccp.models.records.PowerConsumptionRecord;
+import titan.ccp.models.records.ActivePowerRecord;
 
 public class Writer {
 
@@ -41,7 +41,7 @@ public class Writer {
 			final String identifier = "identifier";
 			final long timestamp = 0;
 			final int consumption = 10;
-			final IMonitoringRecord record = new PowerConsumptionRecord(identifier, timestamp, consumption);
+			final IMonitoringRecord record = new ActivePowerRecord(identifier, timestamp, consumption);
 			monitoringController.newMonitoringRecord(record);
 		}
 
