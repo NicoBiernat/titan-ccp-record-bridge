@@ -3,11 +3,11 @@ package titan.ccp.kiekerbridge.raritan;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import kieker.common.record.IMonitoringRecord;
@@ -32,9 +32,8 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 	public List<IMonitoringRecord> apply(final String json) {
 		final JsonObject rootObject = this.jsonParser.parse(json).getAsJsonObject();
 		final JsonArray sensors = rootObject.get(SENSORS_KEY).getAsJsonArray();
-		final int relevantSensorIndex = this.getReleventSensorIndex(sensors);
-		final String sensorLabel = sensors.get(relevantSensorIndex).getAsJsonObject().get(DEVICE_KEY).getAsJsonObject()
-				.get(LABEL_KEY).getAsString();
+		final int[] relevantSensorIndices = this.getReleventSensorIndices(sensors);
+		final String[] sensorLabels = this.getSensorLabels(sensors, relevantSensorIndices);
 		final JsonArray rows = rootObject.get(ROWS_KEY).getAsJsonArray();
 
 		final List<IMonitoringRecord> monitoringRecords = new ArrayList<>(rows.size());
@@ -42,26 +41,32 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 			final JsonObject row = rowJsonElement.getAsJsonObject();
 			final long timestamp = row.get(TIMESTAMP_KEY).getAsLong() * 1_000;
 			final JsonArray records = row.get(RECORDS_KEY).getAsJsonArray();
-			final JsonObject relevantRecord = records.get(relevantSensorIndex).getAsJsonObject();
-			final double value = relevantRecord.get(AVG_VALUE_KEY).getAsDouble();
 
-			// TODO Use new ActivePowerRecords
-			monitoringRecords.add(new ActivePowerRecord(sensorLabel, timestamp, value));
-			// monitoringRecords.add(new PowerConsumptionRecord(sensorLabel, timestamp,
-			// (int) value));
+			for (int i = 0; i < relevantSensorIndices.length; i++) {
+				final int sensorIndex = relevantSensorIndices[i];
+				final String sensorLabel = sensorLabels[i];
+
+				final JsonObject relevantRecord = records.get(sensorIndex).getAsJsonObject();
+				final double value = relevantRecord.get(AVG_VALUE_KEY).getAsDouble();
+
+				monitoringRecords.add(new ActivePowerRecord(sensorLabel, timestamp, value));
+			}
+
 		}
 
 		return monitoringRecords;
 	}
 
-	private int getReleventSensorIndex(final JsonArray sensors) {
-		for (int i = 0; i < sensors.size(); i++) {
-			final String sensorName = sensors.get(i).getAsJsonObject().get(ID_KEY).getAsString();
-			if (sensorName.equals(RELEVANT_SENSOR_NAME)) {
-				return i;
-			}
-		}
-		throw new JsonParseException("No sensor with id=" + RELEVANT_SENSOR_NAME + " found");
+	private int[] getReleventSensorIndices(final JsonArray sensors) {
+		return IntStream.range(0, sensors.size())
+				.filter(i -> sensors.get(i).getAsJsonObject().get(ID_KEY).getAsString().equals(RELEVANT_SENSOR_NAME))
+				.toArray();
+	}
+
+	private String[] getSensorLabels(final JsonArray sensors, final int[] releventSensorIndices) {
+		return IntStream.of(releventSensorIndices).mapToObj(
+				i -> sensors.get(i).getAsJsonObject().get(DEVICE_KEY).getAsJsonObject().get(LABEL_KEY).getAsString())
+				.toArray(l -> new String[l]);
 	}
 
 }

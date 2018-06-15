@@ -15,7 +15,7 @@ import titan.ccp.models.records.ActivePowerRecord;
 public class RaritanJsonTransformerTest {
 
 	// TODO read from file
-	private static final String IBAK_RARITAN_OUTLET_JSON = "{\n" + "  \"sensors\": [\n" + "    {\n"
+	private static final String IBAK_RARITAN_OUTLET_SINGLE_SENSOR_JSON = "{\n" + "  \"sensors\": [\n" + "    {\n"
 			+ "      \"device\": {\n" + "        \"type\": 4,\n" + "        \"label\": \"13\",\n"
 			+ "        \"line\": 0\n" + "      },\n" + "      \"id\": \"voltage\",\n" + "      \"readingtype\": 0,\n"
 			+ "      \"metadata\": {\n" + "        \"type\": {\n" + "          \"readingtype\": 0,\n"
@@ -146,6 +146,55 @@ public class RaritanJsonTransformerTest {
 			+ "          \"minValue\": 0,\n" + "          \"avgValue\": 0,\n" + "          \"maxValue\": 0\n"
 			+ "        }\n" + "      ]\n" + "    }\n" + "  ]\n" + "}\n" + "";
 
+	private static final String IBAK_RARITAN_OUTLET_TWO_SENSORS_JSON = "{\n" + "   \"sensors\":[\n" + "      {\n"
+			+ "         \"device\":{\n" + "            \"type\":4,\n" + "            \"label\":\"47\",\n"
+			+ "            \"line\":0\n" + "         },\n" + "         \"id\":\"activePower\",\n"
+			+ "         \"readingtype\":0,\n" + "         \"metadata\":{\n" + "            \"type\":{\n"
+			+ "               \"readingtype\":0,\n" + "               \"type\":4,\n" + "               \"unit\":3\n"
+			+ "            },\n" + "            \"decdigits\":0,\n" + "            \"accuracy\":0.000000,\n"
+			+ "            \"resolution\":1.000000,\n" + "            \"tolerance\":0.000000,\n"
+			+ "            \"noiseThreshold\":0.000000,\n" + "            \"range\":{\n"
+			+ "               \"lower\":0.000000,\n" + "               \"upper\":21000.000000\n" + "            },\n"
+			+ "            \"thresholdCaps\":{\n" + "               \"hasUpperCritical\":true,\n"
+			+ "               \"hasUpperWarning\":true,\n" + "               \"hasLowerWarning\":true,\n"
+			+ "               \"hasLowerCritical\":true\n" + "            }\n" + "         }\n" + "      },\n"
+			+ "      {\n" + "         \"device\":{\n" + "            \"type\":4,\n" + "            \"label\":\"46\",\n"
+			+ "            \"line\":0\n" + "         },\n" + "         \"id\":\"activePower\",\n"
+			+ "         \"readingtype\":0,\n" + "         \"metadata\":{\n" + "            \"type\":{\n"
+			+ "               \"readingtype\":0,\n" + "               \"type\":4,\n" + "               \"unit\":3\n"
+			+ "            },\n" + "            \"decdigits\":0,\n" + "            \"accuracy\":0.000000,\n"
+			+ "            \"resolution\":1.000000,\n" + "            \"tolerance\":0.000000,\n"
+			+ "            \"noiseThreshold\":0.000000,\n" + "            \"range\":{\n"
+			+ "               \"lower\":0.000000,\n" + "               \"upper\":21000.000000\n" + "            },\n"
+			+ "            \"thresholdCaps\":{\n" + "               \"hasUpperCritical\":true,\n"
+			+ "               \"hasUpperWarning\":true,\n" + "               \"hasLowerWarning\":true,\n"
+			+ "               \"hasLowerCritical\":true\n" + "            }\n" + "         }\n" + "      }\n"
+			+ "   ],\n" + "   \"rows\":[\n" + "      {\n" + "         \"timestamp\":1529057441,\n"
+			+ "         \"records\":[\n" + "            {\n" + "               \"available\":true,\n"
+			+ "               \"takenValidSamples\":1,\n" + "               \"state\":5,\n"
+			+ "               \"minValue\":0.000000,\n" + "               \"avgValue\":0.000000,\n"
+			+ "               \"maxValue\":0.000000\n" + "            },\n" + "            {\n"
+			+ "               \"available\":true,\n" + "               \"takenValidSamples\":1,\n"
+			+ "               \"state\":5,\n" + "               \"minValue\":34.130002,\n"
+			+ "               \"avgValue\":34.130002,\n" + "               \"maxValue\":34.130002\n" + "            }\n"
+			+ "         ]\n" + "      },\n" + "      {\n" + "         \"timestamp\":1529057442,\n"
+			+ "         \"records\":[\n" + "            {\n" + "               \"available\":true,\n"
+			+ "               \"takenValidSamples\":1,\n" + "               \"state\":5,\n"
+			+ "               \"minValue\":0.000000,\n" + "               \"avgValue\":0.000000,\n"
+			+ "               \"maxValue\":0.000000\n" + "            },\n" + "            {\n"
+			+ "               \"available\":true,\n" + "               \"takenValidSamples\":1,\n"
+			+ "               \"state\":5,\n" + "               \"minValue\":34.126002,\n"
+			+ "               \"avgValue\":34.126002,\n" + "               \"maxValue\":34.126002\n" + "            }\n"
+			+ "         ]\n" + "      },\n" + "      {\n" + "         \"timestamp\":1529057443,\n"
+			+ "         \"records\":[\n" + "            {\n" + "               \"available\":true,\n"
+			+ "               \"takenValidSamples\":1,\n" + "               \"state\":5,\n"
+			+ "               \"minValue\":0.000000,\n" + "               \"avgValue\":0.000000,\n"
+			+ "               \"maxValue\":0.000000\n" + "            },\n" + "            {\n"
+			+ "               \"available\":true,\n" + "               \"takenValidSamples\":1,\n"
+			+ "               \"state\":5,\n" + "               \"minValue\":34.134002,\n"
+			+ "               \"avgValue\":34.134002,\n" + "               \"maxValue\":34.134002\n" + "            }\n"
+			+ "         ]\n" + "      }\n" + "   ]\n" + "}";
+
 	private RaritanJsonTransformer raritanJsonTransformer;
 
 	@Before
@@ -159,19 +208,36 @@ public class RaritanJsonTransformerTest {
 	}
 
 	@Test
-	public void testIbakRaritanOutletJson() {
-		final List<IMonitoringRecord> monitoringRecords = this.raritanJsonTransformer.apply(IBAK_RARITAN_OUTLET_JSON);
+	public void testIbakRaritanOutletSingleSensorJson() {
+		final List<IMonitoringRecord> monitoringRecords = this.raritanJsonTransformer
+				.apply(IBAK_RARITAN_OUTLET_SINGLE_SENSOR_JSON);
 		assertEquals(2, monitoringRecords.size());
-		assertTrue(monitoringRecords.get(0) instanceof ActivePowerRecord);
-		final ActivePowerRecord firstRecord = (ActivePowerRecord) monitoringRecords.get(0);
-		assertEquals("13", firstRecord.getIdentifier());
-		assertEquals(1521817336_000l, firstRecord.getTimestamp());
-		assertEquals(87.21, firstRecord.getValueInW(), 0.01); // TODO 87 is W instead of Wh
-		assertTrue(monitoringRecords.get(1) instanceof ActivePowerRecord);
-		final ActivePowerRecord secondRecord = (ActivePowerRecord) monitoringRecords.get(1);
-		assertEquals("13", secondRecord.getIdentifier());
-		assertEquals(1521817380_000l, secondRecord.getTimestamp());
-		assertEquals(88.84, secondRecord.getValueInW(), 0.01); // TODO 88 is W instead of Wh
+
+		this.testRecord(monitoringRecords.get(0), "13", 1521817336_000l, 87.21);
+		this.testRecord(monitoringRecords.get(1), "13", 1521817380_000l, 88.84);
+	}
+
+	@Test
+	public void testIbakRaritanOutletTwoSensorsJson() {
+		final List<IMonitoringRecord> monitoringRecords = this.raritanJsonTransformer
+				.apply(IBAK_RARITAN_OUTLET_TWO_SENSORS_JSON);
+		assertEquals(6, monitoringRecords.size());
+
+		this.testRecord(monitoringRecords.get(0), "47", 1529057441_000l, 0.0);
+		this.testRecord(monitoringRecords.get(1), "46", 1529057441_000l, 34.13);
+		this.testRecord(monitoringRecords.get(2), "47", 1529057442_000l, 0.0);
+		this.testRecord(monitoringRecords.get(3), "46", 1529057442_000l, 34.12);
+		this.testRecord(monitoringRecords.get(4), "47", 1529057443_000l, 0.0);
+		this.testRecord(monitoringRecords.get(5), "46", 1529057443_000l, 34.13);
+	}
+
+	private void testRecord(final IMonitoringRecord record, final String expectedIdentifier,
+			final long expectedTimestamp, final double expectedValueinW) {
+		assertTrue(record instanceof ActivePowerRecord);
+		final ActivePowerRecord castedRecord = (ActivePowerRecord) record;
+		assertEquals(expectedIdentifier, castedRecord.getIdentifier());
+		assertEquals(expectedTimestamp, castedRecord.getTimestamp());
+		assertEquals(expectedValueinW, castedRecord.getValueInW(), 0.01);
 	}
 
 }
