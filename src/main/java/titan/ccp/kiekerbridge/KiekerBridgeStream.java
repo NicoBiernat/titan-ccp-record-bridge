@@ -64,11 +64,6 @@ public final class KiekerBridgeStream<T> {
 		}
 	}
 
-	@Deprecated
-	public static <T> KiekerBridgeStream<T> from(final QueueProvider<T> queueProvider) {
-		return createFromStage(new QueueProccessorStage<>(queueProvider.getQueue()));
-	}
-
 	public static <T> KiekerBridgeStream<T> from(final Supplier<T> supplier) {
 		return createFromStage(new SupplierStage<>(supplier));
 	}
