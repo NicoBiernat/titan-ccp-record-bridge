@@ -9,9 +9,8 @@ import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 import spark.Service;
-import titan.ccp.kiekerbridge.QueueProvider;
 
-public class RaritanRestServer implements QueueProvider<String> {
+public class RaritanRestServer {
 
 	private static final int PORT = 80; // TODO as parameter
 	private static final String POST_URL = "/raritan"; // TODO as parameter
@@ -22,7 +21,9 @@ public class RaritanRestServer implements QueueProvider<String> {
 	private static final String RESPONSE_STATUS_MESSAGE = ""; // TODO temp
 
 	private final Service service;
-	private final Queue<String> queue = new MpscArrayQueue<>(1024);
+	private final Queue<String> queue = new MpscArrayQueue<>(1024); // Non-blocking, but lock-free
+	// private final Queue<String> queue = new ArrayBlockingQueue<>(1024); //
+	// Blocking, but not lock-free
 
 	public RaritanRestServer() {
 		this.service = Service.ignite().port(PORT);
@@ -49,7 +50,6 @@ public class RaritanRestServer implements QueueProvider<String> {
 		this.service.stop();
 	}
 
-	@Override
 	public Queue<String> getQueue() {
 		return this.queue;
 	}
