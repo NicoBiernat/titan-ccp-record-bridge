@@ -57,11 +57,11 @@ public final class KiekerBridgeStream<T> {
 	}
 
 	public static <T> KiekerBridgeStream<T> from(final Queue<T> queue) {
-		return createFromStage(new QueueProccessorStage<>(queue));
-	}
-
-	public static <T> KiekerBridgeStream<T> from(final BlockingQueue<T> queue) {
-		return createFromStage(new BlockingQueueProccessorStage<>(queue));
+		if (queue instanceof BlockingQueue) {
+			return createFromStage(new BlockingQueueProccessorStage<>((BlockingQueue<T>) queue));
+		} else {
+			return createFromStage(new QueueProccessorStage<>(queue));
+		}
 	}
 
 	@Deprecated
