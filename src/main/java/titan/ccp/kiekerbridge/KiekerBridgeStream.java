@@ -1,6 +1,7 @@
 package titan.ccp.kiekerbridge;
 
 import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -10,6 +11,7 @@ import kieker.analysisteetime.util.stage.FilterStage;
 import teetime.framework.AbstractProducerStage;
 import teetime.framework.OutputPort;
 import teetime.stage.basic.ITransformation;
+import titan.ccp.kiekerbridge.stages.BlockingQueueProccessorStage;
 import titan.ccp.kiekerbridge.stages.FlatMapStage;
 import titan.ccp.kiekerbridge.stages.MapStage;
 import titan.ccp.kiekerbridge.stages.QueueProccessorStage;
@@ -58,8 +60,13 @@ public final class KiekerBridgeStream<T> {
 		return createFromStage(new QueueProccessorStage<>(queue));
 	}
 
+	public static <T> KiekerBridgeStream<T> from(final BlockingQueue<T> queue) {
+		return createFromStage(new BlockingQueueProccessorStage<>(queue));
+	}
+
+	@Deprecated
 	public static <T> KiekerBridgeStream<T> from(final QueueProvider<T> queueProvider) {
-		return createFromStage(new QueueProccessorStage<>(queueProvider));
+		return createFromStage(new QueueProccessorStage<>(queueProvider.getQueue()));
 	}
 
 	public static <T> KiekerBridgeStream<T> from(final Supplier<T> supplier) {
