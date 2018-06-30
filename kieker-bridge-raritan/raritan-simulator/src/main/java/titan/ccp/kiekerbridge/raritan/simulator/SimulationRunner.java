@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.configuration2.Configuration;
 
@@ -37,7 +38,20 @@ public class SimulationRunner {
 	public static void main(final String[] args) throws InterruptedException {
 		final Configuration configuration = Configurations.create();
 
-		new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")), List.of(
+		final String setupType = configuration.getString("setup");
+
+		List<SimulatedSensor> sensors;
+		if (setupType.equals("scale")) {
+			sensors = getScalabilitySetup();
+		} else {
+			sensors = getFeasibilitySetup();
+		}
+
+		new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")), sensors).run();
+	}
+
+	public static List<SimulatedSensor> getFeasibilitySetup() {
+		return List.of(
 				new SimulatedSensor("server1", Duration.ofSeconds(1),
 						FunctionBuilder.of(x -> 50).plus(Functions.wave1()).plus(Functions.noise(10)).build()),
 				new SimulatedSensor("server2", Duration.ofSeconds(2),
@@ -48,7 +62,11 @@ public class SimulationRunner {
 				new SimulatedSensor("printer1", Duration.ofSeconds(1),
 						FunctionBuilder.of(x -> 50).plus(Functions.wave2()).plus(Functions.noise(10)).build()),
 				new SimulatedSensor("printer2", Duration.ofSeconds(1),
-						FunctionBuilder.of(x -> 60).plus(Functions.noise(10)).build()))).run();
+						FunctionBuilder.of(x -> 60).plus(Functions.noise(10)).build()));
 	}
 
+	public static List<SimulatedSensor> getScalabilitySetup() {
+		return IntStream.range(0, 1000).mapToObj(i -> new SimulatedSensor("sensor" + i, Duration.ofMillis(1),
+				FunctionBuilder.of(x -> 50).plus(Functions.noise(10)).build())).collect(Collectors.toList());
+	}
 }
