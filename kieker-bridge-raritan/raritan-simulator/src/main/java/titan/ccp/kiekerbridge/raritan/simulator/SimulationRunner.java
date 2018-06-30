@@ -11,10 +11,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.commons.configuration2.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import titan.ccp.common.configuration.Configurations;
 
 public class SimulationRunner {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SimulationRunner.class);
 
 	private final HttpPusher httpPusher;
 
@@ -42,9 +46,13 @@ public class SimulationRunner {
 
 		List<SimulatedSensor> sensors;
 		if (setupType.equals("scale")) {
-			sensors = getScalabilitySetup();
+			final int frequency = configuration.getInt("frequency", 1);
+			final int sensorsCount = configuration.getInt("sensors", 1000);
+			sensors = getScalabilitySetup(frequency, sensorsCount);
+			LOGGER.info("Use scalability setup");
 		} else {
 			sensors = getFeasibilitySetup();
+			LOGGER.info("Use feasability setup");
 		}
 
 		new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")), sensors).run();
@@ -65,8 +73,9 @@ public class SimulationRunner {
 						FunctionBuilder.of(x -> 60).plus(Functions.noise(10)).build()));
 	}
 
-	public static List<SimulatedSensor> getScalabilitySetup() {
-		return IntStream.range(0, 1000).mapToObj(i -> new SimulatedSensor("sensor" + i, Duration.ofMillis(1),
-				FunctionBuilder.of(x -> 50).plus(Functions.noise(10)).build())).collect(Collectors.toList());
+	public static List<SimulatedSensor> getScalabilitySetup(final int frequency, final int sensorsCount) {
+		return IntStream.range(0, sensorsCount).mapToObj(i -> new SimulatedSensor("sensor" + i,
+				Duration.ofMillis(frequency), FunctionBuilder.of(x -> 50).plus(Functions.noise(10)).build()))
+				.collect(Collectors.toList());
 	}
 }
