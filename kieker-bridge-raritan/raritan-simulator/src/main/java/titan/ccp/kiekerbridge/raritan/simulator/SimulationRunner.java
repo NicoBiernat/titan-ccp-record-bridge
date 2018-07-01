@@ -40,7 +40,8 @@ public class SimulationRunner {
 	}
 
 	public static void main(final String[] args) throws InterruptedException {
-		java.security.Security.setProperty("networkaddress.cache.ttl", "5");
+		// Turn off Java's DNS caching
+		java.security.Security.setProperty("networkaddress.cache.ttl", "0"); // TODO
 
 		final Configuration configuration = Configurations.create();
 
