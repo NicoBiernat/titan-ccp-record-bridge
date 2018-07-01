@@ -21,7 +21,8 @@ public class RaritanRestServer {
 	private static final String RESPONSE_STATUS_MESSAGE = ""; // TODO temp
 
 	private final Service service;
-	private final Queue<String> queue = new MpscArrayQueue<>(1024); // Non-blocking, but lock-free
+	// TODO queue size
+	private final Queue<String> queue = new MpscArrayQueue<>(1024_000); // Non-blocking, but lock-free
 	// private final Queue<String> queue = new ArrayBlockingQueue<>(1024); //
 	// Blocking, but not lock-free
 
