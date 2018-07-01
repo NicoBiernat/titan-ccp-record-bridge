@@ -22,7 +22,7 @@ public class RaritanRestServer {
 
 	private final Service service;
 	// TODO queue size
-	private final Queue<String> queue = new MpscArrayQueue<>(1024_000); // Non-blocking, but lock-free
+	private final Queue<String> queue = new MpscArrayQueue<>(1024); // Non-blocking, but lock-free
 	// private final Queue<String> queue = new ArrayBlockingQueue<>(1024); //
 	// Blocking, but not lock-free
 
