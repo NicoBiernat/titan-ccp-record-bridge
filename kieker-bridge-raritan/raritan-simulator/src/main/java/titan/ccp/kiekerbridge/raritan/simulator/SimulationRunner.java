@@ -40,9 +40,11 @@ public class SimulationRunner {
 	}
 
 	public static void main(final String[] args) throws InterruptedException {
+		java.security.Security.setProperty("networkaddress.cache.ttl", "5");
+
 		final Configuration configuration = Configurations.create();
 
-		final String setupType = configuration.getString("setup");
+		final String setupType = configuration.getString("setup", "feas");
 
 		List<SimulatedSensor> sensors;
 		if (setupType.equals("scale")) {
