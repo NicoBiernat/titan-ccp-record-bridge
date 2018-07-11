@@ -47,10 +47,10 @@ public class SimulationRunner {
 					sensorReader.getSensor().getPeroid().toMillis(), TimeUnit.MILLISECONDS);
 			futures.add(future);
 		}
-		this.scheduler.schedule(() -> {
-			System.out.println(this.counter.get());
-			System.exit(0);
-		}, 10, TimeUnit.SECONDS);
+		// this.scheduler.schedule(() -> {
+		// System.out.println(this.counter.get());
+		// System.exit(0);
+		// }, 10, TimeUnit.SECONDS);
 		return futures;
 	}
 
