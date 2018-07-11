@@ -102,21 +102,21 @@ public class SimulationRunner {
 						FunctionBuilder.of(x -> 60).plus(Functions.noise(20)).build()),
 				new SimulatedSensor("server3", Duration.ofSeconds(1),
 						FunctionBuilder.of(x -> 30).plusScaled(20, Functions.squares(4 * 60_000, 100_000, 5 * 60_000))
-								.plus(Functions.noise(5)).build()), // Aright
+								.plus(Functions.noise(5)).build()),
 				new SimulatedSensor("printer1", Duration.ofSeconds(1),
 						FunctionBuilder.of(x -> 10)
 								.plusScaled(80, Functions.squares(5 * 60_000, 15 * 60_000, 35 * 60_000))
-								.plus(Functions.noise(20)).build()), // Aright
+								.plus(Functions.noise(20)).build()),
 				new SimulatedSensor("printer2", Duration.ofSeconds(2),
 						FunctionBuilder.of(x -> 5)
 								.plusScaled(60, Functions.squares(1 * 60_000, 12 * 60_000, 19 * 60_000))
-								.plus(Functions.noise(10)).build()), // Aright
+								.plus(Functions.noise(10)).build()),
 				new SimulatedSensor("fan1", Duration.ofSeconds(10),
 						FunctionBuilder.of(x -> 30).plus(Functions.wave2()).plus(Functions.noise(5)).build()),
 				new SimulatedSensor("ac1", Duration.ofSeconds(1),
-						FunctionBuilder.of(Functions.wave3()).plus(Functions.noise(5)).build()), // Aright
+						FunctionBuilder.of(Functions.wave3()).plus(Functions.noise(5)).build()),
 				new SimulatedSensor("ac2", Duration.ofSeconds(1),
-						FunctionBuilder.of(Functions.wave3()).plus(Functions.noise(5)).build())); // Aright
+						FunctionBuilder.of(Functions.wave3()).plus(Functions.noise(5)).build()));
 	}
 
 	public static List<SimulatedSensor> getScalabilitySetup(final int frequency, final int sensorsCount,
