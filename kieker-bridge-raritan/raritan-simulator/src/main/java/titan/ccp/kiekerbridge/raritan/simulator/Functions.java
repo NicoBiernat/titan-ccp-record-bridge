@@ -29,4 +29,9 @@ public final class Functions {
 		return x -> 2 * (Math.sin((double) x / 1_000_000) + Math.sin((double) x / 200_000) + 4);
 	}
 
+	public static LongToDoubleFunction wave3() {
+		// 10*sin(1+(x/500))+ 30
+		return x -> 10 * Math.sin(1 + (double) x / 500_000) + 30;
+	}
+
 }
