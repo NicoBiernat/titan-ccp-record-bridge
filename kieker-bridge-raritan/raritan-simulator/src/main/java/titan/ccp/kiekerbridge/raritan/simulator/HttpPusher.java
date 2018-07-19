@@ -28,6 +28,7 @@ public class HttpPusher {
 				.POST(HttpRequest.BodyPublisher.fromString(message)).build();
 		final BodyHandler<Void> bodyHandler = HttpResponse.BodyHandler.discard(null);
 
+		// TODO "Pushed message" ist printed always
 		this.client.sendAsync(request, bodyHandler).exceptionally(e -> {
 			LOGGER.warn("Failed to push message.", e);
 			return null;

@@ -25,7 +25,7 @@ public class SimulationRunner {
 
 	private final HttpPusher httpPusher;
 
-	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(16);
 
 	private final AtomicLong counter = new AtomicLong(0);
 
@@ -47,6 +47,7 @@ public class SimulationRunner {
 					sensorReader.getSensor().getPeroid().toMillis(), TimeUnit.MILLISECONDS);
 			futures.add(future);
 		}
+
 		// this.scheduler.schedule(() -> {
 		// System.out.println(this.counter.get());
 		// System.exit(0);
