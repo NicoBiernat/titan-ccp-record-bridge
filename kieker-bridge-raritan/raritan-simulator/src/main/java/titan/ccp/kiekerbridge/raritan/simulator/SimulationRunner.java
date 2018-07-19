@@ -68,7 +68,7 @@ public class SimulationRunner {
 			final int frequency = configuration.getInt("frequency", 1);
 			final int sensorsCount = configuration.getInt("sensors", 1000);
 			sensors = getScalabilitySetup(frequency, sensorsCount, 100);
-			LOGGER.info("Use scalability setup");
+			LOGGER.info("Use scalability setup with frequency: '{}' and sensors: '{}'", frequency, sensorsCount);
 		} else if (setupType.equals("demo")) {
 			sensors = getDemoSetup();
 			LOGGER.info("Use demo setup");
