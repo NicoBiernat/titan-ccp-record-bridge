@@ -1,6 +1,5 @@
 package titan.ccp.kiekerbridge.raritan.simulator;
 
-import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Collection;
@@ -39,7 +38,7 @@ public class SimulationRunner {
 		this.sensorReaders = sensors.stream().map(s -> new SensorReader(s)).collect(Collectors.toList());
 	}
 
-	public void run() throws IOException {
+	public void run() {
 		for (final SensorReader sensorReader : this.sensorReaders) {
 			final Runnable sender = () -> {
 				this.httpPusher.sendMessage(sensorReader.getMessage());
@@ -59,7 +58,7 @@ public class SimulationRunner {
 		this.scheduler.shutdownNow();
 	}
 
-	public static void main(final String[] args) throws InterruptedException, IOException {
+	public static void main(final String[] args) throws InterruptedException {
 		// Turn off Java's DNS caching
 		java.security.Security.setProperty("networkaddress.cache.ttl", "0"); // TODO
 
@@ -103,7 +102,7 @@ public class SimulationRunner {
 			}, 0, 1, TimeUnit.SECONDS);
 
 			// Wait for termination
-			Thread.sleep(60 * 1000);
+			Thread.sleep(3 * 60 * 1000);
 			runner.shutdown();
 			monitoringScheduler.shutdownNow();
 
