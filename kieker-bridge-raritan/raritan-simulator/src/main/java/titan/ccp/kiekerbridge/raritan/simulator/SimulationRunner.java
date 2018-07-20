@@ -64,9 +64,9 @@ public class SimulationRunner {
 		java.security.Security.setProperty("networkaddress.cache.ttl", "0"); // TODO
 
 		final Configuration configuration = Configurations.create();
-		final String setupType = configuration.getString("setup", "scale");
+		final String setupType = configuration.getString("setup", "demo");
 
-		if (setupType.equals("demo")) { // TODO
+		if (setupType.equals("scale")) { // TODO
 
 			final int frequency = configuration.getInt("frequency", 1);
 			final int sensorsCount = configuration.getInt("sensors", 1000);
