@@ -8,23 +8,31 @@ public class SensorReader {
 
 	private final long startTimestamp;
 
+	private final boolean sendTimestampsInMs;
+
 	public SensorReader(final SimulatedSensor sensor) {
-		this(sensor, System.currentTimeMillis());
+		this(sensor, false, System.currentTimeMillis());
 	}
 
-	public SensorReader(final SimulatedSensor sensor, final long startTimestamp) {
+	public SensorReader(final SimulatedSensor sensor, final boolean sendTimestampsInMs) {
+		this(sensor, sendTimestampsInMs, System.currentTimeMillis());
+	}
+
+	public SensorReader(final SimulatedSensor sensor, final boolean sendTimestampsInMs, final long startTimestamp) {
 		this.sensor = sensor;
 		this.startTimestamp = startTimestamp;
+		this.sendTimestampsInMs = sendTimestampsInMs;
 	}
 
 	public String getMessage() {
 		return this.getMessage(System.currentTimeMillis());
 	}
 
-	public String getMessage(final long timestamp) {
-		final double value = this.getValue(timestamp);
+	public String getMessage(final long timestampInMs) {
+		final double value = this.getValue(timestampInMs);
+		final long covertedTimestamp = this.sendTimestampsInMs ? timestampInMs : timestampInMs / 1_000;
 		return MessageFormat.format(JsonTemplate.TEMPLATE, this.sensor.getIdentifier(),
-				String.valueOf(timestamp / 1_000), String.valueOf(value));
+				String.valueOf(covertedTimestamp), String.valueOf(value));
 	}
 
 	public double getValue() {

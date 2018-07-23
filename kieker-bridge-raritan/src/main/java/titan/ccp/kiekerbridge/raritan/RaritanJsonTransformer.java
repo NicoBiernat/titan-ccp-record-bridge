@@ -28,6 +28,16 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 
 	private final JsonParser jsonParser = new JsonParser();
 
+	private final boolean inputTimestampsInMs;
+
+	public RaritanJsonTransformer() {
+		this(false);
+	}
+
+	public RaritanJsonTransformer(final boolean inputTimestampsInMs) {
+		this.inputTimestampsInMs = inputTimestampsInMs;
+	}
+
 	@Override
 	public List<IMonitoringRecord> apply(final String json) {
 		final JsonObject rootObject = this.jsonParser.parse(json).getAsJsonObject();
@@ -39,7 +49,8 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 		final List<IMonitoringRecord> monitoringRecords = new ArrayList<>(rows.size());
 		for (final JsonElement rowJsonElement : rows) {
 			final JsonObject row = rowJsonElement.getAsJsonObject();
-			final long timestamp = row.get(TIMESTAMP_KEY).getAsLong() * 1_000;
+			final long timestampReceived = row.get(TIMESTAMP_KEY).getAsLong();
+			final long timestampInMs = this.inputTimestampsInMs ? timestampReceived : timestampReceived * 1_000;
 			final JsonArray records = row.get(RECORDS_KEY).getAsJsonArray();
 
 			for (int i = 0; i < relevantSensorIndices.length; i++) {
@@ -49,7 +60,7 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 				final JsonObject relevantRecord = records.get(sensorIndex).getAsJsonObject();
 				final double value = relevantRecord.get(AVG_VALUE_KEY).getAsDouble();
 
-				monitoringRecords.add(new ActivePowerRecord(sensorLabel, timestamp, value));
+				monitoringRecords.add(new ActivePowerRecord(sensorLabel, timestampInMs, value));
 			}
 
 		}

@@ -34,8 +34,14 @@ public class SimulationRunner {
 	private final Collection<SensorReader> sensorReaders;
 
 	public SimulationRunner(final URI uri, final Collection<SimulatedSensor> sensors) {
+		this(uri, sensors, false);
+	}
+
+	public SimulationRunner(final URI uri, final Collection<SimulatedSensor> sensors,
+			final boolean sendTimestampsInMs) {
 		this.httpPusher = new HttpPusher(uri);
-		this.sensorReaders = sensors.stream().map(s -> new SensorReader(s)).collect(Collectors.toList());
+		this.sensorReaders = sensors.stream().map(s -> new SensorReader(s, sendTimestampsInMs))
+				.collect(Collectors.toList());
 	}
 
 	public void run() {
@@ -75,7 +81,7 @@ public class SimulationRunner {
 			final ScheduledExecutorService monitoringScheduler = Executors.newScheduledThreadPool(1);
 
 			final SimulationRunner runner = new SimulationRunner(
-					URI.create(configuration.getString("kieker.bridge.address")), sensors);
+					URI.create(configuration.getString("kieker.bridge.address")), sensors, true);
 			runner.run();
 
 			// Start input counter
