@@ -40,7 +40,7 @@ public class SensorReader {
 	}
 
 	public double getValue(final long timestamp) {
-		final long millisSinceStart = this.startTimestamp - timestamp;
+		final long millisSinceStart = timestamp - this.startTimestamp;
 		return this.sensor.getValueFunction().applyAsDouble(millisSinceStart);
 	}
 
