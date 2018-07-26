@@ -117,8 +117,11 @@ public class SimulationRunner {
 			new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")), getDemoSetup()).run();
 		} else {
 			LOGGER.info("Use feasability setup");
-			new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")), getFeasibilitySetup())
-					.run();
+			final SimulationRunner runner = new SimulationRunner(
+					URI.create(configuration.getString("kieker.bridge.address")), getFeasibilitySetup());
+			runner.run();
+			Thread.sleep(60 * 60 * 1000);
+			runner.shutdown();
 		}
 
 	}
