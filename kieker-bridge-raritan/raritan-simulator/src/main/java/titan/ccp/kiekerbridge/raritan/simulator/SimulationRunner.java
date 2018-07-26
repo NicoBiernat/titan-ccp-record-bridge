@@ -133,12 +133,12 @@ public class SimulationRunner {
 				new SimulatedSensor("s2-ac", Duration.ofSeconds(3), x -> 40),
 
 				new SimulatedSensor("s3-sensor1", Duration.ofSeconds(10),
-						FunctionBuilder.of(x -> 30 / (60 * 60 * 1000) * x + 100).plus(Functions.noise(5)).build()),
+						FunctionBuilder.of(x -> 30.0 / (60 * 60 * 1000) * x + 100).plus(Functions.noise(5)).build()),
 				new SimulatedSensor("s3-sensor2", Duration.ofSeconds(1),
-						FunctionBuilder.of(x -> 30 / (60 * 60 * 1000) * x + 100).plus(Functions.noise(5)).build()),
+						FunctionBuilder.of(x -> 30.0 / (60 * 60 * 1000) * x + 100).plus(Functions.noise(5)).build()),
 
 				new SimulatedSensor("s4-sensor", Duration.ofSeconds(3),
-						x -> 80 * Math.sin((double) x / (60 * 60 * 1000) * Math.PI - Math.PI) + 100));
+						x -> -80 * Math.sin(x * Math.PI / (60 * 60 * 1000)) + 100));
 	}
 
 	public static List<SimulatedSensor> getDemoSetup() {
