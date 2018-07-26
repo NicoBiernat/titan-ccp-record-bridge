@@ -124,18 +124,18 @@ public class SimulationRunner {
 	}
 
 	public static List<SimulatedSensor> getFeasibilitySetup() {
-		return List.of(
-				new SimulatedSensor("server1", Duration.ofSeconds(1),
-						FunctionBuilder.of(x -> 50).plus(Functions.wave1()).plus(Functions.noise(10)).build()),
-				new SimulatedSensor("server2", Duration.ofSeconds(2),
-						FunctionBuilder.of(x -> 60).plus(Functions.noise(10)).build()),
-				new SimulatedSensor("server3", Duration.ofSeconds(1),
-						FunctionBuilder.of(x -> 40).plusScaled(20, Functions.squares(30_000, 10_000, 10 * 60_000))
-								.plus(Functions.noise(5)).build()),
-				new SimulatedSensor("printer1", Duration.ofSeconds(1),
-						FunctionBuilder.of(x -> 50).plus(Functions.wave2()).plus(Functions.noise(5)).build()),
-				new SimulatedSensor("printer2", Duration.ofSeconds(1),
-						FunctionBuilder.of(x -> 60).plus(Functions.noise(10)).build()));
+		return List.of(new SimulatedSensor("s2-server", Duration.ofSeconds(1), x -> 30),
+				new SimulatedSensor("s2-light", Duration.ofSeconds(10), x -> 10),
+				new SimulatedSensor("s2-fan", Duration.ofMillis(500), x -> 20),
+				new SimulatedSensor("s2-ac", Duration.ofSeconds(3), x -> 40),
+
+				new SimulatedSensor("s3-sensor1", Duration.ofSeconds(10),
+						FunctionBuilder.of(x -> 30 / (60 * 60 * 1000) * x + 100).plus(Functions.noise(5)).build()),
+				new SimulatedSensor("s3-sensor2", Duration.ofSeconds(1),
+						FunctionBuilder.of(x -> 30 / (60 * 60 * 1000) * x + 100).plus(Functions.noise(5)).build()),
+
+				new SimulatedSensor("s4-sensor", Duration.ofSeconds(3),
+						x -> 80 * Math.sin((double) x / (60 * 60 * 1000) * Math.PI - Math.PI) + 100));
 	}
 
 	public static List<SimulatedSensor> getDemoSetup() {
