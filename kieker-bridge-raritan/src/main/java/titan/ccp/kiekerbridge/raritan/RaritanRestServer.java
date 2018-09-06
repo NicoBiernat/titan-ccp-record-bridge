@@ -12,7 +12,7 @@ import spark.Service;
 
 public class RaritanRestServer {
 
-	private static final int PORT = 80; // TODO as parameter
+	private static final int PORT = 8080; // TODO as parameter
 	private static final String POST_URL = "/raritan"; // TODO as parameter
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RaritanRestServer.class);
