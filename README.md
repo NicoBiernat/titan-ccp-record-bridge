@@ -7,7 +7,7 @@ devices and machines in production environments such as factories.
 
 This repository contains the following subprojects related to Titan CPP **Record Bridges**:
 
-* The *Record Bridge framework* to simply create concrete, Java-based Record Bridge microservices.
+* The [Record Bridge framework](#titan-ccp-record-bridge-framework) to simply create concrete, Java-based Record Bridge microservices.
 * The [Raritan Record Bridge](kieker-bridge-raritan), a concrete Record Bridge mircoservice for power distribution units from the manufacturer Raritan
 * The [Raritan Simulator](kieker-bridge-raritan/raritan-simulator) to tool to simulate Raritan power distribution units
 
