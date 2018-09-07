@@ -73,10 +73,14 @@ public class SimulationRunner {
 
 		if (setupType.equals("scale")) { // TODO
 
-			final int frequency = configuration.getInt("frequency", 1);
-			final int sensorsCount = configuration.getInt("sensors", 1000);
+			final int frequency = configuration.getInt("frequency", 100);
+			final int sensorsCount = configuration.getInt("sensors", 100);
 			final List<SimulatedSensor> sensors = getScalabilitySetup(frequency, sensorsCount, 100);
 			LOGGER.info("Use scalability setup with frequency: '{}' and sensors: '{}'", frequency, sensorsCount);
+
+			final boolean counters = configuration.getBoolean("counters", false);
+			final boolean autoTermination = configuration.getBoolean("autotermination", false);
+			LOGGER.info("Further setup: counters: '{}', autoTermination: '{}'", counters, autoTermination);
 
 			final ScheduledExecutorService monitoringScheduler = Executors.newScheduledThreadPool(1);
 
@@ -84,33 +88,38 @@ public class SimulationRunner {
 					URI.create(configuration.getString("kieker.bridge.address")), sensors, true);
 			runner.run();
 
-			// Start input counter
-			final long startTime = System.currentTimeMillis();
-			monitoringScheduler.scheduleAtFixedRate(() -> {
-				final long elapsedTime = System.currentTimeMillis() - startTime;
-				System.out.println("input;" + elapsedTime + ";" + runner.getCounter());
-			}, 0, 1, TimeUnit.SECONDS);
-
-			// Start output counter
-			final HttpClient httpClient = HttpClient.newHttpClient();
-			monitoringScheduler.scheduleAtFixedRate(() -> {
-				final HttpRequest request = HttpRequest.newBuilder()
-						.uri(URI.create("http://cc01:31302/power-consumption-count")).GET().build();
-				final BodyHandler<String> bodyHandler = HttpResponse.BodyHandler.asString();
-
-				final long requestStartedTime = System.currentTimeMillis() - startTime;
-
-				httpClient.sendAsync(request, bodyHandler).thenApply(r -> Long.parseLong(r.body())).thenAccept(v -> {
+			if (counters) {
+				// Start input counter
+				final long startTime = System.currentTimeMillis();
+				monitoringScheduler.scheduleAtFixedRate(() -> {
 					final long elapsedTime = System.currentTimeMillis() - startTime;
-					// countData.add(new CountData(elapsedTime, v));
-					System.out.println("output;" + requestStartedTime + ";" + elapsedTime + ";" + v);
-				});
-			}, 0, 1, TimeUnit.SECONDS);
+					System.out.println("input;" + elapsedTime + ";" + runner.getCounter());
+				}, 0, 1, TimeUnit.SECONDS);
+
+				// Start output counter
+				final HttpClient httpClient = HttpClient.newHttpClient();
+				monitoringScheduler.scheduleAtFixedRate(() -> {
+					final HttpRequest request = HttpRequest.newBuilder()
+							.uri(URI.create("http://cc01:31302/power-consumption-count")).GET().build();
+					final BodyHandler<String> bodyHandler = HttpResponse.BodyHandler.asString();
+
+					final long requestStartedTime = System.currentTimeMillis() - startTime;
+
+					httpClient.sendAsync(request, bodyHandler).thenApply(r -> Long.parseLong(r.body()))
+							.thenAccept(v -> {
+								final long elapsedTime = System.currentTimeMillis() - startTime;
+								// countData.add(new CountData(elapsedTime, v));
+								System.out.println("output;" + requestStartedTime + ";" + elapsedTime + ";" + v);
+							});
+				}, 0, 1, TimeUnit.SECONDS);
+			}
 
 			// Wait for termination
-			Thread.sleep(3 * 60 * 1000);
-			runner.shutdown();
-			monitoringScheduler.shutdownNow();
+			if (autoTermination) {
+				Thread.sleep(3 * 60 * 1000);
+				runner.shutdown();
+				monitoringScheduler.shutdownNow();
+			}
 
 		} else if (setupType.equals("demo")) {
 			LOGGER.info("Use demo setup");
