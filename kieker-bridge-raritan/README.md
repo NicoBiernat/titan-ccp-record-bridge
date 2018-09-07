@@ -11,9 +11,9 @@ This directory contains the **Raritan Record Bridge** of the Titan CCP.
 
 We use Gradle as a build tool. In order to build the executeables run 
 `./gradlew build` on Linux/macOS or `./gradlew.bat build` on Windows. This will
-create the file `build/distributions/titanccp-aggregation.tar` which contains
+create the file `build/distributions/titanccp-kieker-bridge-raritan.tar` which contains
 start scripts for Linux/macOS and Windows.
 
 This repository also contains a Dockerfile. Run
-`docker build -t titan-ccp-aggregation .` to create a container from it (after
+`docker build -t titan-ccp-kieker-bridge-raritan .` to create a container from it (after
 building it with Gradle).
