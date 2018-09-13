@@ -4,3 +4,5 @@ include 'kieker-bridge-raritan'
 project(":kieker-bridge-raritan").name = "titanccp-kieker-bridge-raritan"
 
 include 'titanccp-kieker-bridge-raritan:raritan-simulator'
+
+include 'load-tester-bridge'
