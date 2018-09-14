@@ -21,10 +21,14 @@ build:
   script: ./gradlew --build-cache assemble
   artifacts:
     paths:
-      - build/
-      - kieker-bridge-raritan/build
-      - kieker-bridge-raritan/raritan-simulator/build
-      - load-tester-bridge/build
+      - build/libs
+      - kieker-bridge-raritan/build/libs
+      - kieker-bridge-raritan/build/distributions/*.tar
+      - kieker-bridge-raritan/raritan-simulator/build/libs
+      - kieker-bridge-raritan/raritan-simulator/build/distributions/*.tar
+      - load-tester-bridge/build/libs
+      - load-tester-bridge/build/distributions/*.tar
+    expire_in: 1 day
 
 
 test:
