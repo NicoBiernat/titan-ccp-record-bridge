@@ -66,3 +66,20 @@ deploy-raritan-simulator:
     - docker logout
   only:
     - master
+
+deploy-load-tester-bridge:
+  stage: deploy
+  tags:
+    - dockerex
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build --pull -t titan-ccp-load-tester-bridge ./load-tester-bridge
+    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:latest
+    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:$(date +%Y%m%d%H%M%S)
+    - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
+    - docker push industrialdevops/titan-ccp-load-tester-bridge
+    - docker logout
+  only:
+    - master
