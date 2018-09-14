@@ -24,6 +24,7 @@ build:
       - build/
       - kieker-bridge-raritan/build
       - kieker-bridge-raritan/raritan-simulator/build
+      - load-tester-bridge/build
 
 
 test:
