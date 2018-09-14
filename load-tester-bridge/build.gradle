@@ -11,9 +11,8 @@ repositories {
 dependencies {
     compile project(':')
     
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile "com.sparkjava:spark-core:2.7.2"
     compile 'org.slf4j:slf4j-simple:1.6.1'
+    compile 'redis.clients:jedis:2.9.0'
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
