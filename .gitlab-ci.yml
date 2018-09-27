@@ -21,16 +21,21 @@ build:
   script: ./gradlew --build-cache assemble
   artifacts:
     paths:
-      - build/
-      - kieker-bridge-raritan/build
-      - kieker-bridge-raritan/raritan-simulator/build
+      - build/libs/*.jar
+      - kieker-bridge-raritan/build/libs/*.jar
+      - kieker-bridge-raritan/build/distributions/*.tar
+      - kieker-bridge-raritan/raritan-simulator/build/libs/*.jar
+      - kieker-bridge-raritan/raritan-simulator/build/distributions/*.tar
+      - load-tester-bridge/build/libs/*.jar
+      - load-tester-bridge/build/distributions/*.tar
+    expire_in: 1 day
 
 
 test:
   stage: test
   tags:
     - dockerex
-  script: ./gradlew check
+  script: ./gradlew test
 
 deploy-raritan-bridge:
   stage: deploy
@@ -63,6 +68,23 @@ deploy-raritan-simulator:
     - docker tag titan-ccp-raritan-simulator industrialdevops/titan-ccp-raritan-simulator:$(date +%Y%m%d%H%M%S)
     - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
     - docker push industrialdevops/titan-ccp-raritan-simulator
+    - docker logout
+  only:
+    - master
+
+deploy-load-tester-bridge:
+  stage: deploy
+  tags:
+    - dockerex
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build --pull -t titan-ccp-load-tester-bridge ./load-tester-bridge
+    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:latest
+    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:$(date +%Y%m%d%H%M%S)
+    - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
+    - docker push industrialdevops/titan-ccp-load-tester-bridge
     - docker logout
   only:
     - master
