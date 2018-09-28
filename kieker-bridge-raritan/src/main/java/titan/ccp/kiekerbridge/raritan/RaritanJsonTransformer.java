@@ -1,13 +1,13 @@
 package titan.ccp.kiekerbridge.raritan;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.IntStream;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 import kieker.common.record.IMonitoringRecord;
 import titan.ccp.models.records.ActivePowerRecord;
 
@@ -49,7 +49,7 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
       final JsonObject row = rowJsonElement.getAsJsonObject();
       final long timestampReceived = row.get(TIMESTAMP_KEY).getAsLong();
       final long timestampInMs =
-          this.inputTimestampsInMs ? timestampReceived : timestampReceived * 1_000;
+          this.inputTimestampsInMs ? timestampReceived : timestampReceived * 1_000; // NOCS
       final JsonArray records = row.get(RECORDS_KEY).getAsJsonArray();
 
       for (int i = 0; i < relevantSensorIndices.length; i++) {
@@ -72,7 +72,7 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
         .get(ID_KEY).getAsString().equals(RELEVANT_SENSOR_NAME)).toArray();
   }
 
-  private String[] getSensorLabels(final JsonArray sensors, final int[] releventSensorIndices) {
+  private String[] getSensorLabels(final JsonArray sensors, final int... releventSensorIndices) {
     return IntStream.of(releventSensorIndices).mapToObj(i -> sensors.get(i).getAsJsonObject()
         .get(DEVICE_KEY).getAsJsonObject().get(LABEL_KEY).getAsString())
         .toArray(l -> new String[l]);

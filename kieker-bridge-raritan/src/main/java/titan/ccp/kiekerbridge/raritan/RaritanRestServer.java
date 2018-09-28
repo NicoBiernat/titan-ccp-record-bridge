@@ -26,8 +26,9 @@ public class RaritanRestServer {
 
   public RaritanRestServer() {
     this.service = Service.ignite().port(PORT);
-    LOGGER.info("Instantiate Spark server.");
+  }
 
+  public void start() {
     this.service.post(POST_URL, (final Request request, final Response response) -> {
       LOGGER.info("Received push message on {}:{}", POST_URL, PORT); // TODO change to debug
       try {
@@ -39,10 +40,7 @@ public class RaritanRestServer {
       response.status(RESPONSE_STATUS_CODE);
       return RESPONSE_STATUS_MESSAGE;
     });
-  }
-
-  public void start() {
-
+    LOGGER.info("Instantiate Spark server.");
   }
 
   public void stop() {
