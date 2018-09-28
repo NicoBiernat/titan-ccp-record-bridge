@@ -7,8 +7,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import org.apache.commons.configuration2.Configuration;
 import kieker.common.record.IMonitoringRecord;
+import org.apache.commons.configuration2.Configuration;
 import teetime.framework.Execution;
 import teetime.framework.OutputPort;
 import teetime.stage.InstanceOfFilter;
@@ -16,6 +16,7 @@ import titan.ccp.common.configuration.Configurations;
 import titan.ccp.kiekerbridge.test.KafkaRecordSender;
 import titan.ccp.models.records.ActivePowerRecord;
 
+// TODO RENAME to Record Bridge
 public final class KiekerBridge {
 
   private final Execution<TerminatableConfiguration> execution;
@@ -56,7 +57,7 @@ public final class KiekerBridge {
     this.stop().join();
   }
 
-  public static Builder ofStream(final KiekerBridgeStream<? extends IMonitoringRecord> stream) {
+  public static Builder ofStream(final RecordBridgeStream<? extends IMonitoringRecord> stream) {
     return new Builder(stream.getConfiguration(), stream.getLastOutputPort());
   }
 

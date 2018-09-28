@@ -17,7 +17,12 @@ import titan.ccp.kiekerbridge.stages.QueueProccessorStage;
 import titan.ccp.kiekerbridge.stages.SupplierStage;
 import titan.ccp.kiekerbridge.stages.Terminatable;
 
-public final class KiekerBridgeStream<T> {
+/**
+ * A stream of elements to be processed by TeeTime.
+ *
+ * @param <T> Elements in this stream
+ */
+public final class RecordBridgeStream<T> {
 
   private static final int TEETIME_DEFAULT_PIPE_CAPACITY = 512;
 
@@ -25,40 +30,43 @@ public final class KiekerBridgeStream<T> {
 
   private final OutputPort<? extends T> lastOutputPort;
 
-  private KiekerBridgeStream(final StreamBasedConfiguration configuration,
+  private RecordBridgeStream(final StreamBasedConfiguration configuration,
       final OutputPort<? extends T> lastOutputPort) {
     this.configuration = configuration;
     this.lastOutputPort = lastOutputPort;
   }
 
-  public <R> KiekerBridgeStream<R> map(final Function<? super T, ? extends R> mapper) {
+  public <R> RecordBridgeStream<R> map(final Function<? super T, ? extends R> mapper) {
     return this.addStage(new MapStage<>(mapper));
   }
 
-  public <R> KiekerBridgeStream<R> flatMap(
+  public <R> RecordBridgeStream<R> flatMap(
       final Function<? super T, ? extends Iterable<? extends R>> mapper) {
     return this.addStage(new FlatMapStage<>(mapper));
   }
 
-  public KiekerBridgeStream<T> filter(final Predicate<T> predicate) {
+  public RecordBridgeStream<T> filter(final Predicate<T> predicate) {
     return this.addStage(new FilterStage<>(predicate));
   }
 
-  private <R> KiekerBridgeStream<R> addStage(final ITransformation<? super T, ? extends R> stage) {
+  private <R> RecordBridgeStream<R> addStage(final ITransformation<? super T, ? extends R> stage) {
     this.configuration.connectPorts(this.lastOutputPort, stage.getInputPort(),
         TEETIME_DEFAULT_PIPE_CAPACITY);
-    return new KiekerBridgeStream<>(this.configuration, stage.getOutputPort());
+    return new RecordBridgeStream<>(this.configuration, stage.getOutputPort());
   }
 
-  protected StreamBasedConfiguration getConfiguration() {
+  /* default */ StreamBasedConfiguration getConfiguration() {
     return this.configuration;
   }
 
-  protected OutputPort<? extends T> getLastOutputPort() {
+  /* default */ OutputPort<? extends T> getLastOutputPort() {
     return this.lastOutputPort;
   }
 
-  public static <T> KiekerBridgeStream<T> from(final Queue<T> queue) {
+  /**
+   * Create s stream from a {@link Queue}.
+   */
+  public static <T> RecordBridgeStream<T> from(final Queue<T> queue) {
     if (queue instanceof BlockingQueue) {
       return createFromStage(new BlockingQueueProccessorStage<>((BlockingQueue<T>) queue));
     } else {
@@ -66,13 +74,16 @@ public final class KiekerBridgeStream<T> {
     }
   }
 
-  public static <T> KiekerBridgeStream<T> from(final Supplier<T> supplier) {
+  /**
+   * Create a stream from a {@link Supplier}.
+   */
+  public static <T> RecordBridgeStream<T> from(final Supplier<T> supplier) {
     return createFromStage(new SupplierStage<>(supplier));
   }
 
-  private static <T, S extends AbstractProducerStage<T> & Terminatable> KiekerBridgeStream<T> createFromStage(
+  private static <T, S extends AbstractProducerStage<T> & Terminatable> RecordBridgeStream<T> createFromStage( // NOCS
       final S stage) {
-    return new KiekerBridgeStream<>(new StreamBasedConfiguration(stage), stage.getOutputPort());
+    return new RecordBridgeStream<>(new StreamBasedConfiguration(stage), stage.getOutputPort());
   }
 
   private static class StreamBasedConfiguration extends TerminatableConfiguration {

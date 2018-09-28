@@ -11,7 +11,7 @@ import kieker.common.record.IMonitoringRecord;
 import org.jctools.queues.MpscArrayQueue;
 import redis.clients.jedis.Jedis;
 import titan.ccp.kiekerbridge.KiekerBridge;
-import titan.ccp.kiekerbridge.KiekerBridgeStream;
+import titan.ccp.kiekerbridge.RecordBridgeStream;
 import titan.ccp.models.records.ActivePowerRecord;
 
 /**
@@ -55,7 +55,7 @@ public final class LoadTester {
       }, initialDelay, periodeInMs, TimeUnit.MILLISECONDS);
     }
 
-    final KiekerBridgeStream<IMonitoringRecord> stream = KiekerBridgeStream.from(queue);
+    final RecordBridgeStream<IMonitoringRecord> stream = RecordBridgeStream.from(queue);
     final KiekerBridge kiekerBridge = KiekerBridge.ofStream(stream).build();
     kiekerBridge.start();
 

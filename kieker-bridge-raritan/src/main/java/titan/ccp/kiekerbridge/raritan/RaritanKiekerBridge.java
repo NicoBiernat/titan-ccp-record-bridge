@@ -3,7 +3,7 @@ package titan.ccp.kiekerbridge.raritan;
 import java.util.Objects;
 import kieker.common.record.IMonitoringRecord;
 import titan.ccp.kiekerbridge.KiekerBridge;
-import titan.ccp.kiekerbridge.KiekerBridgeStream;
+import titan.ccp.kiekerbridge.RecordBridgeStream;
 
 public class RaritanKiekerBridge {
 
@@ -14,8 +14,8 @@ public class RaritanKiekerBridge {
 
     final RaritanRestServer raritanRestServer = new RaritanRestServer();
 
-    final KiekerBridgeStream<IMonitoringRecord> stream =
-        KiekerBridgeStream.from(raritanRestServer.getQueue())
+    final RecordBridgeStream<IMonitoringRecord> stream =
+        RecordBridgeStream.from(raritanRestServer.getQueue())
             .flatMap(new RaritanJsonTransformer(receiveTimestampsInMs));
     final KiekerBridge kiekerBridge =
         KiekerBridge.ofStream(stream).onStop(raritanRestServer::stop).build();
