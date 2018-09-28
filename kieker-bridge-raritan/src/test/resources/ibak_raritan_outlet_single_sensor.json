@@ -1,0 +1,392 @@
+{
+  "sensors": [
+    {
+      "device": {
+        "type": 4,
+        "label": "13",
+        "line": 0
+      },
+      "id": "voltage",
+      "readingtype": 0,
+      "metadata": {
+        "type": {
+          "readingtype": 0,
+          "type": 1,
+          "unit": 1
+        },
+        "decdigits": 0,
+        "accuracy": 0,
+        "resolution": 1,
+        "tolerance": 0,
+        "noiseThreshold": 0,
+        "range": {
+          "lower": 0,
+          "upper": 500
+        },
+        "thresholdCaps": {
+          "hasUpperCritical": true,
+          "hasUpperWarning": true,
+          "hasLowerWarning": true,
+          "hasLowerCritical": true
+        }
+      }
+    },
+    {
+      "device": {
+        "type": 4,
+        "label": "13",
+        "line": 0
+      },
+      "id": "current",
+      "readingtype": 0,
+      "metadata": {
+        "type": {
+          "readingtype": 0,
+          "type": 2,
+          "unit": 2
+        },
+        "decdigits": 3,
+        "accuracy": 0,
+        "resolution": 0.001,
+        "tolerance": 0,
+        "noiseThreshold": 0.04,
+        "range": {
+          "lower": 0,
+          "upper": 70
+        },
+        "thresholdCaps": {
+          "hasUpperCritical": true,
+          "hasUpperWarning": true,
+          "hasLowerWarning": true,
+          "hasLowerCritical": true
+        }
+      }
+    },
+    {
+      "device": {
+        "type": 4,
+        "label": "13",
+        "line": 0
+      },
+      "id": "activePower",
+      "readingtype": 0,
+      "metadata": {
+        "type": {
+          "readingtype": 0,
+          "type": 4,
+          "unit": 3
+        },
+        "decdigits": 0,
+        "accuracy": 0,
+        "resolution": 1,
+        "tolerance": 0,
+        "noiseThreshold": 0,
+        "range": {
+          "lower": 0,
+          "upper": 21000
+        },
+        "thresholdCaps": {
+          "hasUpperCritical": true,
+          "hasUpperWarning": true,
+          "hasLowerWarning": true,
+          "hasLowerCritical": true
+        }
+      }
+    },
+    {
+      "device": {
+        "type": 4,
+        "label": "13",
+        "line": 0
+      },
+      "id": "apparentPower",
+      "readingtype": 0,
+      "metadata": {
+        "type": {
+          "readingtype": 0,
+          "type": 4,
+          "unit": 4
+        },
+        "decdigits": 0,
+        "accuracy": 0,
+        "resolution": 1,
+        "tolerance": 0,
+        "noiseThreshold": 0,
+        "range": {
+          "lower": 0,
+          "upper": 21000
+        },
+        "thresholdCaps": {
+          "hasUpperCritical": true,
+          "hasUpperWarning": true,
+          "hasLowerWarning": true,
+          "hasLowerCritical": true
+        }
+      }
+    },
+    {
+      "device": {
+        "type": 4,
+        "label": "13",
+        "line": 0
+      },
+      "id": "powerFactor",
+      "readingtype": 0,
+      "metadata": {
+        "type": {
+          "readingtype": 0,
+          "type": 5,
+          "unit": 0
+        },
+        "decdigits": 2,
+        "accuracy": 0,
+        "resolution": 0.01,
+        "tolerance": 0,
+        "noiseThreshold": 0,
+        "range": {
+          "lower": 0,
+          "upper": 1
+        },
+        "thresholdCaps": {
+          "hasUpperCritical": true,
+          "hasUpperWarning": true,
+          "hasLowerWarning": true,
+          "hasLowerCritical": true
+        }
+      }
+    },
+    {
+      "device": {
+        "type": 4,
+        "label": "13",
+        "line": 0
+      },
+      "id": "activeEnergy",
+      "readingtype": 0,
+      "metadata": {
+        "type": {
+          "readingtype": 0,
+          "type": 6,
+          "unit": 5
+        },
+        "decdigits": 0,
+        "accuracy": 0,
+        "resolution": 1,
+        "tolerance": 0,
+        "noiseThreshold": 0,
+        "range": {
+          "lower": 0,
+          "upper": 1099511627776
+        },
+        "thresholdCaps": {
+          "hasUpperCritical": true,
+          "hasUpperWarning": true,
+          "hasLowerWarning": true,
+          "hasLowerCritical": true
+        }
+      }
+    },
+    {
+      "device": {
+        "type": 4,
+        "label": "13",
+        "line": 0
+      },
+      "id": "lineFrequency",
+      "readingtype": 0,
+      "metadata": {
+        "type": {
+          "readingtype": 0,
+          "type": 7,
+          "unit": 8
+        },
+        "decdigits": 1,
+        "accuracy": 0,
+        "resolution": 0.1,
+        "tolerance": 0,
+        "noiseThreshold": 0,
+        "range": {
+          "lower": 0,
+          "upper": 6500
+        },
+        "thresholdCaps": {
+          "hasUpperCritical": true,
+          "hasUpperWarning": true,
+          "hasLowerWarning": true,
+          "hasLowerCritical": true
+        }
+      }
+    },
+    {
+      "device": {
+        "type": 4,
+        "label": "13",
+        "line": 0
+      },
+      "id": "outletState",
+      "readingtype": 1,
+      "metadata": {
+        "type": {
+          "readingtype": 0,
+          "type": 0,
+          "unit": 0
+        },
+        "decdigits": 0,
+        "accuracy": 0,
+        "resolution": 0,
+        "tolerance": 0,
+        "noiseThreshold": 0,
+        "range": {
+          "lower": 0,
+          "upper": 0
+        },
+        "thresholdCaps": {
+          "hasUpperCritical": false,
+          "hasUpperWarning": false,
+          "hasLowerWarning": false,
+          "hasLowerCritical": false
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "timestamp": 1521817336,
+      "records": [
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 227.569995,
+          "avgValue": 227.569995,
+          "maxValue": 227.569995
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 0.388,
+          "avgValue": 0.388,
+          "maxValue": 0.388
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 87.216004,
+          "avgValue": 87.216004,
+          "maxValue": 87.216004
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 88.536004,
+          "avgValue": 88.536004,
+          "maxValue": 88.536004
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 0.985091,
+          "avgValue": 0.985091,
+          "maxValue": 0.985091
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 325047.687001,
+          "avgValue": 325047.687001,
+          "maxValue": 325047.687001
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 49.999999,
+          "avgValue": 49.999999,
+          "maxValue": 49.999999
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 8,
+          "minValue": 0,
+          "avgValue": 0,
+          "maxValue": 0
+        }
+      ]
+    },
+    {
+      "timestamp": 1521817380,
+      "records": [
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 226.929995,
+          "avgValue": 227.428177,
+          "maxValue": 227.759995
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 0.386,
+          "avgValue": 0.395523,
+          "maxValue": 0.457
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 86.580004,
+          "avgValue": 88.840254,
+          "maxValue": 102.899005
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 87.894004,
+          "avgValue": 90.137982,
+          "maxValue": 103.916005
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 0.984755,
+          "avgValue": 0.985565,
+          "maxValue": 0.990213
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 325047.711001,
+          "avgValue": 325048.24507,
+          "maxValue": 325048.772001
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 5,
+          "minValue": 49.999999,
+          "avgValue": 49.999999,
+          "maxValue": 49.999999
+        },
+        {
+          "available": true,
+          "takenValidSamples": 1,
+          "state": 8,
+          "minValue": 0,
+          "avgValue": 0,
+          "maxValue": 0
+        }
+      ]
+    }
+  ]
+}
