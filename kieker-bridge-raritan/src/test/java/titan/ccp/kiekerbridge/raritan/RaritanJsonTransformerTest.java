@@ -33,8 +33,8 @@ public class RaritanJsonTransformerTest {
     final List<IMonitoringRecord> monitoringRecords = this.raritanJsonTransformer.apply(json);
     assertEquals(2, monitoringRecords.size());
 
-    this.testRecord(monitoringRecords.get(0), "13", 1521817336_000l, 87.21);
-    this.testRecord(monitoringRecords.get(1), "13", 1521817380_000l, 88.84);
+    this.testRecord(monitoringRecords.get(0), "13", 1521817336_000L, 87.21);
+    this.testRecord(monitoringRecords.get(1), "13", 1521817380_000L, 88.84);
   }
 
   @Test
@@ -43,12 +43,12 @@ public class RaritanJsonTransformerTest {
     final List<IMonitoringRecord> monitoringRecords = this.raritanJsonTransformer.apply(json);
     assertEquals(6, monitoringRecords.size());
 
-    this.testRecord(monitoringRecords.get(0), "47", 1529057441_000l, 0.0);
-    this.testRecord(monitoringRecords.get(1), "46", 1529057441_000l, 34.13);
-    this.testRecord(monitoringRecords.get(2), "47", 1529057442_000l, 0.0);
-    this.testRecord(monitoringRecords.get(3), "46", 1529057442_000l, 34.12);
-    this.testRecord(monitoringRecords.get(4), "47", 1529057443_000l, 0.0);
-    this.testRecord(monitoringRecords.get(5), "46", 1529057443_000l, 34.13);
+    this.testRecord(monitoringRecords.get(0), "47", 1529057441_000L, 0.0);
+    this.testRecord(monitoringRecords.get(1), "46", 1529057441_000L, 34.13);
+    this.testRecord(monitoringRecords.get(2), "47", 1529057442_000L, 0.0);
+    this.testRecord(monitoringRecords.get(3), "46", 1529057442_000L, 34.12);
+    this.testRecord(monitoringRecords.get(4), "47", 1529057443_000L, 0.0);
+    this.testRecord(monitoringRecords.get(5), "46", 1529057443_000L, 34.13);
   }
 
   private void testRecord(final IMonitoringRecord record, final String expectedIdentifier,

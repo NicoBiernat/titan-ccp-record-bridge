@@ -1,11 +1,11 @@
 package titan.ccp.kiekerbridge.test;
 
 import java.util.Properties;
+import kieker.common.record.IMonitoringRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
-import kieker.common.record.IMonitoringRecord;
 import teetime.framework.AbstractConsumerStage;
 import titan.ccp.common.kieker.kafka.IMonitoringRecordSerde;
 import titan.ccp.models.records.ActivePowerRecord;
