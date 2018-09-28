@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.LongToDoubleFunction;
 
+/**
+ * Builder to build a {@link LongToDoubleFunction} by adding multiple {@link LongToDoubleFunction}s.
+ * Additionally, the individual summands can be scaled by a fixed value.
+ */
 public final class FunctionBuilder {
 
   private final List<LongToDoubleFunction> functions = new ArrayList<>();
@@ -23,7 +27,7 @@ public final class FunctionBuilder {
   }
 
   public LongToDoubleFunction build() {
-    return x -> functions.stream().mapToDouble(f -> f.applyAsDouble(x)).sum();
+    return x -> this.functions.stream().mapToDouble(f -> f.applyAsDouble(x)).sum();
   }
 
   public static FunctionBuilder of(final LongToDoubleFunction function) {

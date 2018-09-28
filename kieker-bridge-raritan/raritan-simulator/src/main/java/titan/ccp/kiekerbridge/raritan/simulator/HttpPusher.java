@@ -9,7 +9,12 @@ import jdk.incubator.http.HttpResponse.BodyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Push messages via HTTP to a configured destination ({@link URI}).
+ */
 public class HttpPusher {
+
+  private static final int PUSH_TIMEOUT_SECONDS = 10;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpPusher.class);
 
@@ -21,13 +26,16 @@ public class HttpPusher {
     this.pushUri = pushUri;
   }
 
+  /**
+   * Push the passed message.
+   */
   public void sendMessage(final String message) {
     final HttpRequest request =
-        HttpRequest.newBuilder().uri(this.pushUri).timeout(Duration.ofSeconds(10))
+        HttpRequest.newBuilder().uri(this.pushUri).timeout(Duration.ofSeconds(PUSH_TIMEOUT_SECONDS))
             .POST(HttpRequest.BodyPublisher.fromString(message)).build();
     final BodyHandler<Void> bodyHandler = HttpResponse.BodyHandler.discard(null);
 
-    // TODO "Pushed message" ist printed always
+    // TODO "Pushed message" is printed always
     this.client.sendAsync(request, bodyHandler).exceptionally(e -> {
       LOGGER.warn("Failed to push message.", e);
       return null;
