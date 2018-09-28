@@ -5,21 +5,21 @@ import teetime.framework.AbstractConsumerStage;
 
 public class KafkaSenderStage extends AbstractConsumerStage<IMonitoringRecord> {
 
-	private final KafkaSender kafkaSender;
+  private final KafkaSender kafkaSender;
 
-	public KafkaSenderStage() {
-		kafkaSender = new KafkaSender();
-	}
+  public KafkaSenderStage() {
+    kafkaSender = new KafkaSender();
+  }
 
-	@Override
-	protected void execute(IMonitoringRecord record) throws Exception {
-		kafkaSender.send(record);
-	}
+  @Override
+  protected void execute(IMonitoringRecord record) throws Exception {
+    kafkaSender.send(record);
+  }
 
-	@Override
-	protected void onTerminating() {
-		kafkaSender.shutdown();
-		super.onTerminating();
-	}
+  @Override
+  protected void onTerminating() {
+    kafkaSender.shutdown();
+    super.onTerminating();
+  }
 
 }
