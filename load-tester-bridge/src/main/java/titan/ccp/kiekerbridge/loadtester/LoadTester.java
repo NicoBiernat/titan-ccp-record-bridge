@@ -14,8 +14,20 @@ import titan.ccp.kiekerbridge.KiekerBridge;
 import titan.ccp.kiekerbridge.KiekerBridgeStream;
 import titan.ccp.models.records.ActivePowerRecord;
 
-public class LoadTester {
+/**
+ * Generates monitoring records of fixed values using a configurable number of sensors that generate
+ * records in a configurable time interval.
+ */
+public final class LoadTester {
 
+  private static final int TERMINATION_TIMEOUT_SECONDS = 10;
+  private static final String REDIS_INPUT_COUNTER_KEY = "input_counter";
+
+  private LoadTester() {}
+
+  /**
+   * Main method to run the load tester.
+   */
   public static void main(final String[] args) {
     // TODO Do this via configuration
     final int producers =
@@ -26,8 +38,8 @@ public class LoadTester {
 
     final Random random = new Random();
     final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(8);
-    final Queue<IMonitoringRecord> queue = new MpscArrayQueue<>(1024); // Non-blocking, but
-                                                                       // lock-free
+    // Non-blocking, but lock-free queue
+    final Queue<IMonitoringRecord> queue = new MpscArrayQueue<>(1024);
     final AtomicLong counter = new AtomicLong(0);
     final String redisHost = Objects.requireNonNullElse(System.getenv("REDIS_HOST"), "localhost");
     final int redisPort =
@@ -49,20 +61,21 @@ public class LoadTester {
 
     scheduler.scheduleAtFixedRate(() -> {
       final long oldValue = counter.getAndSet(0);
-      System.out.println(oldValue);
-      jedis.incrBy("input_counter", oldValue);
+      System.out.println(oldValue); // NOPMD
+      jedis.incrBy(REDIS_INPUT_COUNTER_KEY, oldValue);
     }, 1, 1, TimeUnit.SECONDS);
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       scheduler.shutdown();
       try {
-        scheduler.awaitTermination(10, TimeUnit.SECONDS);
+        scheduler.awaitTermination(TERMINATION_TIMEOUT_SECONDS, TimeUnit.SECONDS);
       } catch (final InterruptedException e) {
-        e.printStackTrace();
+        throw new IllegalStateException(e);
       }
       final long oldValue = counter.getAndSet(0);
-      System.out.println(oldValue);
-      jedis.incrBy("input_counter", oldValue);
+      System.out.println(oldValue); // NOPMD
+      jedis.incrBy(REDIS_INPUT_COUNTER_KEY, oldValue);
+      jedis.close();
     }));
   }
 
