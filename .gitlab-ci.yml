@@ -14,6 +14,12 @@ cache:
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
+stages:
+  - build
+  - test
+  - check
+  - deploy
+
 build:
   stage: build
   tags:
@@ -30,12 +36,29 @@ build:
       - load-tester-bridge/build/distributions/*.tar
     expire_in: 1 day
 
-
 test:
   stage: test
   tags:
     - dockerex
   script: ./gradlew test
+
+checkstyle:
+  stage: check
+  tags:
+    - dockerex
+  script: ./gradlew checkstyle
+  
+pmd:
+  stage: check
+  tags:
+    - dockerex
+  script: ./gradlew pmd
+  
+spotbugs:
+  stage: check
+  tags:
+    - dockerex
+  script: ./gradlew spotbugs
 
 deploy-raritan-bridge:
   stage: deploy
