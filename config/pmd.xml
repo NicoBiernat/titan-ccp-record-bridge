@@ -17,9 +17,11 @@
 
   <rule ref="category/java/codestyle.xml">
     <exclude name="AtLeastOneConstructor" />
+    <exclude name="DefaultPackage" />
     <exclude name="OnlyOneReturn" />
     <exclude name="ShortVariable" />
     <exclude name="ShortClassName" />
+    <exclude name="UnnecessaryModifier" />
   </rule>
 
   <rule ref="category/java/design.xml">

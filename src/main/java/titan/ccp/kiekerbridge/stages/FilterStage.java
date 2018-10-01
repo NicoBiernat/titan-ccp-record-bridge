@@ -3,6 +3,12 @@ package titan.ccp.kiekerbridge.stages;
 import java.util.function.Predicate;
 import teetime.stage.basic.AbstractFilter;
 
+/**
+ * TeeTime stage that only forwards those elements for which the configured {@link Predicate}
+ * returns true.
+ *
+ * @param <T> type of elements to filter
+ */
 public class FilterStage<T> extends AbstractFilter<T> {
 
   private final Predicate<? super T> predicate;

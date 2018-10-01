@@ -13,11 +13,14 @@ import teetime.framework.Execution;
 import teetime.framework.OutputPort;
 import teetime.stage.InstanceOfFilter;
 import titan.ccp.common.configuration.Configurations;
-import titan.ccp.kiekerbridge.test.KafkaRecordSender;
 import titan.ccp.models.records.ActivePowerRecord;
 
-// TODO RENAME to Record Bridge
+
+/**
+ * Framework class to simplify the creation of Record Bridges.
+ */
 public final class KiekerBridge {
+  // TODO RENAME to Record Bridge
 
   private final Execution<TerminatableConfiguration> execution;
 
@@ -35,6 +38,9 @@ public final class KiekerBridge {
     Runtime.getRuntime().addShutdownHook(new Thread(this::stopBlocking));
   }
 
+  /**
+   * Start the bridge.
+   */
   public void start() {
     for (final Runnable onStartAction : this.onStartActions) {
       onStartAction.run();
@@ -42,6 +48,9 @@ public final class KiekerBridge {
     this.execution.executeNonBlocking();
   }
 
+  /**
+   * Asynchronously stop the bridge.
+   */
   public CompletableFuture<Void> stop() {
     final CompletableFuture<Void> requestTerminationResult =
         this.execution.getConfiguration().requestTermination();
@@ -53,19 +62,25 @@ public final class KiekerBridge {
     return CompletableFuture.allOf(stopResults.toArray(size -> new CompletableFuture[size]));
   }
 
+  /**
+   * Stop the bridge. This method blocks until it is eventually stopped.
+   */
   public void stopBlocking() {
     this.stop().join();
   }
 
   public static Builder ofStream(final RecordBridgeStream<? extends IMonitoringRecord> stream) {
-    return new Builder(stream.getConfiguration(), stream.getLastOutputPort());
+    return new Builder(stream.getConfiguration(), stream.getLastOutputPort()); // NOPMD
   }
 
   public static Builder ofConfiguration(final TerminatableConfiguration configuration,
       final OutputPort<? extends IMonitoringRecord> outputPort) {
-    return new Builder(configuration, outputPort);
+    return new Builder(configuration, outputPort); // NOPMD
   }
 
+  /**
+   * Builder to create Record Bridges.
+   */
   public static class Builder {
 
     private static final int TEETIME_DEFAULT_PIPE_CAPACITY = 512;
@@ -105,16 +120,17 @@ public final class KiekerBridge {
       };
     }
 
+    /**
+     * Add an on-start action.
+     */
     public Builder onStart(final Runnable action) {
       this.onStartActions.add(action);
       return this;
     }
 
-    public Builder onStop(final Supplier<CompletableFuture<Void>> action) {
-      this.onStopActions.add(action);
-      return this;
-    }
-
+    /**
+     * Add an on-stop action.
+     */
     public Builder onStop(final Runnable action) {
       this.onStopActions.add(() -> {
         action.run();
@@ -123,8 +139,16 @@ public final class KiekerBridge {
       return this;
     }
 
+    /**
+     * Add an asynchronous on-stop action.
+     */
+    public Builder onStop(final Supplier<CompletableFuture<Void>> action) {
+      this.onStopActions.add(action);
+      return this;
+    }
+
     public KiekerBridge build() {
-      return new KiekerBridge(this.teetimeConfigFactory.apply(this.configuration),
+      return new KiekerBridge(this.teetimeConfigFactory.apply(this.configuration), // NOPMD
           this.onStartActions, this.onStopActions);
     }
 

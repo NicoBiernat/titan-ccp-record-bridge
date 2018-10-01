@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge.test;
+package titan.ccp.kiekerbridge;
 
 import com.google.common.base.Function;
 import java.util.Properties;
@@ -13,6 +13,11 @@ import teetime.framework.AbstractConsumerStage;
 import titan.ccp.common.kieker.kafka.IMonitoringRecordSerde;
 
 
+/**
+ * Sends monitoring records to Kafka.
+ *
+ * @param <T> {@link IMonitoringRecord} to send
+ */
 public class KafkaRecordSender<T extends IMonitoringRecord> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(KafkaRecordSender.class);
@@ -32,6 +37,9 @@ public class KafkaRecordSender<T extends IMonitoringRecord> {
     this(bootstrapServers, topic, keyAccessor, new Properties());
   }
 
+  /**
+   * Create a new {@link KafkaRecordSender}.
+   */
   public KafkaRecordSender(final String bootstrapServers, final String topic,
       final Function<T, String> keyAccessor, final Properties defaultProperties) {
     this.topic = topic;
@@ -49,6 +57,9 @@ public class KafkaRecordSender<T extends IMonitoringRecord> {
         IMonitoringRecordSerde.serializer());
   }
 
+  /**
+   * Write the passed monitoring record to Kafka.
+   */
   public void write(final T monitoringRecord) {
     final ProducerRecord<String, T> record = new ProducerRecord<>(this.topic,
         this.keyAccessor.apply(monitoringRecord), monitoringRecord);
@@ -61,11 +72,17 @@ public class KafkaRecordSender<T extends IMonitoringRecord> {
     this.producer.close();
   }
 
+  /**
+   * Create a TeeTime stage wrapping a {@link KafkaRecordSender}.
+   *
+   * @param <T> {@link IMonitoringRecord} to send
+   */
   public static class Stage<T extends IMonitoringRecord> extends AbstractConsumerStage<T> {
 
     private final KafkaRecordSender<T> sender;
 
     public Stage(final KafkaRecordSender<T> sender) {
+      super();
       this.sender = sender;
     }
 
