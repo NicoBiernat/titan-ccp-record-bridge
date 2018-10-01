@@ -24,12 +24,15 @@ allprojects {
 	    maven {
 	    	url "https://oss.sonatype.org/content/repositories/snapshots/"
 	    }
+	    maven {
+    		url 'https://jitpack.io'
 	}
 }
 
 dependencies {
     // These dependencies is exported to consumers, that is to say found on their compile classpath.
-    api 'org.industrial-devops:titan.ccp.model:0.0.1-SNAPSHOT'
+    api 'com.github.cau-se:titan-ccp-common:master-SNAPSHOT'
+    //api 'org.industrial-devops:titan.ccp.model:0.0.1-SNAPSHOT'
     api 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'
     api 'net.sourceforge.teetime:teetime:3.0'
 
