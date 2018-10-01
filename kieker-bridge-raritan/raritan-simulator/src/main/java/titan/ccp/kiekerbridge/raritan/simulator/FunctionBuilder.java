@@ -30,7 +30,7 @@ public final class FunctionBuilder {
     return x -> this.functions.stream().mapToDouble(f -> f.applyAsDouble(x)).sum();
   }
 
-  public static FunctionBuilder of(final LongToDoubleFunction function) {
+  public static FunctionBuilder of(final LongToDoubleFunction function) { // NOPMD
     return new FunctionBuilder(function);
   }
 }

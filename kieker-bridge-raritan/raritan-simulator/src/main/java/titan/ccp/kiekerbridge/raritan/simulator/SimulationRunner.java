@@ -82,7 +82,7 @@ public class SimulationRunner {
     final Configuration configuration = Configurations.create();
     final String setupType = configuration.getString("setup", "demo"); // NOCS
 
-    if (setupType.equals("scale")) { // TODO
+    if (setupType.equals("scale")) { // NOPMD // TODO
 
       final int frequency = configuration.getInt("frequency", 100);
       final int sensorsCount = configuration.getInt("sensors", 100);
@@ -106,7 +106,7 @@ public class SimulationRunner {
         final long startTime = System.currentTimeMillis();
         monitoringScheduler.scheduleAtFixedRate(() -> {
           final long elapsedTime = System.currentTimeMillis() - startTime;
-          System.out.println("input;" + elapsedTime + ";" + runner.getCounter());
+          System.out.println("input;" + elapsedTime + ";" + runner.getCounter()); // NOPMD
         }, 0, 1, TimeUnit.SECONDS);
 
         // Start output counter
@@ -122,7 +122,8 @@ public class SimulationRunner {
               .thenAccept(v -> {
                 final long elapsedTime = System.currentTimeMillis() - startTime;
                 // countData.add(new CountData(elapsedTime, v));
-                System.out.println("output;" + requestStartedTime + ";" + elapsedTime + ";" + v);
+                System.out.println("output;" + requestStartedTime + ";" // NOPMD 
+                    + elapsedTime + ";" + v); 
               });
         }, 0, 1, TimeUnit.SECONDS);
       }
@@ -134,7 +135,7 @@ public class SimulationRunner {
         monitoringScheduler.shutdownNow();
       }
 
-    } else if (setupType.equals("demo")) {
+    } else if (setupType.equals("demo")) { // NOPMD
       LOGGER.info("Use demo setup");
       new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")),
           getDemoSetup()).run();
