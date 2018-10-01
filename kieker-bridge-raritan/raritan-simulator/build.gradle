@@ -18,12 +18,7 @@ buildscript {
 sourceCompatibility = "1.10"
 targetCompatibility = "1.10"
 
-repositories {
-    jcenter()
-}
-
 dependencies {
-	compile 'org.industrial-devops:titan.ccp.model:0.0.1-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.slf4j:slf4j-simple:1.7.25'
 
