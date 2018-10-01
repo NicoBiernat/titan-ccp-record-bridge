@@ -5,8 +5,17 @@ import kieker.common.record.IMonitoringRecord;
 import titan.ccp.kiekerbridge.KiekerBridge;
 import titan.ccp.kiekerbridge.RecordBridgeStream;
 
-public class RaritanKiekerBridge {
+/**
+ * A Record Bridge that integrates Raritan PDUs.
+ */
+public final class RaritanKiekerBridge {
+  // TODO rename to RecordBridge
 
+  private RaritanKiekerBridge() {}
+
+  /**
+   * Start the {@link RaritanKiekerBridge}.
+   */
   public static void main(final String[] args) {
     // TODO Do this via configuration
     final boolean receiveTimestampsInMs = Boolean

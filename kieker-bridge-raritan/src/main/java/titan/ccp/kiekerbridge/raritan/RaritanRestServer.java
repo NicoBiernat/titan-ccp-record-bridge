@@ -8,6 +8,9 @@ import spark.Request;
 import spark.Response;
 import spark.Service;
 
+/**
+ * Rest server to receive Raritan push messages and store them to a queue.
+ */
 public class RaritanRestServer {
 
   private static final int PORT = 8080; // TODO as parameter
@@ -28,6 +31,9 @@ public class RaritanRestServer {
     this.service = Service.ignite().port(PORT);
   }
 
+  /**
+   * Start the server.
+   */
   public void start() {
     this.service.post(POST_URL, (final Request request, final Response response) -> {
       LOGGER.info("Received push message on {}:{}", POST_URL, PORT); // TODO change to debug
@@ -43,6 +49,9 @@ public class RaritanRestServer {
     LOGGER.info("Instantiate Spark server.");
   }
 
+  /**
+   * Stop the server.
+   */
   public void stop() {
     this.service.stop();
   }

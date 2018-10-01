@@ -11,6 +11,10 @@ import java.util.stream.IntStream;
 import kieker.common.record.IMonitoringRecord;
 import titan.ccp.models.records.ActivePowerRecord;
 
+/**
+ * {@link Function} that transforms Raritan JSON push messages into a list of
+ * {@link IMonitoringRecord}s.
+ */
 public class RaritanJsonTransformer implements Function<String, List<IMonitoringRecord>> {
 
   private static final String SENSORS_KEY = "sensors";
