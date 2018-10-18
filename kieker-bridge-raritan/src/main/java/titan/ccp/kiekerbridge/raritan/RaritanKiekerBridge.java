@@ -26,8 +26,8 @@ public final class RaritanKiekerBridge {
     final RecordBridgeStream<IMonitoringRecord> stream =
         RecordBridgeStream.from(raritanRestServer.getQueue())
             .flatMap(new RaritanJsonTransformer(receiveTimestampsInMs));
-    final KiekerBridge kiekerBridge =
-        KiekerBridge.ofStream(stream).onStop(raritanRestServer::stop).build();
+    final KiekerBridge kiekerBridge = KiekerBridge.ofStream(stream)
+        .onStart(raritanRestServer::start).onStop(raritanRestServer::stop).build();
     kiekerBridge.start();
   }
 
