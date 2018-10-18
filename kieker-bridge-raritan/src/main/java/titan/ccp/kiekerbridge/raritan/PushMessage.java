@@ -1,5 +1,7 @@
 package titan.ccp.kiekerbridge.raritan;
 
+import java.util.Optional;
+
 /**
  * A sensor push message with an additional identifier identifying the PDU.
  */
@@ -9,7 +11,7 @@ public final class PushMessage {
   private final String message;
 
   public PushMessage(final String message) {
-    this("", message);
+    this(null, message);
   }
 
   public PushMessage(final String id, final String message) {
@@ -17,8 +19,8 @@ public final class PushMessage {
     this.message = message;
   }
 
-  public String getId() {
-    return this.id;
+  public Optional<String> getId() {
+    return Optional.ofNullable(this.id);
   }
 
   public String getMessage() {

@@ -40,7 +40,7 @@ public class RaritanRestServer {
    */
   public void start() {
     this.service.post(POST_URL, (final Request request, final Response response) -> {
-      final String id = request.queryParamOrDefault(ID_QUERY_PARAMETER, "");
+      final String id = request.queryParamOrDefault(ID_QUERY_PARAMETER, null);
       LOGGER.info("Received push message on {}:{}", POST_URL, PORT); // TODO change to debug
       try {
         this.queue.add(new PushMessage(id, request.body()));

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import kieker.common.record.IMonitoringRecord;
@@ -42,6 +43,7 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
 
   @Override
   public List<IMonitoringRecord> apply(final PushMessage pushMessage) {
+    final Optional<String> pduId = pushMessage.getId();
     final String json = pushMessage.getMessage();
     final JsonObject rootObject = this.jsonParser.parse(json).getAsJsonObject();
     final JsonArray sensors = rootObject.get(SENSORS_KEY).getAsJsonArray();
@@ -59,8 +61,7 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
 
       for (int i = 0; i < relevantSensorIndices.length; i++) {
         final int sensorIndex = relevantSensorIndices[i];
-        final String sensorLabel =
-            (pushMessage.getId().equals("") ? "" : pushMessage.getId() + '.') + sensorLabels[i];
+        final String sensorLabel = (pduId.isPresent() ? pduId.get() + '.' : "") + sensorLabels[i];
 
         final JsonObject relevantRecord = records.get(sensorIndex).getAsJsonObject();
         final double value = relevantRecord.get(AVG_VALUE_KEY).getAsDouble();
