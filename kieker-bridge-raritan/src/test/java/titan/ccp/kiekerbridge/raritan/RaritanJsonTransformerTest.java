@@ -30,7 +30,9 @@ public class RaritanJsonTransformerTest {
   @Test
   public void testIbakRaritanOutletSingleSensorJson() {
     final String json = this.getFileAsString("ibak_raritan_outlet_single_sensor.json");
-    final List<IMonitoringRecord> monitoringRecords = this.raritanJsonTransformer.apply(json);
+    final PushMessage pushMessage = new PushMessage(json);
+    final List<IMonitoringRecord> monitoringRecords =
+        this.raritanJsonTransformer.apply(pushMessage);
     assertEquals(2, monitoringRecords.size());
 
     this.testRecord(monitoringRecords.get(0), "13", 1521817336_000L, 87.21);
@@ -40,7 +42,9 @@ public class RaritanJsonTransformerTest {
   @Test
   public void testIbakRaritanOutletTwoSensorsJson() {
     final String json = this.getFileAsString("ibak_raritan_outlet_two_sensors.json");
-    final List<IMonitoringRecord> monitoringRecords = this.raritanJsonTransformer.apply(json);
+    final PushMessage pushMessage = new PushMessage(json);
+    final List<IMonitoringRecord> monitoringRecords =
+        this.raritanJsonTransformer.apply(pushMessage);
     assertEquals(6, monitoringRecords.size());
 
     this.testRecord(monitoringRecords.get(0), "47", 1529057441_000L, 0.0);

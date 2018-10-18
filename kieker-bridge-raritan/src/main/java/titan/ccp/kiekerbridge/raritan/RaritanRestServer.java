@@ -15,6 +15,9 @@ public class RaritanRestServer {
 
   private static final int PORT = 8080; // TODO as parameter
   private static final String POST_URL = "/raritan"; // TODO as parameter
+  private static final String ID_QUERY_PARAMETER = "id"; // TODO as parameter
+
+  private static final int QUEUE_SIZE = 1024; // TODO as parameter
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RaritanRestServer.class);
 
@@ -22,9 +25,10 @@ public class RaritanRestServer {
   private static final String RESPONSE_STATUS_MESSAGE = ""; // TODO temp
 
   private final Service service;
-  // TODO queue size
-  private final Queue<String> queue = new MpscArrayQueue<>(1024); // Non-blocking, but lock-free
-  // private final Queue<String> queue = new ArrayBlockingQueue<>(1024); //
+
+  private final Queue<PushMessage> queue = new MpscArrayQueue<>(QUEUE_SIZE);
+  // Non-blocking, but lock-free
+  // private final Queue<String> queue = new ArrayBlockingQueue<>(1024);
   // Blocking, but not lock-free
 
   public RaritanRestServer() {
@@ -36,9 +40,10 @@ public class RaritanRestServer {
    */
   public void start() {
     this.service.post(POST_URL, (final Request request, final Response response) -> {
+      final String id = request.queryParamOrDefault(ID_QUERY_PARAMETER, "");
       LOGGER.info("Received push message on {}:{}", POST_URL, PORT); // TODO change to debug
       try {
-        this.queue.add(request.body());
+        this.queue.add(new PushMessage(id, request.body()));
       } catch (final IllegalStateException e) {
         LOGGER.warn("Element cannot be added since queue capacity is exhausted.", e);
       }
@@ -56,7 +61,8 @@ public class RaritanRestServer {
     this.service.stop();
   }
 
-  public Queue<String> getQueue() {
+  public Queue<PushMessage> getQueue() {
     return this.queue;
   }
 }
+

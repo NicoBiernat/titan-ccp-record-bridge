@@ -15,7 +15,7 @@ import titan.ccp.models.records.ActivePowerRecord;
  * {@link Function} that transforms Raritan JSON push messages into a list of
  * {@link IMonitoringRecord}s.
  */
-public class RaritanJsonTransformer implements Function<String, List<IMonitoringRecord>> {
+public class RaritanJsonTransformer implements Function<PushMessage, List<IMonitoringRecord>> {
 
   private static final String SENSORS_KEY = "sensors";
   private static final String DEVICE_KEY = "device";
@@ -41,7 +41,8 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
   }
 
   @Override
-  public List<IMonitoringRecord> apply(final String json) {
+  public List<IMonitoringRecord> apply(final PushMessage pushMessage) {
+    final String json = pushMessage.getMessage();
     final JsonObject rootObject = this.jsonParser.parse(json).getAsJsonObject();
     final JsonArray sensors = rootObject.get(SENSORS_KEY).getAsJsonArray();
     final int[] relevantSensorIndices = this.getReleventSensorIndices(sensors);
@@ -58,7 +59,8 @@ public class RaritanJsonTransformer implements Function<String, List<IMonitoring
 
       for (int i = 0; i < relevantSensorIndices.length; i++) {
         final int sensorIndex = relevantSensorIndices[i];
-        final String sensorLabel = sensorLabels[i];
+        final String sensorLabel =
+            (pushMessage.getId().equals("") ? "" : pushMessage.getId() + '.') + sensorLabels[i];
 
         final JsonObject relevantRecord = records.get(sensorIndex).getAsJsonObject();
         final double value = relevantRecord.get(AVG_VALUE_KEY).getAsDouble();
