@@ -8,7 +8,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import kieker.common.record.IMonitoringRecord;
+import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import teetime.framework.Execution;
 import teetime.framework.OutputPort;
 import teetime.stage.InstanceOfFilter;
@@ -85,16 +87,30 @@ public final class KiekerBridge {
 
     private static final int TEETIME_DEFAULT_PIPE_CAPACITY = 512;
 
+    private static final String DEFAULT_PROPERTY_LOCATION =
+        "META-INF/default-record-bridge.properties";
+
     private final Function<Configuration, TerminatableConfiguration> teetimeConfigFactory;
 
     private final List<Runnable> onStartActions = new ArrayList<>(4);
 
     private final List<Supplier<CompletableFuture<Void>>> onStopActions = new ArrayList<>(4);
 
-    private final Configuration configuration = Configurations.create();
+    private final CompositeConfiguration configuration = new CompositeConfiguration();
 
     private Builder(final TerminatableConfiguration teetimeConfiguration,
         final OutputPort<? extends IMonitoringRecord> outputPort) {
+
+      this.configuration.addConfiguration(Configurations.create());
+      try {
+        this.configuration
+            .addConfiguration(new org.apache.commons.configuration2.builder.fluent.Configurations()
+                .properties(DEFAULT_PROPERTY_LOCATION));
+      } catch (final ConfigurationException e) {
+        throw new IllegalArgumentException(
+            "Cannot load configuration from ressource " + "\"" + DEFAULT_PROPERTY_LOCATION + "\"",
+            e);
+      }
 
       this.teetimeConfigFactory = config -> {
         // final KafkaSenderStage senderStage = new KafkaSenderStage();
