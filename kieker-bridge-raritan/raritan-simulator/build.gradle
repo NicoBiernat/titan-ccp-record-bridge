@@ -15,8 +15,8 @@ buildscript {
   }
 }
 
-sourceCompatibility = "1.10"
-targetCompatibility = "1.10"
+sourceCompatibility = "1.11"
+targetCompatibility = "1.11"
 
 dependencies {
     compile 'com.github.cau-se:titan-ccp-common:master-SNAPSHOT'
@@ -27,17 +27,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-tasks.withType(AbstractCompile) {
-  options.compilerArgs += ["--add-modules", "jdk.incubator.httpclient"]
-}
-
-tasks.withType(Test) {
-  jvmArgs += ["--add-modules", "jdk.incubator.httpclient"]
-}
-
 mainClassName = "titan.ccp.kiekerbridge.raritan.simulator.SimulationRunner"
-
-applicationDefaultJvmArgs = ["--add-modules=jdk.incubator.httpclient"]
 
 pmd {
   ruleSetFiles = files("../../config/pmd.xml")

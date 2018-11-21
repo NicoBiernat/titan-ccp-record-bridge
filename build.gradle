@@ -15,8 +15,8 @@ buildscript {
   }
 }
 
-sourceCompatibility = "1.10"
-targetCompatibility = "1.10"
+sourceCompatibility = "1.11"
+targetCompatibility = "1.11"
 
 configurations.all {
     // Check for updates every build
@@ -37,8 +37,8 @@ allprojects {
 
 dependencies {
     // These dependencies is exported to consumers, that is to say found on their compile classpath.
-    //api 'com.github.cau-se:titan-ccp-common:master-SNAPSHOT'
     api('com.github.cau-se:titan-ccp-common:master-SNAPSHOT') { changing = true }
+    //api('com.github.cau-se:titan-ccp-common:byte-buffer-size-128-SNAPSHOT') { changing = true }
     //api 'org.industrial-devops:titan.ccp.model:0.0.1-SNAPSHOT'
     api 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'
     api 'net.sourceforge.teetime:teetime:3.0'
