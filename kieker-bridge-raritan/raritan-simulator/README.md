@@ -7,6 +7,10 @@ devices and machines in production environments such as factories.
 
 This directory contains a tool to simulate Raritan power distribution units.
 
+## Usage
+
+The URL power measurements are sent to has to be configured via a Java property file's parameter `kieker.bridge.address` or via the environment variable `KIEKER_BRIDGE_ADDRESS`.
+
 ## Build and Run
 
 To simply run the source code from within, e.g., Eclipse make sure to add

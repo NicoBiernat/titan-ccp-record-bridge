@@ -58,6 +58,7 @@ public class SimulationRunner {
         this.httpPusher.sendMessage(sensorReader.getMessage());
         this.counter.addAndGet(1);
       };
+
       this.scheduler.scheduleAtFixedRate(sender, 0, sensorReader.getSensor().getPeroid().toMillis(),
           TimeUnit.MILLISECONDS);
     }
@@ -73,7 +74,7 @@ public class SimulationRunner {
   }
 
   /**
-   * Main method to a simulation runner using external configurations.
+   * Main method to start a simulation runner using external configurations.
    */
   public static void main(final String[] args) throws InterruptedException {
     // Turn off Java's DNS caching
@@ -122,8 +123,8 @@ public class SimulationRunner {
               .thenAccept(v -> {
                 final long elapsedTime = System.currentTimeMillis() - startTime;
                 // countData.add(new CountData(elapsedTime, v));
-                System.out.println("output;" + requestStartedTime + ";" // NOPMD 
-                    + elapsedTime + ";" + v); 
+                System.out.println("output;" + requestStartedTime + ";" // NOPMD
+                    + elapsedTime + ";" + v);
               });
         }, 0, 1, TimeUnit.SECONDS);
       }
@@ -135,17 +136,17 @@ public class SimulationRunner {
         monitoringScheduler.shutdownNow();
       }
 
-    } else if (setupType.equals("demo")) { // NOPMD
-      LOGGER.info("Use demo setup");
-      new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")),
-          getDemoSetup()).run();
-    } else {
+    } else if (setupType.equals("feas")) { // NOPMD
       LOGGER.info("Use feasability setup");
       final SimulationRunner runner = new SimulationRunner(
           URI.create(configuration.getString("kieker.bridge.address")), getFeasibilitySetup());
       runner.run();
       Thread.sleep(60 * 60 * 1000); // NOCS
       runner.shutdown();
+    } else {
+      LOGGER.info("Use demo setup");
+      new SimulationRunner(URI.create(configuration.getString("kieker.bridge.address")),
+          getDemoSetup()).run();
     }
 
   }
