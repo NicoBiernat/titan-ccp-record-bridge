@@ -1,6 +1,6 @@
 FROM openjdk:10-slim
 
-ADD build/distributions/titanccp-kieker-bridge-raritan.tar /
+ADD build/distributions/titanccp-record-bridge-raritan.tar /
 
 EXPOSE 80
 
