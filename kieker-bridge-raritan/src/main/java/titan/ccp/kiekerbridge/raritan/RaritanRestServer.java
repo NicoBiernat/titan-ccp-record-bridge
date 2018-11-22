@@ -13,35 +13,43 @@ import spark.Service;
  */
 public class RaritanRestServer {
 
-  private static final int PORT = 8080; // TODO as parameter
-  private static final String POST_URL = "/raritan"; // TODO as parameter
-  private static final String ID_QUERY_PARAMETER = "id"; // TODO as parameter
-
-  private static final int QUEUE_SIZE = 1024; // TODO as parameter
-
   private static final Logger LOGGER = LoggerFactory.getLogger(RaritanRestServer.class);
 
-  private static final int RESPONSE_STATUS_CODE = 200; // TODO temp
-  private static final String RESPONSE_STATUS_MESSAGE = ""; // TODO temp
+  private static final int RESPONSE_STATUS_CODE = 200;
+  private static final String RESPONSE_STATUS_MESSAGE = "";
 
   private final Service service;
+  private final String postUrl;
+  private final String idQueryParameter;
 
-  private final Queue<PushMessage> queue = new MpscArrayQueue<>(QUEUE_SIZE);
-  // Non-blocking, but lock-free
-  // private final Queue<String> queue = new ArrayBlockingQueue<>(1024);
-  // Blocking, but not lock-free
+  private final Queue<PushMessage> queue;
 
-  public RaritanRestServer() {
-    this.service = Service.ignite().port(PORT);
+  /**
+   * Creates a new web server for receiving push messages sent by a Raritan PDU.
+   *
+   * @param port Port this web server should listen on
+   * @param postUrl URL to which records are sent.
+   * @param idQueryParameter Name of an optional query parameter to distinguish multiple PDUs.
+   * @param queueSize Size of the internal queue.
+   */
+  public RaritanRestServer(final int port, final String postUrl, final String idQueryParameter,
+      final int queueSize) {
+    this.service = Service.ignite().port(port);
+    this.postUrl = postUrl;
+    this.idQueryParameter = idQueryParameter;
+
+    this.queue = new MpscArrayQueue<>(queueSize); // Non-blocking, but lock-free
+    // this.queue = new ArrayBlockingQueue<>(1024); // Blocking, but not lock-free
   }
 
   /**
    * Start the server.
    */
   public void start() {
-    this.service.post(POST_URL, (final Request request, final Response response) -> {
-      final String id = request.queryParamOrDefault(ID_QUERY_PARAMETER, null);
-      LOGGER.info("Received push message on {}:{}", POST_URL, PORT); // TODO change to debug
+    this.service.post(this.postUrl, (final Request request, final Response response) -> {
+      final String id = request.queryParamOrDefault(this.idQueryParameter, null);
+      LOGGER.info("Received push message on {}:{}", this.postUrl, this.service.port());
+      // TODO change to debug
       try {
         this.queue.add(new PushMessage(id, request.body()));
       } catch (final IllegalStateException e) {

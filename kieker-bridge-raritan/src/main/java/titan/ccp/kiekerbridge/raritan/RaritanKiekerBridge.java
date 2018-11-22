@@ -1,7 +1,8 @@
 package titan.ccp.kiekerbridge.raritan;
 
-import java.util.Objects;
 import kieker.common.record.IMonitoringRecord;
+import org.apache.commons.configuration2.Configuration;
+import titan.ccp.common.configuration.Configurations;
 import titan.ccp.kiekerbridge.KiekerBridge;
 import titan.ccp.kiekerbridge.RecordBridgeStream;
 
@@ -17,11 +18,16 @@ public final class RaritanKiekerBridge {
    * Start the {@link RaritanKiekerBridge}.
    */
   public static void main(final String[] args) {
-    // TODO Do this via configuration
-    final boolean receiveTimestampsInMs = Boolean
-        .parseBoolean(Objects.requireNonNullElse(System.getenv("TIMESTAMPS_IN_MS"), "false"));
+    final Configuration configuration = Configurations.create();
+    final boolean receiveTimestampsInMs = configuration.getBoolean("timestamp.in.ms");
+    final int webserverPort = configuration.getInt("webserver.port");
+    final String webserverPostUrl = configuration.getString("webserver.post.url");
+    final String webserverPostQueryParameterId =
+        configuration.getString("webserver.post.query.parameter.id");
+    final int queueSize = configuration.getInt("queue.size");
 
-    final RaritanRestServer raritanRestServer = new RaritanRestServer();
+    final RaritanRestServer raritanRestServer = new RaritanRestServer(webserverPort,
+        webserverPostUrl, webserverPostQueryParameterId, queueSize);
 
     final RecordBridgeStream<IMonitoringRecord> stream =
         RecordBridgeStream.from(raritanRestServer.getQueue())
