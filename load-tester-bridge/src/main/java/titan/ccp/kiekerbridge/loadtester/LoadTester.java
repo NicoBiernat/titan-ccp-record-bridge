@@ -12,7 +12,7 @@ import org.jctools.queues.MpscArrayQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
-import titan.ccp.kiekerbridge.KiekerBridge;
+import titan.ccp.kiekerbridge.RecordBridge;
 import titan.ccp.kiekerbridge.RecordBridgeStream;
 import titan.ccp.models.records.ActivePowerRecord;
 
@@ -66,8 +66,8 @@ public final class LoadTester {
 
 
     final RecordBridgeStream<IMonitoringRecord> stream = RecordBridgeStream.from(queue);
-    final KiekerBridge kiekerBridge = KiekerBridge.ofStream(stream).build();
-    kiekerBridge.start();
+    final RecordBridge recordBridge = RecordBridge.ofStream(stream).build();
+    recordBridge.start();
 
     scheduler.scheduleAtFixedRate(() -> {
       final long oldValue = counter.getAndSet(0);

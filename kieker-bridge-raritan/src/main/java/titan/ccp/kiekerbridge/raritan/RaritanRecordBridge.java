@@ -3,19 +3,18 @@ package titan.ccp.kiekerbridge.raritan;
 import kieker.common.record.IMonitoringRecord;
 import org.apache.commons.configuration2.Configuration;
 import titan.ccp.common.configuration.Configurations;
-import titan.ccp.kiekerbridge.KiekerBridge;
+import titan.ccp.kiekerbridge.RecordBridge;
 import titan.ccp.kiekerbridge.RecordBridgeStream;
 
 /**
  * A Record Bridge that integrates Raritan PDUs.
  */
-public final class RaritanKiekerBridge {
-  // TODO rename to RecordBridge
+public final class RaritanRecordBridge {
 
-  private RaritanKiekerBridge() {}
+  private RaritanRecordBridge() {}
 
   /**
-   * Start the {@link RaritanKiekerBridge}.
+   * Start the {@link RaritanRecordBridge}.
    */
   public static void main(final String[] args) {
     final Configuration configuration = Configurations.create();
@@ -32,7 +31,7 @@ public final class RaritanKiekerBridge {
     final RecordBridgeStream<IMonitoringRecord> stream =
         RecordBridgeStream.from(raritanRestServer.getQueue())
             .flatMap(new RaritanJsonTransformer(receiveTimestampsInMs));
-    final KiekerBridge kiekerBridge = KiekerBridge.ofStream(stream)
+    final RecordBridge kiekerBridge = RecordBridge.ofStream(stream)
         .onStart(raritanRestServer::start).onStop(raritanRestServer::stop).build();
     kiekerBridge.start();
   }

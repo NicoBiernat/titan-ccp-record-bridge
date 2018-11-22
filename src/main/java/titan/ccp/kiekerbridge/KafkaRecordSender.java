@@ -64,7 +64,7 @@ public class KafkaRecordSender<T extends IMonitoringRecord> {
     final ProducerRecord<String, T> record = new ProducerRecord<>(this.topic,
         this.keyAccessor.apply(monitoringRecord), monitoringRecord);
 
-    LOGGER.debug("Send record to Kafka topic {}: {}", this.topic, record); // TODO debug
+    LOGGER.debug("Send record to Kafka topic {}: {}", this.topic, record);
     this.producer.send(record);
   }
 

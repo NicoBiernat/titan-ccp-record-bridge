@@ -37,7 +37,6 @@ allprojects {
 
 dependencies {
     // These dependencies is exported to consumers, that is to say found on their compile classpath.
-    //api 'com.github.cau-se:titan-ccp-common:master-SNAPSHOT'
     api('com.github.cau-se:titan-ccp-common:master-SNAPSHOT') { changing = true }
     //api 'org.industrial-devops:titan.ccp.model:0.0.1-SNAPSHOT'
     api 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'

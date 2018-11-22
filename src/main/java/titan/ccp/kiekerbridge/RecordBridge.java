@@ -21,8 +21,7 @@ import titan.ccp.models.records.ActivePowerRecord;
 /**
  * Framework class to simplify the creation of Record Bridges.
  */
-public final class KiekerBridge {
-  // TODO RENAME to Record Bridge
+public final class RecordBridge {
 
   private final Execution<TerminatableConfiguration> execution;
 
@@ -30,7 +29,7 @@ public final class KiekerBridge {
 
   private final List<Supplier<CompletableFuture<Void>>> onStopActions;
 
-  private KiekerBridge(final TerminatableConfiguration configuration,
+  private RecordBridge(final TerminatableConfiguration configuration,
       final List<Runnable> onStartActions,
       final List<Supplier<CompletableFuture<Void>>> onStopActions) {
     this.execution = new Execution<>(configuration);
@@ -113,17 +112,9 @@ public final class KiekerBridge {
       }
 
       this.teetimeConfigFactory = config -> {
-        // final KafkaSenderStage senderStage = new KafkaSenderStage();
-        // final KafkaPowerConsumptionRecordSender kafkaSender = new
-        // KafkaPowerConsumptionRecordSender(
-        // config.getString("kafka.bootstrap.servers"), config.getString("kafka.topic"),
-        // new Properties());
         final KafkaRecordSender<ActivePowerRecord> kafkaSender =
             new KafkaRecordSender<>(config.getString("kafka.bootstrap.servers"),
                 config.getString("kafka.topic"), r -> r.getIdentifier(), new Properties());
-        // final KafkaPowerConsumptionRecordSender.Stage senderStage = new
-        // KafkaPowerConsumptionRecordSender.Stage(
-        // kafkaSender);
         final KafkaRecordSender.Stage<ActivePowerRecord> senderStage =
             new KafkaRecordSender.Stage<>(kafkaSender);
         final InstanceOfFilter<IMonitoringRecord, ActivePowerRecord> instanceOfFilter =
@@ -163,8 +154,8 @@ public final class KiekerBridge {
       return this;
     }
 
-    public KiekerBridge build() {
-      return new KiekerBridge(this.teetimeConfigFactory.apply(this.configuration), // NOPMD
+    public RecordBridge build() {
+      return new RecordBridge(this.teetimeConfigFactory.apply(this.configuration), // NOPMD
           this.onStartActions, this.onStopActions);
     }
 

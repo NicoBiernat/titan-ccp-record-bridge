@@ -29,7 +29,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-mainClassName = "titan.ccp.kiekerbridge.raritan.RaritanKiekerBridge"
+mainClassName = "titan.ccp.kiekerbridge.raritan.RaritanRecordBridge"
 
 pmd {
   ruleSetFiles = files("../config/pmd.xml")
