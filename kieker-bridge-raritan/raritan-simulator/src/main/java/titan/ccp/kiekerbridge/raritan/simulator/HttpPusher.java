@@ -35,11 +35,12 @@ public class HttpPusher {
             .POST(HttpRequest.BodyPublisher.fromString(message)).build();
     final BodyHandler<Void> bodyHandler = HttpResponse.BodyHandler.discard(null);
 
-    // TODO "Pushed message" is printed always
-    this.client.sendAsync(request, bodyHandler).exceptionally(e -> {
+    this.client.sendAsync(request, bodyHandler).thenAccept(r -> {
+      LOGGER.info("Pushed message"); // TODO debug level
+    }).exceptionally(e -> {
       LOGGER.warn("Failed to push message.", e);
       return null;
-    }).thenAccept(r -> LOGGER.info("Pushed message")); // TODO debug level
+    });
 
   }
 }
