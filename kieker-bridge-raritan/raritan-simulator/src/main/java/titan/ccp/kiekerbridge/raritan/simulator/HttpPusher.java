@@ -36,7 +36,7 @@ public class HttpPusher {
     final BodyHandler<Void> bodyHandler = HttpResponse.BodyHandler.discard(null);
 
     this.client.sendAsync(request, bodyHandler).thenAccept(r -> {
-      LOGGER.info("Pushed message"); // TODO debug level
+      LOGGER.debug("Pushed message");
     }).exceptionally(e -> {
       LOGGER.warn("Failed to push message.", e);
       return null;
