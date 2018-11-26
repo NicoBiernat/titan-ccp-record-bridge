@@ -26,24 +26,33 @@ public class KafkaRecordSender<T extends IMonitoringRecord> {
 
   private final Function<T, String> keyAccessor;
 
+  private final Function<T, Long> timestampAccessor;
+
   private final Producer<String, T> producer;
 
   public KafkaRecordSender(final String bootstrapServers, final String topic) {
-    this(bootstrapServers, topic, x -> "", new Properties());
+    this(bootstrapServers, topic, x -> "", x -> null, new Properties());
   }
 
   public KafkaRecordSender(final String bootstrapServers, final String topic,
       final Function<T, String> keyAccessor) {
-    this(bootstrapServers, topic, keyAccessor, new Properties());
+    this(bootstrapServers, topic, keyAccessor, x -> null, new Properties());
+  }
+
+  public KafkaRecordSender(final String bootstrapServers, final String topic,
+      final Function<T, String> keyAccessor, final Function<T, Long> timestampAccessor) {
+    this(bootstrapServers, topic, keyAccessor, timestampAccessor, new Properties());
   }
 
   /**
    * Create a new {@link KafkaRecordSender}.
    */
   public KafkaRecordSender(final String bootstrapServers, final String topic,
-      final Function<T, String> keyAccessor, final Properties defaultProperties) {
+      final Function<T, String> keyAccessor, final Function<T, Long> timestampAccessor,
+      final Properties defaultProperties) {
     this.topic = topic;
     this.keyAccessor = keyAccessor;
+    this.timestampAccessor = timestampAccessor;
 
     final Properties properties = new Properties();
     properties.putAll(defaultProperties);
@@ -61,8 +70,9 @@ public class KafkaRecordSender<T extends IMonitoringRecord> {
    * Write the passed monitoring record to Kafka.
    */
   public void write(final T monitoringRecord) {
-    final ProducerRecord<String, T> record = new ProducerRecord<>(this.topic,
-        this.keyAccessor.apply(monitoringRecord), monitoringRecord);
+    final ProducerRecord<String, T> record =
+        new ProducerRecord<>(this.topic, null, this.timestampAccessor.apply(monitoringRecord),
+            this.keyAccessor.apply(monitoringRecord), monitoringRecord);
 
     LOGGER.debug("Send record to Kafka topic {}: {}", this.topic, record);
     this.producer.send(record);
