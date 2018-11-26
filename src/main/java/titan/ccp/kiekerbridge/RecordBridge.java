@@ -114,7 +114,7 @@ public final class RecordBridge {
       this.teetimeConfigFactory = config -> {
         final KafkaRecordSender<ActivePowerRecord> kafkaSender = new KafkaRecordSender<>(
             config.getString("kafka.bootstrap.servers"), config.getString("kafka.topic"),
-            r -> r.getIdentifier(), r -> r.getLoggingTimestamp(), new Properties());
+            r -> r.getIdentifier(), r -> r.getTimestamp(), new Properties());
         final KafkaRecordSender.Stage<ActivePowerRecord> senderStage =
             new KafkaRecordSender.Stage<>(kafkaSender);
         final InstanceOfFilter<IMonitoringRecord, ActivePowerRecord> instanceOfFilter =
