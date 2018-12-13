@@ -1,7 +1,7 @@
 package titan.ccp.kiekerbridge;
 
-import com.google.common.base.Function;
 import java.util.Properties;
+import java.util.function.Function;
 import kieker.common.record.IMonitoringRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
