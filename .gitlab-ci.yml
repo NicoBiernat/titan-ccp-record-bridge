@@ -76,7 +76,7 @@ deploy-raritan-bridge:
     - docker logout
   only:
     - master
-    
+
 deploy-raritan-bridge-ibak-replay:
   stage: deploy
   tags:
@@ -85,7 +85,7 @@ deploy-raritan-bridge-ibak-replay:
   services:
     - docker:dind
   script:
-    - docker build --pull -t titan-ccp-kieker-bridge-raritan ./record-bridge-raritan
+    - docker build --pull -t titan-ccp-kieker-bridge-raritan ./kieker-bridge-raritan
     - docker tag titan-ccp-kieker-bridge-raritan industrialdevops/titan-ccp-kieker-bridge-raritan:$(date +%Y%m%d%H%M%S)_ibak-replay
     - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
     - docker push industrialdevops/titan-ccp-kieker-bridge-raritan
