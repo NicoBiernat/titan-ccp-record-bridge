@@ -81,7 +81,7 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
     return monitoringRecords;
   }
 
-  private Optional<String> determinePduId(final int[] relevantSensorIndices, // NOCS
+  private Optional<String> determinePduId(final int[] relevantSensorIndices, // NOCS NOPMD
       final String[] sensorLabels, final JsonArray records) {
     boolean sensor20used = false;
     boolean sensor25used = false;
