@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import kieker.common.record.IMonitoringRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import titan.ccp.models.records.ActivePowerRecord;
 
 /**
@@ -17,6 +19,8 @@ import titan.ccp.models.records.ActivePowerRecord;
  * {@link IMonitoringRecord}s.
  */
 public class RaritanJsonTransformer implements Function<PushMessage, List<IMonitoringRecord>> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(RaritanJsonTransformer.class);
 
   private static final String SENSORS_KEY = "sensors";
   private static final String DEVICE_KEY = "device";
@@ -42,8 +46,8 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
   }
 
   @Override
-  public List<IMonitoringRecord> apply(final PushMessage pushMessage) {
-    final Optional<String> pduId = pushMessage.getId();
+  public List<IMonitoringRecord> apply(final PushMessage pushMessage) { // NOPMD
+    // final Optional<String> pduId = pushMessage.getId();
     final String json = pushMessage.getMessage();
     final JsonObject rootObject = this.jsonParser.parse(json).getAsJsonObject();
     final JsonArray sensors = rootObject.get(SENSORS_KEY).getAsJsonArray();
@@ -58,6 +62,9 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
       final long timestampInMs =
           this.inputTimestampsInMs ? timestampReceived : timestampReceived * 1_000; // NOCS
       final JsonArray records = row.get(RECORDS_KEY).getAsJsonArray();
+
+      final Optional<String> pduId =
+          this.determinePduId(relevantSensorIndices, sensorLabels, records);
 
       for (int i = 0; i < relevantSensorIndices.length; i++) {
         final int sensorIndex = relevantSensorIndices[i];
@@ -74,6 +81,38 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
     return monitoringRecords;
   }
 
+  private Optional<String> determinePduId(final int[] relevantSensorIndices, // NOCS
+      final String[] sensorLabels, final JsonArray records) {
+    boolean sensor20used = false;
+    boolean sensor25used = false;
+    boolean sensor15used = false;
+    for (int i = 0; i < relevantSensorIndices.length; i++) {
+      final int sensorIndex = relevantSensorIndices[i];
+      final JsonObject relevantRecord = records.get(sensorIndex).getAsJsonObject();
+      if (sensorLabels[i].equals("20") && relevantRecord.get(AVG_VALUE_KEY).getAsDouble() != 0.0) {
+        sensor20used = true;
+      } else if (sensorLabels[i].equals("25")
+          && relevantRecord.get(AVG_VALUE_KEY).getAsDouble() != 0.0) {
+        sensor25used = true;
+      } else if (sensorLabels[i].equals("15")
+          && relevantRecord.get(AVG_VALUE_KEY).getAsDouble() != 0.0) {
+        sensor15used = true;
+      }
+    }
+    String determinedPduId = "undefined";
+    if (sensor20used) {
+      determinedPduId = "1";
+      LOGGER.info("Determined PDU ID 1");
+    } else if (sensor25used) {
+      determinedPduId = "2";
+      LOGGER.info("Determined PDU ID 2");
+    } else if (sensor15used) {
+      determinedPduId = "3";
+      LOGGER.info("Determined PDU ID 3;");
+    }
+    return Optional.of(determinedPduId);
+  }
+
   private int[] getReleventSensorIndices(final JsonArray sensors) {
     return IntStream.range(0, sensors.size()).filter(i -> sensors.get(i).getAsJsonObject()
         .get(ID_KEY).getAsString().equals(RELEVANT_SENSOR_NAME)).toArray();
@@ -86,3 +125,4 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
   }
 
 }
+
