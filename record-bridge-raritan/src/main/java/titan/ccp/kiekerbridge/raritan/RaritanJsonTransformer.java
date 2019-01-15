@@ -3,6 +3,7 @@ package titan.ccp.kiekerbridge.raritan;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import kieker.common.record.IMonitoringRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import titan.ccp.models.records.ActivePowerRecord;
 
 /**
@@ -17,6 +20,8 @@ import titan.ccp.models.records.ActivePowerRecord;
  * {@link IMonitoringRecord}s.
  */
 public class RaritanJsonTransformer implements Function<PushMessage, List<IMonitoringRecord>> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(RaritanJsonTransformer.class);
 
   private static final String SENSORS_KEY = "sensors";
   private static final String DEVICE_KEY = "device";
@@ -43,6 +48,19 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
 
   @Override
   public List<IMonitoringRecord> apply(final PushMessage pushMessage) {
+    try {
+      return this.tryTransforming(pushMessage);
+    } catch (final JsonParseException e) {
+      LOGGER.warn("Unable to parse push message. ", e);
+      return List.of();
+    } catch (final IllegalStateException e) {
+      LOGGER.warn("Push message does not conform expected schema. ", e);
+      return List.of();
+    }
+  }
+
+  private List<IMonitoringRecord> tryTransforming(final PushMessage pushMessage)
+      throws JsonParseException, IllegalStateException {
     final Optional<String> pduId = pushMessage.getId();
     final String json = pushMessage.getMessage();
     final JsonObject rootObject = this.jsonParser.parse(json).getAsJsonObject();
