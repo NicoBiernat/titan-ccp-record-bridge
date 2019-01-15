@@ -3,6 +3,7 @@ package titan.ccp.kiekerbridge.raritan;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,38 +48,44 @@ public class RaritanJsonTransformer implements Function<PushMessage, List<IMonit
 
   @Override
   public List<IMonitoringRecord> apply(final PushMessage pushMessage) { // NOPMD
-    // final Optional<String> pduId = pushMessage.getId();
-    final String json = pushMessage.getMessage();
-    final JsonObject rootObject = this.jsonParser.parse(json).getAsJsonObject();
-    final JsonArray sensors = rootObject.get(SENSORS_KEY).getAsJsonArray();
-    final int[] relevantSensorIndices = this.getReleventSensorIndices(sensors);
-    final String[] sensorLabels = this.getSensorLabels(sensors, relevantSensorIndices);
-    final JsonArray rows = rootObject.get(ROWS_KEY).getAsJsonArray();
+    try {
+      // final Optional<String> pduId = pushMessage.getId();
+      final String json = pushMessage.getMessage();
+      final JsonObject rootObject = this.jsonParser.parse(json).getAsJsonObject();
+      final JsonArray sensors = rootObject.get(SENSORS_KEY).getAsJsonArray();
+      final int[] relevantSensorIndices = this.getReleventSensorIndices(sensors);
+      final String[] sensorLabels = this.getSensorLabels(sensors, relevantSensorIndices);
+      final JsonArray rows = rootObject.get(ROWS_KEY).getAsJsonArray();
 
-    final List<IMonitoringRecord> monitoringRecords = new ArrayList<>(rows.size());
-    for (final JsonElement rowJsonElement : rows) {
-      final JsonObject row = rowJsonElement.getAsJsonObject();
-      final long timestampReceived = row.get(TIMESTAMP_KEY).getAsLong();
-      final long timestampInMs =
-          this.inputTimestampsInMs ? timestampReceived : timestampReceived * 1_000; // NOCS
-      final JsonArray records = row.get(RECORDS_KEY).getAsJsonArray();
+      final List<IMonitoringRecord> monitoringRecords = new ArrayList<>(rows.size());
+      for (final JsonElement rowJsonElement : rows) {
+        final JsonObject row = rowJsonElement.getAsJsonObject();
+        final long timestampReceived = row.get(TIMESTAMP_KEY).getAsLong();
+        final long timestampInMs =
+            this.inputTimestampsInMs ? timestampReceived : timestampReceived * 1_000; // NOCS
+        final JsonArray records = row.get(RECORDS_KEY).getAsJsonArray();
 
-      final Optional<String> pduId =
-          this.determinePduId(relevantSensorIndices, sensorLabels, records);
+        final Optional<String> pduId =
+            this.determinePduId(relevantSensorIndices, sensorLabels, records);
 
-      for (int i = 0; i < relevantSensorIndices.length; i++) {
-        final int sensorIndex = relevantSensorIndices[i];
-        final String sensorLabel = (pduId.isPresent() ? pduId.get() + '.' : "") + sensorLabels[i];
+        for (int i = 0; i < relevantSensorIndices.length; i++) {
+          final int sensorIndex = relevantSensorIndices[i];
+          final String sensorLabel = (pduId.isPresent() ? pduId.get() + '.' : "") + sensorLabels[i];
 
-        final JsonObject relevantRecord = records.get(sensorIndex).getAsJsonObject();
-        final double value = relevantRecord.get(AVG_VALUE_KEY).getAsDouble();
+          final JsonObject relevantRecord = records.get(sensorIndex).getAsJsonObject();
+          final double value = relevantRecord.get(AVG_VALUE_KEY).getAsDouble();
 
-        monitoringRecords.add(new ActivePowerRecord(sensorLabel, timestampInMs, value));
+          monitoringRecords.add(new ActivePowerRecord(sensorLabel, timestampInMs, value));
+        }
+
       }
 
-    }
+      return monitoringRecords;
 
-    return monitoringRecords;
+    } catch (JsonParseException e) {
+      LOGGER.warn("Message could not be parsed. ", e);
+      return List.of();
+    }
   }
 
   private Optional<String> determinePduId(final int[] relevantSensorIndices, // NOCS NOPMD
