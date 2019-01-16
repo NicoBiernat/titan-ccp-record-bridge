@@ -1,6 +1,10 @@
 package titan.ccp.kiekerbridge.raritan.simulator;
 
 import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandler;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
@@ -10,10 +14,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import jdk.incubator.http.HttpClient;
-import jdk.incubator.http.HttpRequest;
-import jdk.incubator.http.HttpResponse;
-import jdk.incubator.http.HttpResponse.BodyHandler;
 import org.apache.commons.configuration2.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +115,7 @@ public class SimulationRunner {
         monitoringScheduler.scheduleAtFixedRate(() -> {
           final HttpRequest request = HttpRequest.newBuilder()
               .uri(URI.create("http://cc01:31302/power-consumption-count")).GET().build();
-          final BodyHandler<String> bodyHandler = HttpResponse.BodyHandler.asString();
+          final BodyHandler<String> bodyHandler = HttpResponse.BodyHandlers.ofString();
 
           final long requestStartedTime = System.currentTimeMillis() - startTime;
 

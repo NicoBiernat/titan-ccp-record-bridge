@@ -1,11 +1,11 @@
 package titan.ccp.kiekerbridge.raritan.simulator;
 
 import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandler;
 import java.time.Duration;
-import jdk.incubator.http.HttpClient;
-import jdk.incubator.http.HttpRequest;
-import jdk.incubator.http.HttpResponse;
-import jdk.incubator.http.HttpResponse.BodyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +32,8 @@ public class HttpPusher {
   public void sendMessage(final String message) {
     final HttpRequest request =
         HttpRequest.newBuilder().uri(this.pushUri).timeout(Duration.ofSeconds(PUSH_TIMEOUT_SECONDS))
-            .POST(HttpRequest.BodyPublisher.fromString(message)).build();
-    final BodyHandler<Void> bodyHandler = HttpResponse.BodyHandler.discard(null);
+            .POST(HttpRequest.BodyPublishers.ofString(message)).build();
+    final BodyHandler<Void> bodyHandler = HttpResponse.BodyHandlers.discarding();
 
     this.client.sendAsync(request, bodyHandler).thenAccept(r -> {
       LOGGER.debug("Pushed message");
