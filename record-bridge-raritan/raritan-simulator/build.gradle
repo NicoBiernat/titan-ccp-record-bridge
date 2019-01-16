@@ -27,17 +27,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-tasks.withType(AbstractCompile) {
-  options.compilerArgs += ["--add-modules", "jdk.incubator.httpclient"]
-}
-
-tasks.withType(Test) {
-  jvmArgs += ["--add-modules", "jdk.incubator.httpclient"]
-}
-
 mainClassName = "titan.ccp.kiekerbridge.raritan.simulator.SimulationRunner"
-
-applicationDefaultJvmArgs = ["--add-modules=jdk.incubator.httpclient"]
 
 pmd {
   ruleSetFiles = files("../../config/pmd.xml")
