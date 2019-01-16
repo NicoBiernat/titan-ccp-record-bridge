@@ -15,37 +15,46 @@ buildscript {
   }
 }
 
-sourceCompatibility = "1.11"
-targetCompatibility = "1.11"
+sourceCompatibility = "1.10"
+targetCompatibility = "1.10"
 
 dependencies {
-    compile project(':')
-    
-    compile 'org.slf4j:slf4j-simple:1.6.1'
-    compile 'redis.clients:jedis:2.9.0'
+    compile 'com.github.cau-se:titan-ccp-common:master-SNAPSHOT'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'org.slf4j:slf4j-simple:1.7.25'
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
 }
 
-mainClassName = "titan.ccp.kiekerbridge.loadtester.LoadTester"
+tasks.withType(AbstractCompile) {
+  options.compilerArgs += ["--add-modules", "jdk.incubator.httpclient"]
+}
+
+tasks.withType(Test) {
+  jvmArgs += ["--add-modules", "jdk.incubator.httpclient"]
+}
+
+mainClassName = "titan.ccp.kiekerbridge.raritan.simulator.SimulationRunner"
+
+applicationDefaultJvmArgs = ["--add-modules=jdk.incubator.httpclient"]
 
 pmd {
-  ruleSetFiles = files("../config/pmd.xml")
+  ruleSetFiles = files("../../config/pmd.xml")
   ignoreFailures = false
   toolVersion = "6.7.0"
 }
 
 checkstyle {
-  configDir = file("../config")
-  configFile = file("../config/checkstyle.xml")
+  configDir = file("../../config")
+  configFile = file("../../config/checkstyle.xml")
   maxWarnings = 0
   ignoreFailures = false
   toolVersion = "8.12"
 }
 
 spotbugs {
-  excludeFilter = file("../config/spotbugs-exclude-filter.xml")
+  excludeFilter = file("../../config/spotbugs-exclude-filter.xml")
   reportLevel = "low"
   effort = "max"
   ignoreFailures = false

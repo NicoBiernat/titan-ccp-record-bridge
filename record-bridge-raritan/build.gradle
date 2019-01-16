@@ -1,4 +1,4 @@
-apply plugin: 'java-library'
+apply plugin: 'application'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'com.github.spotbugs'
@@ -18,59 +18,35 @@ buildscript {
 sourceCompatibility = "1.11"
 targetCompatibility = "1.11"
 
-configurations.all {
-    // Check for updates every build
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
-allprojects { 
-	repositories {
-	    jcenter()
-	    maven {
-	    	url "https://oss.sonatype.org/content/repositories/snapshots/"
-	    }
-	    maven {
-    		url 'https://jitpack.io'
-    	}
-    	maven {
-    		url 'https://packages.confluent.io/maven/'
-    	}
-	}
-}
-
 dependencies {
-    // These dependencies is exported to consumers, that is to say found on their compile classpath.
-    api('com.github.cau-se:titan-ccp-common:master-SNAPSHOT') { changing = true }
-    //api('com.github.cau-se:titan-ccp-common:byte-buffer-size-128-SNAPSHOT') { changing = true }
-    //api 'org.industrial-devops:titan.ccp.model:0.0.1-SNAPSHOT'
-    api 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'
-    api 'net.sourceforge.teetime:teetime:3.0'
-
-    // These dependencies are used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'org.apache.kafka:kafka-clients:2.1.0'
-    implementation 'com.google.guava:guava:24.1-jre'
-    implementation 'org.jctools:jctools-core:2.1.1'
+    compile project(':')
+    
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile "com.sparkjava:spark-core:2.7.2"
+    compile 'org.slf4j:slf4j-simple:1.6.1'
 
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 }
 
+mainClassName = "titan.ccp.kiekerbridge.raritan.RaritanRecordBridge"
+
 pmd {
-  ruleSetFiles = files("config/pmd.xml")
+  ruleSetFiles = files("../config/pmd.xml")
   ignoreFailures = false
   toolVersion = "6.7.0"
 }
 
 checkstyle {
-  configDir = file("config")
-  configFile = file("config/checkstyle.xml")
+  configDir = file("../config")
+  configFile = file("../config/checkstyle.xml")
   maxWarnings = 0
   ignoreFailures = false
   toolVersion = "8.12"
 }
 
 spotbugs {
-  excludeFilter = file("config/spotbugs-exclude-filter.xml")
+  excludeFilter = file("../config/spotbugs-exclude-filter.xml")
   reportLevel = "low"
   effort = "max"
   ignoreFailures = false

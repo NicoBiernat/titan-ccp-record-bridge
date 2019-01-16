@@ -1,8 +1,8 @@
-rootProject.name = 'titanccp-kieker-bridge'
+rootProject.name = 'titanccp-record-bridge'
 
-include 'kieker-bridge-raritan'
-project(":kieker-bridge-raritan").name = "titanccp-kieker-bridge-raritan"
+include 'record-bridge-raritan'
+project(":record-bridge-raritan").name = "titanccp-record-bridge-raritan"
 
-include 'titanccp-kieker-bridge-raritan:raritan-simulator'
+include 'titanccp-record-bridge-raritan:raritan-simulator'
 
 include 'load-tester-bridge'
