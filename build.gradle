@@ -29,20 +29,12 @@ allprojects {
 	    maven {
 	    	url "https://oss.sonatype.org/content/repositories/snapshots/"
 	    }
-	    maven {
-    		url 'https://jitpack.io'
-    	}
-    	maven {
-    		url 'https://packages.confluent.io/maven/'
-    	}
 	}
 }
 
 dependencies {
     // These dependencies is exported to consumers, that is to say found on their compile classpath.
-    api('com.github.cau-se:titan-ccp-common:master-SNAPSHOT') { changing = true }
-    //api('com.github.cau-se:titan-ccp-common:byte-buffer-size-128-SNAPSHOT') { changing = true }
-    //api 'org.industrial-devops:titan.ccp.model:0.0.1-SNAPSHOT'
+    api('org.industrial-devops:titan-ccp-common:0.0.1-SNAPSHOT') { changing = true }
     api 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'
     api 'net.sourceforge.teetime:teetime:3.0'
 
@@ -56,6 +48,7 @@ dependencies {
 }
 
 pmd {
+  ruleSets = [] // Gradle requires to clean the rule sets first
   ruleSetFiles = files("config/pmd.xml")
   ignoreFailures = false
   toolVersion = "6.7.0"
