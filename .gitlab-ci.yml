@@ -68,15 +68,18 @@ deploy-raritan-bridge:
   services:
     - docker:dind
   script:
+    - DOCKER_TAG_NAME=$(echo $CI_COMMIT_REF_SLUG- | sed 's/^master-$//')
     - docker build --pull -t titan-ccp-kieker-bridge-raritan ./record-bridge-raritan
-    - docker tag titan-ccp-kieker-bridge-raritan industrialdevops/titan-ccp-kieker-bridge-raritan:latest
-    - docker tag titan-ccp-kieker-bridge-raritan industrialdevops/titan-ccp-kieker-bridge-raritan:$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-kieker-bridge-raritan industrialdevops/titan-ccp-kieker-bridge-raritan:${DOCKER_TAG_NAME}latest
+    - docker tag titan-ccp-kieker-bridge-raritan industrialdevops/titan-ccp-kieker-bridge-raritan:$DOCKER_TAG_NAME$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-kieker-bridge-raritan industrialdevops/titan-ccp-kieker-bridge-raritan:$DOCKER_TAG_NAME$CI_COMMIT_SHA
     - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
     - docker push industrialdevops/titan-ccp-kieker-bridge-raritan
     - docker logout
   only:
-    - master
-
+    variables:
+      - $DOCKERHUB_ID
+      - $DOCKERHUB_PW
 
 deploy-raritan-simulator:
   stage: deploy
@@ -86,14 +89,18 @@ deploy-raritan-simulator:
   services:
     - docker:dind
   script:
+    - DOCKER_TAG_NAME=$(echo $CI_COMMIT_REF_SLUG- | sed 's/^master-$//')
     - docker build --pull -t titan-ccp-raritan-simulator ./record-bridge-raritan/raritan-simulator
-    - docker tag titan-ccp-raritan-simulator industrialdevops/titan-ccp-raritan-simulator:latest
-    - docker tag titan-ccp-raritan-simulator industrialdevops/titan-ccp-raritan-simulator:$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-raritan-simulator industrialdevops/titan-ccp-raritan-simulator:${DOCKER_TAG_NAME}latest
+    - docker tag titan-ccp-raritan-simulator industrialdevops/titan-ccp-raritan-simulator:$DOCKER_TAG_NAME$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-raritan-simulator industrialdevops/titan-ccp-raritan-simulator:$DOCKER_TAG_NAME$CI_COMMIT_SHA
     - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
     - docker push industrialdevops/titan-ccp-raritan-simulator
     - docker logout
   only:
-    - master
+    variables:
+      - $DOCKERHUB_ID
+      - $DOCKERHUB_PW
 
 deploy-load-tester-bridge:
   stage: deploy
@@ -103,11 +110,15 @@ deploy-load-tester-bridge:
   services:
     - docker:dind
   script:
+    - DOCKER_TAG_NAME=$(echo $CI_COMMIT_REF_SLUG- | sed 's/^master-$//')
     - docker build --pull -t titan-ccp-load-tester-bridge ./load-tester-bridge
-    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:latest
-    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:${DOCKER_TAG_NAME}latest
+    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:$DOCKER_TAG_NAME$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-load-tester-bridge industrialdevops/titan-ccp-load-tester-bridge:$DOCKER_TAG_NAME$CI_COMMIT_SHA
     - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
     - docker push industrialdevops/titan-ccp-load-tester-bridge
     - docker logout
   only:
-    - master
+    variables:
+      - $DOCKERHUB_ID
+      - $DOCKERHUB_PW
