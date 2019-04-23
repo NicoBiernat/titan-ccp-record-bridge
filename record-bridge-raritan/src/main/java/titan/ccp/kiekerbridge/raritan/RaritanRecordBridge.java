@@ -28,11 +28,14 @@ public final class RaritanRecordBridge {
     final RaritanRestServer raritanRestServer = new RaritanRestServer(webserverPort,
         webserverPostUrl, webserverPostQueryParameterId, queueSize);
 
-    final RecordBridgeStream<IMonitoringRecord> stream =
-        RecordBridgeStream.from(raritanRestServer.getQueue())
-            .flatMap(new RaritanJsonTransformer(receiveTimestampsInMs));
-    final RecordBridge kiekerBridge = RecordBridge.ofStream(stream)
-        .onStart(raritanRestServer::start).onStop(raritanRestServer::stop).build();
+    final RecordBridgeStream<IMonitoringRecord> stream = RecordBridgeStream
+        .from(raritanRestServer.getQueue())
+        .flatMap(new RaritanJsonTransformer(receiveTimestampsInMs));
+    final RecordBridge kiekerBridge = RecordBridge
+        .ofStream(stream)
+        .onStart(raritanRestServer::start)
+        .onStop(raritanRestServer::stop)
+        .build();
     kiekerBridge.start();
   }
 
