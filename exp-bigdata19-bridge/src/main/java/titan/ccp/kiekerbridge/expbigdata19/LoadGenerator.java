@@ -76,7 +76,7 @@ public class LoadGenerator {
           },
           initialDelay,
           periodMs,
-          TimeUnit.MICROSECONDS);
+          TimeUnit.MILLISECONDS);
     }
 
     System.out.println("Wait for termination...");
