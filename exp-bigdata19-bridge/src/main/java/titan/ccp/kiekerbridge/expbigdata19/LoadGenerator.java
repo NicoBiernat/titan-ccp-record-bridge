@@ -1,4 +1,4 @@
-package titan.ccp.kiekerbridge;
+package titan.ccp.kiekerbridge.expbigdata19;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import titan.ccp.kiekerbridge.KafkaRecordSender;
 import titan.ccp.model.sensorregistry.MutableAggregatedSensor;
 import titan.ccp.model.sensorregistry.MutableSensorRegistry;
 import titan.ccp.models.records.ActivePowerRecord;

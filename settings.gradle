@@ -6,3 +6,4 @@ project(":record-bridge-raritan").name = "titanccp-record-bridge-raritan"
 include 'titanccp-record-bridge-raritan:raritan-simulator'
 
 include 'load-tester-bridge'
+include 'exp-bigdata19-bridge'
