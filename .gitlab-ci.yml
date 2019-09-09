@@ -42,19 +42,19 @@ test:
     - dockerex
   script: ./gradlew test
 
-checkstyle:
+.checkstyle:
   stage: check
   tags:
     - dockerex
   script: ./gradlew checkstyle
   
-pmd:
+.pmd:
   stage: check
   tags:
     - dockerex
   script: ./gradlew pmd
   
-spotbugs:
+.spotbugs:
   stage: check
   tags:
     - dockerex
@@ -81,7 +81,7 @@ deploy-raritan-bridge:
       - $DOCKERHUB_ID
       - $DOCKERHUB_PW
 
-deploy-raritan-simulator:
+.deploy-raritan-simulator:
   stage: deploy
   tags:
     - dockerex
@@ -102,7 +102,7 @@ deploy-raritan-simulator:
       - $DOCKERHUB_ID
       - $DOCKERHUB_PW
 
-deploy-load-tester-bridge:
+.deploy-load-tester-bridge:
   stage: deploy
   tags:
     - dockerex

@@ -1,4 +1,4 @@
-apply plugin: 'java-library'
+apply plugin: 'application'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'com.github.spotbugs'
@@ -39,13 +39,15 @@ dependencies {
     api 'net.sourceforge.teetime:teetime:3.0'
 
     // These dependencies are used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'org.apache.kafka:kafka-clients:2.1.0'
+    implementation 'org.apache.kafka:kafka-clients:2.3.0'
     implementation 'com.google.guava:guava:24.1-jre'
     implementation 'org.jctools:jctools-core:2.1.1'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
+
+mainClassName = "titan.ccp.kiekerbridge.ExperimentorBigData"
 
 pmd {
   ruleSets = [] // Gradle requires to clean the rule sets first
