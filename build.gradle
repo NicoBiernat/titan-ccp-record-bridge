@@ -34,17 +34,17 @@ allprojects {
 
 dependencies {
     // These dependencies is exported to consumers, that is to say found on their compile classpath.
-    api('org.industrial-devops:titan-ccp-common:0.0.1-SNAPSHOT') { changing = true }
-    api 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'
-    api 'net.sourceforge.teetime:teetime:3.0'
+    compile('org.industrial-devops:titan-ccp-common:0.0.1-SNAPSHOT') { changing = true }
+    compile 'net.kieker-monitoring:kieker:1.14-SNAPSHOT'
+    compile 'net.sourceforge.teetime:teetime:3.0'
 
     // These dependencies are used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'org.apache.kafka:kafka-clients:2.3.0'
-    implementation 'com.google.guava:guava:24.1-jre'
-    implementation 'org.jctools:jctools-core:2.1.1'
+    compile 'org.apache.kafka:kafka-clients:2.3.0'
+    compile 'com.google.guava:guava:24.1-jre'
+    compile 'org.jctools:jctools-core:2.1.1'
 
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 }
 
 mainClassName = "titan.ccp.kiekerbridge.ExperimentorBigData"
