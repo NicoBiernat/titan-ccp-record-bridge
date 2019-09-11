@@ -95,8 +95,9 @@ public class LoadCounter {
           final long elapsedTime = System.currentTimeMillis() - time;
           // final long latency = time - lastTimestamp;
           System.out
-              .println("input," + time + ',' + elapsedTime + ',' + latency + ',' + inputCount);
-          System.out.println("output," + time + ',' + elapsedTime + ',' + 0 + ',' + outputCount);
+              .println("input," + time + ',' + elapsedTime + ',' + 0 + ',' + inputCount);
+          System.out
+              .println("output," + time + ',' + elapsedTime + ',' + latency + ',' + outputCount);
           // + ',' + lastTimestamp + ',' + latency);
           // System.out.println("output," + time + ',' + outputCount + ',' + mean);
         },
