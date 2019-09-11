@@ -1,5 +1,6 @@
 package titan.ccp.kiekerbridge.expbigdata19;
 
+import com.google.common.math.StatsAccumulator;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
@@ -7,9 +8,13 @@ import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.StreamSupport;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.Deserializer;
+import titan.ccp.common.kieker.kafka.IMonitoringRecordSerde;
+import titan.ccp.models.records.AggregatedActivePowerRecord;
+import titan.ccp.models.records.AggregatedActivePowerRecordFactory;
 
 public class LoadCounter {
 
@@ -33,11 +38,13 @@ public class LoadCounter {
     props.setProperty("key.deserializer",
         "org.apache.kafka.common.serialization.StringDeserializer");
     props.setProperty("value.deserializer",
-        "org.apache.kafka.common.serialization.StringDeserializer");
+        "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 
     final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    final Deserializer<AggregatedActivePowerRecord> deserializer =
+        IMonitoringRecordSerde.deserializer(new AggregatedActivePowerRecordFactory());
 
-    final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+    final KafkaConsumer<String, byte[]> consumer = new KafkaConsumer<>(props);
     consumer.subscribe(List.of(kafkaInputTopic, kafkaOutputTopic));
 
     // final AtomicLong sum = new AtomicLong(0);
@@ -51,23 +58,49 @@ public class LoadCounter {
           // for (final Entry<TopicPartition, Long> endOffset : endOffsets.entrySet()) {
           // System.out.println(endOffset.getKey() + ": " + endOffset.getValue());
           // }
-          final ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(500));
+          final ConsumerRecords<String, byte[]> records = consumer.poll(Duration.ofMillis(500));
           // records.partitions().stream().filter(tp -> tp.topic().equals("input"));
-          final long inputCount =
-              StreamSupport.stream(records.records(kafkaInputTopic).spliterator(),
-                  false).count();
-          final long outputCount =
-              StreamSupport.stream(records.records(kafkaOutputTopic).spliterator(),
-                  false).count();
-          // sum.addAndGet(outputCount);
-          // count.incrementAndGet();
-          // final long mean = sum.get() / count.get();
+          // final Iterable<ConsumerRecord<String, byte[]>> x = records.records(kafkaInputTopic);
+
+          long inputCount = 0;
+          ConsumerRecord<String, byte[]> lastInputRecord;
+          for (final ConsumerRecord<String, byte[]> inputRecord : records
+              .records(kafkaInputTopic)) {
+            inputCount++;
+            lastInputRecord = inputRecord;
+          }
+
+          long outputCount = 0;
+          ConsumerRecord<String, byte[]> lastOutputRecord = null;
+          final StatsAccumulator statsAccumulator = new StatsAccumulator();
+          for (final ConsumerRecord<String, byte[]> outputRecord : records
+              .records(kafkaOutputTopic)) {
+            outputCount++;
+            lastOutputRecord = outputRecord;
+            final AggregatedActivePowerRecord record =
+                deserializer.deserialize(kafkaOutputTopic, outputRecord.value());
+            final long latency = time - record.getTimestamp();
+            statsAccumulator.add(latency);
+          }
+
+          // long lastTimestamp = 0;
+          // if (lastOutputRecord != null) {
+          // final AggregatedActivePowerRecord record =
+          // deserializer.deserialize(kafkaOutputTopic, lastOutputRecord.value());
+          // lastTimestamp = record.getTimestamp();
+          // }
+
+          final double latency = statsAccumulator.count() > 0 ? statsAccumulator.mean() : 0.0;
+
           final long elapsedTime = System.currentTimeMillis() - time;
-          System.out.println("input," + time + ',' + elapsedTime + ',' + inputCount);
-          System.out.println("output," + time + ',' + elapsedTime + ',' + outputCount);
+          // final long latency = time - lastTimestamp;
+          System.out
+              .println("input," + time + ',' + elapsedTime + ',' + latency + ',' + inputCount);
+          System.out.println("output," + time + ',' + elapsedTime + ',' + 0 + ',' + outputCount);
+          // + ',' + lastTimestamp + ',' + latency);
           // System.out.println("output," + time + ',' + outputCount + ',' + mean);
         },
-        1,
+        0,
         1,
         TimeUnit.SECONDS);
 

@@ -71,8 +71,6 @@ public class LoadGenerator {
       throw new IllegalStateException();
     }
 
-    System.out.println(sensorRegistry.toJson().length());
-
     final List<String> sensors =
         sensorRegistry.getMachineSensors().stream().map(s -> s.getIdentifier())
             .collect(Collectors.toList());
