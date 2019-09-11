@@ -20,8 +20,24 @@ import titan.ccp.models.records.ActivePowerRecord;
 
 public class LoadGenerator {
 
+  private static int addChildren(final MutableAggregatedSensor parent, final int numChildren,
+      final int lvl, final int maxLvl, int nextId) {
+    for (int c = 0; c < numChildren; c++) {
+      if (lvl == maxLvl) {
+        parent.addChildMachineSensor("sensor_" + nextId);
+        nextId++;
+      } else {
+        final MutableAggregatedSensor newParent =
+            parent.addChildAggregatedSensor("group_lvl_" + lvl + '_' + c);
+        nextId = addChildren(newParent, numChildren, lvl + 1, maxLvl, nextId);
+      }
+    }
+    return nextId;
+  }
+
   public static void main(final String[] args) throws InterruptedException, IOException {
 
+    final String hierarchy = Objects.requireNonNullElse(System.getenv("HIERARCHY"), "full");
     final int numNestedGroups =
         Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_NESTED_GROUPS"), "1"));
     final int numSensor =
@@ -39,15 +55,27 @@ public class LoadGenerator {
             "http://localhost:8082/sensor-registry");
 
     final MutableSensorRegistry sensorRegistry = new MutableSensorRegistry("group_lvl_0");
-    MutableAggregatedSensor lastSensor = sensorRegistry.getTopLevelSensor();
-    for (int lvl = 1; lvl < numNestedGroups; lvl++) {
-      lastSensor = lastSensor.addChildAggregatedSensor("group_lvl_" + lvl);
+    if (hierarchy.equals("deep")) {
+      MutableAggregatedSensor lastSensor = sensorRegistry.getTopLevelSensor();
+      for (int lvl = 1; lvl < numNestedGroups; lvl++) {
+        lastSensor = lastSensor.addChildAggregatedSensor("group_lvl_" + lvl);
+      }
+      for (int s = 0; s < numSensor; s++) {
+        lastSensor.addChildMachineSensor("sensor_" + s);
+      }
+    } else if (hierarchy.equals("full")) {
+      final int x =
+          addChildren(sensorRegistry.getTopLevelSensor(), numSensor, 1, numNestedGroups, 0);
+      System.out.println(x);
+    } else {
+      throw new IllegalStateException();
     }
-    for (int s = 0; s < numSensor; s++) {
-      lastSensor.addChildMachineSensor("sensor_" + s);
-    }
+
+    System.out.println(sensorRegistry.toJson().length());
+
     final List<String> sensors =
-        lastSensor.getChildren().stream().map(s -> s.getIdentifier()).collect(Collectors.toList());
+        sensorRegistry.getMachineSensors().stream().map(s -> s.getIdentifier())
+            .collect(Collectors.toList());
 
     final HttpClient httpClient = HttpClient.newHttpClient();
     final HttpRequest request = HttpRequest
@@ -84,4 +112,7 @@ public class LoadGenerator {
     System.out.println("Will terminate now");
 
   }
+
+
+
 }
