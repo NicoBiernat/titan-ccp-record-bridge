@@ -37,7 +37,7 @@ public class LoadGenerator {
 
   public static void main(final String[] args) throws InterruptedException, IOException {
 
-    final String hierarchy = Objects.requireNonNullElse(System.getenv("HIERARCHY"), "full");
+    final String hierarchy = Objects.requireNonNullElse(System.getenv("HIERARCHY"), "deep");
     final int numNestedGroups =
         Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_NESTED_GROUPS"), "1"));
     final int numSensor =
