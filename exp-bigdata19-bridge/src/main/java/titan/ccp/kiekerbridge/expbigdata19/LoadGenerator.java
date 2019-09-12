@@ -98,7 +98,7 @@ public class LoadGenerator {
     final KafkaRecordSender<ActivePowerRecord> kafkaRecordSender = new KafkaRecordSender<>(
         kafkaBootstrapServers, kafkaInputTopic, r -> r.getIdentifier(), r -> r.getTimestamp());
 
-    final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
     final Random random = new Random();
 
     for (final String sensor : sensors) {
