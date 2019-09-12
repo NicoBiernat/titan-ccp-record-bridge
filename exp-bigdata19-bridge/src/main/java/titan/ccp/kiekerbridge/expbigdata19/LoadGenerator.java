@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -13,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import titan.ccp.configuration.events.Event;
 import titan.ccp.kiekerbridge.KafkaRecordSender;
 import titan.ccp.model.sensorregistry.MutableAggregatedSensor;
 import titan.ccp.model.sensorregistry.MutableSensorRegistry;
@@ -38,11 +38,11 @@ public class LoadGenerator {
 
   public static void main(final String[] args) throws InterruptedException, IOException {
 
-    final String hierarchy = Objects.requireNonNullElse(System.getenv("HIERARCHY"), "deep");
+    final String hierarchy = Objects.requireNonNullElse(System.getenv("HIERARCHY"), "full");
     final int numNestedGroups =
-        Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_NESTED_GROUPS"), "1"));
+        Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_NESTED_GROUPS"), "5"));
     final int numSensor =
-        Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_SENSORS"), "1"));
+        Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_SENSORS"), "10"));
     final int periodMs =
         Integer.parseInt(Objects.requireNonNullElse(System.getenv("PERIOD_MS"), "1000"));
     final int value =
@@ -80,8 +80,19 @@ public class LoadGenerator {
         .uri(URI.create(configurationUrl))
         .PUT(BodyPublishers.ofString(sensorRegistry.toJson()))
         .build();
+    // httpClient.send(request, BodyHandlers.discarding());
 
-    httpClient.send(request, BodyHandlers.discarding());
+    final ConfigPublisher configPublisher =
+        new ConfigPublisher(kafkaBootstrapServers, "configuration");
+    configPublisher.publish(Event.SENSOR_REGISTRY_CHANGED, sensorRegistry.toJson());
+    // configPublisher.publish(Event.SENSOR_REGISTRY_CHANGED, new
+    // MutableSensorRegistry("").toJson());
+    configPublisher.close();
+    System.out.println("Configuration sent.");
+
+    System.out.println("Now wait 30 seconds");
+    Thread.sleep(30_000);
+    System.out.println("And woke up again :)");
 
 
     final KafkaRecordSender<ActivePowerRecord> kafkaRecordSender = new KafkaRecordSender<>(
