@@ -28,7 +28,8 @@ public class LoadGenerator {
         nextId++;
       } else {
         final MutableAggregatedSensor newParent =
-            parent.addChildAggregatedSensor("group_lvl_" + lvl + '_' + c);
+            parent.addChildAggregatedSensor("group_lvl_" + lvl + '_' + nextId);
+        nextId++;
         nextId = addChildren(newParent, numChildren, lvl + 1, maxLvl, nextId);
       }
     }
@@ -64,9 +65,7 @@ public class LoadGenerator {
         lastSensor.addChildMachineSensor("sensor_" + s);
       }
     } else if (hierarchy.equals("full")) {
-      final int x =
-          addChildren(sensorRegistry.getTopLevelSensor(), numSensor, 1, numNestedGroups, 0);
-      System.out.println(x);
+      addChildren(sensorRegistry.getTopLevelSensor(), numSensor, 1, numNestedGroups, 0);
     } else {
       throw new IllegalStateException();
     }
