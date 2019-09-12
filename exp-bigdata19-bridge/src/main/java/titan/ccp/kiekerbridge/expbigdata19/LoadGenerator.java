@@ -24,11 +24,11 @@ public class LoadGenerator {
       final int lvl, final int maxLvl, int nextId) {
     for (int c = 0; c < numChildren; c++) {
       if (lvl == maxLvl) {
-        parent.addChildMachineSensor("sensor_" + nextId);
+        parent.addChildMachineSensor("s_" + nextId);
         nextId++;
       } else {
         final MutableAggregatedSensor newParent =
-            parent.addChildAggregatedSensor("group_lvl_" + lvl + '_' + nextId);
+            parent.addChildAggregatedSensor("g_" + lvl + '_' + nextId);
         nextId++;
         nextId = addChildren(newParent, numChildren, lvl + 1, maxLvl, nextId);
       }
@@ -38,11 +38,11 @@ public class LoadGenerator {
 
   public static void main(final String[] args) throws InterruptedException, IOException {
 
-    final String hierarchy = Objects.requireNonNullElse(System.getenv("HIERARCHY"), "full");
+    final String hierarchy = Objects.requireNonNullElse(System.getenv("HIERARCHY"), "deep");
     final int numNestedGroups =
-        Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_NESTED_GROUPS"), "5"));
+        Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_NESTED_GROUPS"), "1"));
     final int numSensor =
-        Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_SENSORS"), "10"));
+        Integer.parseInt(Objects.requireNonNullElse(System.getenv("NUM_SENSORS"), "1"));
     final int periodMs =
         Integer.parseInt(Objects.requireNonNullElse(System.getenv("PERIOD_MS"), "1000"));
     final int value =
