@@ -27,10 +27,6 @@ public class ConfigPublisher {
     properties.putAll(defaultProperties);
     properties.put("bootstrap.servers", bootstrapServers);
     properties.put("max.request.size", "33554432"); // 32 MB
-    // properties.put("acks", this.acknowledges);
-    // properties.put("batch.size", this.batchSize);
-    // properties.put("linger.ms", this.lingerMs);
-    // properties.put("buffer.memory", this.bufferMemory);
 
     this.producer =
         new KafkaProducer<>(properties, EventSerde.serializer(), new StringSerializer());

@@ -7,9 +7,7 @@ public class ExperimentorBigData {
 
   public static void main(final String[] args) throws InterruptedException, IOException {
 
-    final String modus =
-        Objects.requireNonNullElse(System.getenv("MODUS"),
-            "LoadCounter");
+    final String modus = Objects.requireNonNullElse(System.getenv("MODUS"), "LoadCounter");
 
     if (modus.equals("LoadGenerator")) {
       LoadGenerator.main(args);
