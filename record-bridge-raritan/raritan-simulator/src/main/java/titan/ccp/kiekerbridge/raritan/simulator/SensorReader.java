@@ -16,7 +16,7 @@ public class SensorReader {
   private final boolean sendTimestampsInMs;
 
   public SensorReader(final SimulatedSensor sensor) {
-    this(sensor, false, System.currentTimeMillis());
+    this(sensor, false, SimulatedTime.startTimeMillis());
   }
 
   /**
@@ -26,7 +26,7 @@ public class SensorReader {
    * @param sendTimestampsInMs Whether the values should be sent in milliseconds.
    */
   public SensorReader(final SimulatedSensor sensor, final boolean sendTimestampsInMs) {
-    this(sensor, sendTimestampsInMs, System.currentTimeMillis());
+    this(sensor, sendTimestampsInMs, SimulatedTime.startTimeMillis());
   }
 
   /**
@@ -44,7 +44,7 @@ public class SensorReader {
   }
 
   public String getMessage() {
-    return this.getMessage(System.currentTimeMillis());
+    return this.getMessage(SimulatedTime.currentTimeMillis());
   }
 
   /**
@@ -58,7 +58,7 @@ public class SensorReader {
   }
 
   public double getValue() {
-    return this.getValue(System.currentTimeMillis());
+    return this.getValue(SimulatedTime.currentTimeMillis());
   }
 
   public double getValue(final long timestamp) {
