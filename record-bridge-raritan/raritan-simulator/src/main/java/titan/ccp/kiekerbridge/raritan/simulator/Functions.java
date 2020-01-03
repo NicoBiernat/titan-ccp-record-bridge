@@ -1,12 +1,17 @@
 package titan.ccp.kiekerbridge.raritan.simulator;
 
+import titan.ccp.kiekerbridge.raritan.simulator.util.ImprovedNoise;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.function.LongToDoubleFunction;
 import java.util.stream.IntStream;
 
@@ -57,13 +62,44 @@ public final class Functions {
    * @return
    * The step function.
    */
-  public static LongToDoubleFunction stepFunctionHours(long seed) {
+  public static LongToDoubleFunction randomStepFunctionHours(long seed) {
     Random generator = new Random(seed);
     Double[][] values = IntStream.range(0,7).mapToObj(x ->
                           IntStream.range(0,24).mapToObj(y ->
                           generator.nextDouble())
                           .toArray(Double[]::new))
                         .toArray(Double[][]::new);
+    return x -> {
+      LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(x), SimulatedTime.getTimeZone());
+      return values[ldt.getDayOfWeek().getValue()-1][ldt.getHour()];
+    };
+  }
+
+  /**
+   * A function that:
+   *  - has a constant value within an hour
+   *  - has random values between hours of one week
+   *  - has the same repeating pattern every week
+   *
+   * stepFunction : [0, Long.MAX_VALUE] -> [0,1)
+   *
+   * @return
+   * The step function.
+   */
+  public static LongToDoubleFunction noiseStepFunctionHours(long seed) {
+
+    double[][] values = new double[7][24];
+    double a = 0;
+    double dA = Math.toRadians(360.0 / (double) (values.length * values[0].length));
+    for (int i = 0; i < values.length; i++) {
+      for (int j = 0; j < values[i].length; j++) {
+        double x = Math.cos(a);
+        double y = Math.sin(a);
+        double noise = ImprovedNoise.noise(x, y, (double) seed);
+        values[i][j] = (noise + 1.0) / 2.0;
+        a += dA;
+      }
+    }
     return x -> {
       LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(x), SimulatedTime.getTimeZone());
       return values[ldt.getDayOfWeek().getValue()-1][ldt.getHour()];
@@ -81,7 +117,7 @@ public final class Functions {
    * @return
    * The step function.
    */
-  public static LongToDoubleFunction stepFunctionDays(long seed) {
+  public static LongToDoubleFunction randomStepFunctionDays(long seed) {
     Random generator = new Random(seed);
     Double[] values = IntStream.range(0,7)
                                .mapToObj(x -> generator.nextDouble())
@@ -91,6 +127,56 @@ public final class Functions {
       return values[ldt.getDayOfWeek().getValue()-1];
     };
   }
+
+  /**
+   * A function that:
+   *  - has a constant value within an day
+   *  - has random values between days of one week
+   *  - has the same repeating pattern every week
+   *
+   * stepFunction : [0, Long.MAX_VALUE] -> [0,1)
+   *
+   * @return
+   * The step function.
+   */
+  public static LongToDoubleFunction noiseStepFunctionDays(long seed) {
+    double[] values = new double[7];
+    double a = 0;
+    double dA = Math.toRadians(360.0 / (double) values.length);
+    for (int i = 0; i < values.length; i++) {
+      double x = Math.cos(a);
+      double y = Math.sin(a);
+      double noise = ImprovedNoise.noise(x, y, (double) seed);
+      values[i] = (noise + 1.0) / 2.0;
+      a += dA;
+    }
+    return x -> {
+      LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(x), SimulatedTime.getTimeZone());
+      return values[ldt.getDayOfWeek().getValue()-1];
+    };
+  }
+
+  /**
+   * A function that:
+   *  - generates perlin noise within an hour
+   *  - every minute of an hour has a different value
+   *  - should only be used inside an hour
+   *
+   * perlinNoise : [0, Long.MAX_VALUE] -> [0,1)
+   *
+   * @return
+   * The perlin noise function.
+   */
+  // TODO implement or discard
+//  public static LongToDoubleFunction perlinNoise(long seed) {
+//    double offset = 0;
+//    double increment = 0.1;
+//    return x -> {
+//      LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(x), SimulatedTime.getTimeZone());
+//      Instant.ofEpochMilli(x).get(ChronoField.);
+//      (ImprovedNoise.noise(,0, (double) seed) + 1.0) / 2.0;
+//    }
+//  }
 
   /**
    * A function that returns an outlier value from a given {@link Queue} of {@link Double}

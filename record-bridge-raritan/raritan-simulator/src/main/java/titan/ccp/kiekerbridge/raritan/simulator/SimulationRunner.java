@@ -294,71 +294,62 @@ public class SimulationRunner {
         Random seedGenerator = new Random(42);
         long[] seedsDays = new long[8];
         long[] seedsHours = new long[8];
-        System.out.println("SEEDS:");
+//        System.out.println("SEEDS:");
         for (int i = 0; i < seedsDays.length; i++) {
             seedsDays[i] = seedGenerator.nextLong();
-            System.out.println(seedsDays[i]);
+//            System.out.println(seedsDays[i]);
             seedsHours[i] = seedGenerator.nextLong();
-            System.out.println(seedsHours[i]);
+//            System.out.println(seedsHours[i]);
         }
-        System.out.println();
+//        System.out.println();
 
         // Todo: Try with a little bit of noise
         return List.of(new SimulatedSensor("server1", updatePeriod, // NOCS
-                        FunctionBuilder.of(x -> 50)
-                                .plusScaled(70, Functions.stepFunctionDays(seedsDays[0]))
-                                .plusScaled(30, Functions.stepFunctionHours(seedsHours[0]))
+                        FunctionBuilder.of(x -> 60)
+                                .plusScaled(50, Functions.noiseStepFunctionHours(seedsHours[0]))
                                 .plus(Functions.outlier(queues.get("server1")))
-//                                .plus(Functions.noise(5))
+                                .plus(Functions.noise(5))
                                 .build()), // NOCS
                 new SimulatedSensor("server2", updatePeriod, // NOCS
-                        FunctionBuilder.of(x -> 30)
-                                .plusScaled(10, Functions.stepFunctionDays(seedsDays[1]))
-                                .plusScaled(20, Functions.stepFunctionHours(seedsHours[1]))
+                        FunctionBuilder.of(x -> 40)
+                                .plusScaled(40, Functions.noiseStepFunctionHours(seedsHours[1]))
                                 .plus(Functions.outlier(queues.get("server2")))
-//                                .plus(Functions.noise(5))
+                                .plus(Functions.noise(5))
                                 .build()), // NOCS
                 new SimulatedSensor("server3", updatePeriod, // NOCS
                         FunctionBuilder.of(x -> 30)
-                                .plusScaled(20, Functions.stepFunctionDays(seedsDays[2]))
-                                .plusScaled(10, Functions.stepFunctionHours(seedsHours[2]))
+                                .plusScaled(50, Functions.noiseStepFunctionHours(seedsHours[2]))
                                 .plus(Functions.outlier(queues.get("server3")))
-//                                .plus(Functions.noise(5))
+                                .plus(Functions.noise(5))
                                 .build()), // NOCS
                 new SimulatedSensor("printer1", updatePeriod, // NOCS
                         FunctionBuilder.of(x -> 10)
-                                .plusScaled(30, Functions.stepFunctionDays(seedsDays[3]))
-                                .plusScaled(50, Functions.stepFunctionHours(seedsHours[3]))
+                                .plusScaled(30, Functions.randomStepFunctionDays(seedsDays[3]))
+                                .plusScaled(80, Functions.randomStepFunctionHours(seedsHours[3]))
                                 .plus(Functions.outlier(queues.get("printer1")))
-//                                .plus(Functions.noise(5))
+                                .plus(Functions.noise(5))
                                 .build()), // NOCS
                 new SimulatedSensor("printer2", updatePeriod, // NOCS
                         FunctionBuilder.of(x -> 5)
-                                .plusScaled(10, Functions.stepFunctionDays(seedsDays[4]))
-                                .plusScaled(50, Functions.stepFunctionHours(seedsHours[4]))
+                                .plusScaled(10, Functions.randomStepFunctionDays(seedsDays[4]))
+                                .plusScaled(70, Functions.randomStepFunctionHours(seedsHours[4]))
                                 .plus(Functions.outlier(queues.get("printer2")))
-//                                .plus(Functions.noise(5))
+                                .plus(Functions.noise(5))
                                 .build()), // NOCS
                 new SimulatedSensor("fan1", updatePeriod, // NOCS
                         FunctionBuilder.of(x -> 30)
-                                .plusScaled(10, Functions.stepFunctionDays(seedsDays[5]))
-                                .plusScaled(10, Functions.stepFunctionHours(seedsHours[5]))
+                                .plusScaled(10, Functions.noiseStepFunctionDays(seedsDays[5]))
                                 .plus(Functions.outlier(queues.get("fan1")))
-//                                .plus(Functions.noise(5))
                                 .build()), // NOCS
                 new SimulatedSensor("ac1", updatePeriod, // NOCS
                         FunctionBuilder.of(x -> 20)
-                                .plusScaled(20, Functions.stepFunctionDays(seedsDays[6]))
-                                .plusScaled(10, Functions.stepFunctionHours(seedsHours[6]))
+                                .plusScaled(10, Functions.noiseStepFunctionHours(seedsHours[6]))
                                 .plus(Functions.outlier(queues.get("ac1")))
-//                                .plus(Functions.noise(5))
                                 .build()), // NOCS
                 new SimulatedSensor("ac2", updatePeriod, // NOCS
                         FunctionBuilder.of(x -> 20)
-                                .plusScaled(20, Functions.stepFunctionDays(seedsDays[7]))
-                                .plusScaled(10, Functions.stepFunctionHours(seedsHours[7]))
+                                .plusScaled(10, Functions.noiseStepFunctionHours(seedsHours[7]))
                                 .plus(Functions.outlier(queues.get("ac2")))
-//                                .plus(Functions.noise(5))
                                 .build())); // NOCS
     }
 }

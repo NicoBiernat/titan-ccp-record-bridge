@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class SimulatedTime {
 
-    private static long currentSimulatedTime = System.currentTimeMillis() ;//+ 1000L * 60L * 60L * 24L * 30L */*increment in months: */ 1;//TODO
+    private static long currentSimulatedTime = System.currentTimeMillis();// + 1000L * 60L * 60L * 24L * 30L */*increment in months: */ 0;//TODO
 
     private static ScheduledExecutorService scheduler;
     private static ZoneId zoneId;
