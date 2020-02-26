@@ -185,8 +185,7 @@ public class SimulationRunner {
             // api for inserting anomalies/outliers into the generated data
             Service service = Service.ignite().port(configuration.getInt("webserver.port",80));
 
-            // get request for easier access (e.g. in web browser) though it should actually be put or post
-            service.get("/outlier/:identifier", (final Request request, final Response response) -> {
+            service.post("/outlier/:identifier", (final Request request, final Response response) -> {
                 String identifier = request.params("identifier");
                 double value = NumberUtils.toDouble(request.queryParams("value"),0);
                 if (value == 0 || !queues.containsKey(identifier)) {

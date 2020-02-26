@@ -4,14 +4,8 @@ import titan.ccp.kiekerbridge.raritan.simulator.util.ImprovedNoise;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.function.LongToDoubleFunction;
 import java.util.stream.IntStream;
 
@@ -95,7 +89,7 @@ public final class Functions {
       for (int j = 0; j < values[i].length; j++) {
         double x = Math.cos(a);
         double y = Math.sin(a);
-        double noise = ImprovedNoise.noise(x, y, (double) seed);
+        double noise = ImprovedNoise.noise(x+1, y+1, (double) seed);
         values[i][j] = (noise + 1.0) / 2.0;
         a += dA;
       }
@@ -146,7 +140,7 @@ public final class Functions {
     for (int i = 0; i < values.length; i++) {
       double x = Math.cos(a);
       double y = Math.sin(a);
-      double noise = ImprovedNoise.noise(x, y, (double) seed);
+      double noise = ImprovedNoise.noise(x+1, y+1, (double) seed);
       values[i] = (noise + 1.0) / 2.0;
       a += dA;
     }
@@ -155,28 +149,6 @@ public final class Functions {
       return values[ldt.getDayOfWeek().getValue()-1];
     };
   }
-
-  /**
-   * A function that:
-   *  - generates perlin noise within an hour
-   *  - every minute of an hour has a different value
-   *  - should only be used inside an hour
-   *
-   * perlinNoise : [0, Long.MAX_VALUE] -> [0,1)
-   *
-   * @return
-   * The perlin noise function.
-   */
-  // TODO implement or discard
-//  public static LongToDoubleFunction perlinNoise(long seed) {
-//    double offset = 0;
-//    double increment = 0.1;
-//    return x -> {
-//      LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(x), SimulatedTime.getTimeZone());
-//      Instant.ofEpochMilli(x).get(ChronoField.);
-//      (ImprovedNoise.noise(,0, (double) seed) + 1.0) / 2.0;
-//    }
-//  }
 
   /**
    * A function that returns an outlier value from a given {@link Queue} of {@link Double}
